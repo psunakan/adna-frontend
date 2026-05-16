@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 72">
+  <rect width="260" height="72" fill="white"/>
+  <circle cx="28" cy="36" r="16" fill="none" stroke="#1a5c2e" stroke-width="2.5"/>
+  <text x="28" y="40" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" fill="#1a5c2e">Rx</text>
+  <text x="145" y="30" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700" fill="#1a5c2e" letter-spacing="0.5">GEORGE</text>
+  <text x="145" y="52" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="400" fill="#2d7a47" letter-spacing="2">MEDICINES</text>
+  <line x1="52" y1="62" x2="238" y2="62" stroke="#2d7a47" stroke-width="1"/>
+</svg>

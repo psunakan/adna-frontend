@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A-DNA | African-Diaspora Nursing Alliance</title>
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Open Sans', 'sans-serif'],
+                        heading: ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        pcna: {
+                            green: '#116b53',  // Hybrid Green
+                            red: '#cc0000',    // Alert Red
+                            light: '#f4f6f8',  // Light Gray Background
+                            dark: '#333333',   // Dark Gray Text
+                            teal: '#007b8a',   // Secondary Teal
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-bg {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.48), rgba(0, 0, 0, 0.38)), url('./Pictures/WhatsApp_Image_2026-04-26_at_10.34.39_PM.jpeg');
+            background-color: #116b53;
+            background-size: cover;
+            background-position: center 30%;
+            background-repeat: no-repeat;
+            background-attachment: scroll;
+            min-height: 72vh;
+        }
+
+        @media (min-width: 1024px) {
+            .hero-bg {
+                background-position: center 35%;
+                min-height: 80vh;
+            }
+        }
+
+        .hero-text-shadow {
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Page Frame inspired by PCNA */
+        body {
+            border: 16px solid #116b53;
+            border-bottom: none;
+            padding-bottom: 60px;
+            /* Space for sticky footer */
+        }
+
+        @media (min-width: 1024px) {
+            body {
+                border: 20px solid #116b53;
+            }
+        }
+
+        .nav-link-active {
+            border-bottom: 3px solid #cc0000;
+            color: #cc0000 !important;
+        }
+
+        .btn-pcna {
+            border-radius: 0.375rem;
+            padding: 0.5rem 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.875rem;
+        }
+
+        .btn-pcna:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-pcna-red {
+            background-color: #cc0000;
+            color: #fff;
+        }
+
+        .btn-pcna-red:hover {
+            background-color: #991b1b;
+        }
+
+        .btn-pcna-white {
+            background-color: #fff;
+            color: #116b53;
+        }
+
+        .btn-pcna-white:hover {
+            background-color: #f3f4f6;
+        }
+
+        /* === SCROLL REVEAL === */
+        .reveal {
+            opacity: 0;
+            transform: translateY(36px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-d1 {
+            transition-delay: 0.08s;
+        }
+
+        .reveal-d2 {
+            transition-delay: 0.16s;
+        }
+
+        .reveal-d3 {
+            transition-delay: 0.24s;
+        }
+
+        .reveal-d4 {
+            transition-delay: 0.32s;
+        }
+
+        .reveal-d5 {
+            transition-delay: 0.40s;
+        }
+
+        .reveal-d6 {
+            transition-delay: 0.48s;
+        }
+
+        /* === STATS BAR === */
+        .stat-figure {
+            font-variant-numeric: tabular-nums;
+            line-height: 1;
+        }
+
+        /* === TEAM CARDS === */
+        .team-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .team-avatar {
+            transition: transform 0.3s ease;
+        }
+
+        .team-card:hover .team-avatar {
+            transform: scale(1.08);
+        }
+
+        /* === GALLERY === */
+        .gallery-item {
+            overflow: hidden;
+            border-radius: 0.75rem;
+        }
+
+        .gallery-item img {
+            transition: transform 0.55s ease;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.06);
+        }
+
+        /* === STRATEGY CARDS === */
+        .strategy-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .strategy-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 14px 36px rgba(0, 0, 0, 0.11);
+        }
+
+        /* Global Collaborators Marquee */
+        .marquee-track {
+            display: flex;
+            width: max-content;
+            animation: marquee-scroll 35s linear infinite;
+        }
+
+        .marquee-track:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes marquee-scroll {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-pcna-light text-pcna-dark antialiased font-sans">
+    <!-- Top Utility Bar -->
+    <div class="bg-pcna-green text-white text-xs py-2 hidden md:block">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-end space-x-6">
+            <a href="javascript:void(0)" class="hover:underline">Member Portal</a>
+            <a href="javascript:void(0)" class="hover:underline">Contact Us</a>
+            <span class="font-bold">+1 301-965-0081</span>
+        </div>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-0">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer" onclick="showSection('home')">
+                    <img src="./logo-transparent.png" alt="A-DNA Logo" class="h-24 md:h-28 object-contain"
+                        onerror="this.src='https://via.placeholder.com/150x50?text=A-DNA+Logo'">
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden lg:flex space-x-8 items-center">
+                    <a href="javascript:void(0)" onclick="showSection('home')" id="nav-home"
+                        class="nav-link text-pcna-green hover:text-pcna-red transition-colors font-bold text-base uppercase tracking-wide py-4 border-b-4 border-transparent">Home</a>
+                    <a href="javascript:void(0)" onclick="showSection('about')" id="nav-about"
+                        class="nav-link text-pcna-green hover:text-pcna-red transition-colors font-bold text-base uppercase tracking-wide py-4 border-b-4 border-transparent">About
+                        Us</a>
+
+                    <a href="javascript:void(0)" onclick="showSection('events')" id="nav-events"
+                        class="nav-link text-pcna-green hover:text-pcna-red transition-colors font-bold text-base uppercase tracking-wide py-4 border-b-4 border-transparent">Events</a>
+                    <a href="javascript:void(0)"
+                        class="text-pcna-green hover:text-pcna-red transition-colors font-bold text-base uppercase tracking-wide py-4 border-b-4 border-transparent">Membership</a>
+
+                    <!-- Donate Button -->
+                    <a href="#" aria-label="Donate to A-DNA"
+                        class="ml-4 px-6 py-2 bg-pcna-red text-white font-bold rounded-md hover:bg-red-800 transition-all duration-300 hover:scale-105 shadow-sm uppercase tracking-wider text-sm">Donate</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- SPA Sections Container -->
+    <main>
+        <!-- Home Section -->
+        <section id="home" class="animate-fade-in">
+            <!-- Hero Section -->
+            <div class="hero-bg py-32 md:py-48 flex items-center min-h-[80vh]">
+                <div
+                    class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center text-center gap-12">
+                    <div class="max-w-4xl text-white hero-text-shadow">
+                        <h1 class="font-heading text-4xl md:text-6xl font-semibold leading-tight mb-6">
+                            Advancing Global Health
+                        </h1>
+                        <p class="text-lg md:text-xl text-gray-100 mb-8 font-light leading-relaxed">
+                            Join a global network of nursing professionals dedicated to capacity building, clinical
+                            excellence, and leadership across the African diaspora and the continent.
+                        </p>
+                        <div class="flex flex-col sm:flex-row justify-center gap-4">
+                            <a href="javascript:void(0)" onclick="showSection('about')"
+                                class="px-8 py-3 bg-pcna-red text-white font-bold rounded-md hover:bg-red-800 transition-all duration-300 hover:scale-105 shadow-md uppercase tracking-wider text-sm">
+                                Join A-DNA Today
+                            </a>
+                            <a href="javascript:void(0)" onclick="showSection('events')"
+                                class="px-8 py-3 bg-white text-pcna-green font-bold rounded-md hover:bg-gray-100 transition-all duration-300 hover:scale-105 shadow-md uppercase tracking-wider text-sm">
+                                View Upcoming Events
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Animated Stats Bar -->
+            <div id="stats-bar" class="bg-white border-b-2 border-gray-100">
+                <div class="max-w-7xl mx-auto">
+                    <div class="grid grid-cols-2 md:grid-cols-4 divide-x divide-gray-100">
+                        <div class="py-10 px-6 text-center reveal">
+                            <div class="stat-figure text-5xl md:text-6xl font-extrabold font-heading text-pcna-green"
+                                data-count="4500" data-suffix="+">0</div>
+                            <div class="text-xs font-bold uppercase tracking-widest text-gray-400 mt-3">Members &
+                                Counting</div>
+                        </div>
+                        <div class="py-10 px-6 text-center reveal reveal-d1">
+                            <div class="stat-figure text-5xl md:text-6xl font-extrabold font-heading text-pcna-red"
+                                data-count="19">0</div>
+                            <div class="text-xs font-bold uppercase tracking-widest text-gray-400 mt-3">Expert Leaders
+                            </div>
+                        </div>
+                        <div class="py-10 px-6 text-center reveal reveal-d2">
+                            <div class="stat-figure text-5xl md:text-6xl font-extrabold font-heading text-pcna-teal"
+                                data-count="3" data-suffix="+">0</div>
+                            <div class="text-xs font-bold uppercase tracking-widest text-gray-400 mt-3">Years of Impact
+                            </div>
+                        </div>
+                        <div class="py-10 px-6 text-center reveal reveal-d3">
+                            <div class="stat-figure text-5xl md:text-6xl font-extrabold font-heading text-pcna-green"
+                                data-count="5">0</div>
+                            <div class="text-xs font-bold uppercase tracking-widest text-gray-400 mt-3">Core Strategies
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mission Section -->
+            <div class="py-20 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <h2
+                        class="font-heading text-3xl md:text-4xl font-extrabold text-pcna-green mb-6 uppercase tracking-tight">
+                        Empowering the African Diaspora Nursing Community</h2>
+                    <div class="w-24 h-1 bg-pcna-red mx-auto mb-8"></div>
+                    <p class="max-w-3xl mx-auto text-lg text-gray-600 leading-relaxed">
+                        The African-Diaspora Nursing Alliance (A-DNA) is a non-profit organization dedicated to linking
+                        and advancing African nurses globally — driving meaningful progress in health outcomes
+                        worldwide.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Specialized Tools Grid -->
+            <div class="py-16 bg-pcna-light">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <!-- Professional Hub -->
+                        <div
+                            class="bg-white p-8 rounded-lg shadow-md border-b-4 border-pcna-green hover:shadow-xl transition-shadow duration-300">
+                            <div class="text-pcna-green mb-4">
+                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <h3 class="font-heading text-xl font-bold text-pcna-green mb-3">Global Connectivity</h3>
+                            <p class="text-gray-600 mb-4">We connect African nurses across the diaspora, building a
+                                professional network that transcends borders. Through knowledge sharing, mentorship, and
+                                collaborative advocacy, we amplify African nursing voices on a truly international
+                                scale.</p>
+                            <a href="#"
+                                class="text-pcna-red font-bold text-sm uppercase tracking-wider hover:underline">Explore
+                                Hub &rarr;</a>
+                        </div>
+
+                        <!-- Resource Library -->
+                        <div
+                            class="bg-white p-8 rounded-lg shadow-md border-b-4 border-pcna-teal hover:shadow-xl transition-shadow duration-300">
+                            <div class="text-pcna-teal mb-4">
+                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                </svg>
+                            </div>
+                            <h3 class="font-heading text-xl font-bold text-pcna-green mb-3">Advancement of Nurses</h3>
+                            <p class="text-gray-600 mb-4">We champion the professional growth of African nurses â€”
+                                addressing a critical gap in the face of a global nursing shortage and the longstanding
+                                underrepresentation of African perspectives in healthcare leadership.</p>
+                            <a href="#"
+                                class="text-pcna-red font-bold text-sm uppercase tracking-wider hover:underline">Learn
+                                More &rarr;</a>
+                        </div>
+
+                        <!-- Career Growth -->
+                        <div
+                            class="bg-white p-8 rounded-lg shadow-md border-b-4 border-pcna-red hover:shadow-xl transition-shadow duration-300">
+                            <div class="text-pcna-red mb-4">
+                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <h3 class="font-heading text-xl font-bold text-pcna-green mb-3">Global Health Impact</h3>
+                            <p class="text-gray-600 mb-4">By elevating African nurses, A-DNA strengthens the communities
+                                that need it most. We believe that when African nurses thrive, the world's most
+                                underserved populations receive the quality care they deserve.</p>
+                            <a href="#"
+                                class="text-pcna-red font-bold text-sm uppercase tracking-wider hover:underline">See Our
+                                Impact &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Global Collaborators Marquee Banner -->
+            <div class="overflow-hidden">
+                <!-- Dark Green Header Bar -->
+                <div class="bg-pcna-green py-5 px-8">
+                    <h2
+                        class="font-heading text-white text-2xl md:text-3xl font-extrabold uppercase tracking-widest text-center">
+                        Global Collaborators</h2>
+                </div>
+
+                <!-- Scrolling Logo Area -->
+                <div class="bg-white py-8 relative overflow-hidden border-b border-gray-100">
+                    <div class="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-white to-transparent z-10">
+                    </div>
+                    <div class="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white to-transparent z-10">
+                    </div>
+                    <div class="marquee-track items-center gap-12 px-8">
+                        <!-- Set 1 -->
+                        <div class="flex items-center justify-center px-5 min-w-[160px] min-h-[80px]"><img
+                                src="./Logo/jhpiego.png" alt="Jhpiego" class="h-16 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[180px] min-h-[80px]"><img
+                                src="./Logo/WCEA_transparent_bg.png" alt="World Continuing Education Alliance"
+                                class="h-14 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[120px] min-h-[80px]"><img
+                                src="./Pictures/logos/logo_care.svg" alt="CARE" class="h-16 w-auto object-contain">
+                        </div>
+                        <div class="flex items-center justify-center px-5 min-w-[120px] min-h-[80px]"><img
+                                src="./Logo/image (9).png" alt="Ghana Nurses Association UK"
+                                class="h-24 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[160px] min-h-[80px]"><img
+                                src="./Logo/image (13).png" alt="The DAISY Award" class="h-16 w-auto object-contain">
+                        </div>
+                        <div class="flex items-center justify-center px-5 min-w-[180px] min-h-[80px]"><img
+                                src="./Logo/image (14).png" alt="Health Carousel Foundation"
+                                class="h-14 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[200px] min-h-[80px]"><img
+                                src="./Logo/CGI Logo_Blue Vertical (1).png"
+                                alt="Johns Hopkins Center for Global Initiatives" class="h-20 w-auto object-contain">
+                        </div>
+                        <div class="flex items-center justify-center px-5 min-w-[160px] min-h-[80px]"><img
+                                src="./Logo/image (12).png" alt="DNPs of Color" class="h-14 w-auto object-contain">
+                        </div>
+                        <div class="flex items-center justify-center px-5 min-w-[160px] min-h-[80px]"><img
+                                src="./Logo/Medtronic-Emblem.png" alt="Medtronic" class="h-16 w-auto object-contain">
+                        </div>
+                        <div class="flex items-center justify-center px-5 min-w-[160px] min-h-[80px]"><img
+                                src="./Logo/NBNA-Logo.png" alt="NBNA" class="h-14 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[120px] min-h-[80px]"><img
+                                src="./Logo/BHC logo.png" alt="BHC" class="h-16 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[140px] min-h-[80px]"><img
+                                src="./Logo/ANAC logo.png" alt="ANAC" class="h-14 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[160px] min-h-[80px]"><img
+                                src="./Logo/george-medicines.svg" alt="George Medicines"
+                                class="h-14 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[160px] min-h-[80px]"><img
+                                src="./Logo/GCNM logo (1).jpg" alt="Ghana College of Nurses and Midwives"
+                                class="h-28 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[180px] min-h-[80px]"><img
+                                src="./Logo/GRNMA logo.png" alt="Ghana Registered Nurses and Midwives Association"
+                                class="h-14 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[160px] min-h-[80px]"><img
+                                src="./Logo/manje.svg" alt="Manje" class="h-14 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[180px] min-h-[80px]"><img
+                                src="./Logo/vigilant_logo.jpg" alt="Vigilant Healthcare Solutions"
+                                class="h-14 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[140px] min-h-[80px]"><img
+                                src="./Logo/image (10).png" alt="inSpring" class="h-14 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[200px] min-h-[80px]"><img
+                                src="./Logo/image (11).png" alt="Ghana Ministry of Health and Nursing Council"
+                                class="h-16 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[140px] min-h-[80px]"><img
+                                src="./Logo/image (15).png" alt="Elijeko Enterprise" class="h-14 w-auto object-contain">
+                        </div>
+                        <div class="flex items-center justify-center px-5 min-w-[140px] min-h-[80px]"><img
+                                src="./Logo/image (7).png" alt="OKB Hope Foundation" class="h-16 w-auto object-contain">
+                        </div>
+                        <div class="flex items-center justify-center px-5 min-w-[200px] min-h-[80px]"><img
+                                src="./Logo/CGI Logo_Blue Vertical (1).png"
+                                alt="Johns Hopkins CGI WHO Collaborating Center" class="h-20 w-auto object-contain">
+                        </div>
+
+                        <!-- Set 2 (duplicate for seamless loop) -->
+                        <div class="flex items-center justify-center px-5 min-w-[160px] min-h-[80px]"><img
+                                src="./Logo/jhpiego.png" alt="Jhpiego" class="h-16 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[180px] min-h-[80px]"><img
+                                src="./Logo/WCEA_transparent_bg.png" alt="World Continuing Education Alliance"
+                                class="h-14 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[120px] min-h-[80px]"><img
+                                src="./Pictures/logos/logo_care.svg" alt="CARE" class="h-16 w-auto object-contain">
+                        </div>
+                        <div class="flex items-center justify-center px-5 min-w-[120px] min-h-[80px]"><img
+                                src="./Logo/image (9).png" alt="Ghana Nurses Association UK"
+                                class="h-24 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[160px] min-h-[80px]"><img
+                                src="./Logo/image (13).png" alt="The DAISY Award" class="h-16 w-auto object-contain">
+                        </div>
+                        <div class="flex items-center justify-center px-5 min-w-[180px] min-h-[80px]"><img
+                                src="./Logo/image (14).png" alt="Health Carousel Foundation"
+                                class="h-14 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[200px] min-h-[80px]"><img
+                                src="./Logo/CGI Logo_Blue Vertical (1).png"
+                                alt="Johns Hopkins Center for Global Initiatives" class="h-20 w-auto object-contain">
+                        </div>
+                        <div class="flex items-center justify-center px-5 min-w-[160px] min-h-[80px]"><img
+                                src="./Logo/image (12).png" alt="DNPs of Color" class="h-14 w-auto object-contain">
+                        </div>
+                        <div class="flex items-center justify-center px-5 min-w-[160px] min-h-[80px]"><img
+                                src="./Logo/Medtronic-Emblem.png" alt="Medtronic" class="h-16 w-auto object-contain">
+                        </div>
+                        <div class="flex items-center justify-center px-5 min-w-[160px] min-h-[80px]"><img
+                                src="./Logo/NBNA-Logo.png" alt="NBNA" class="h-14 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[120px] min-h-[80px]"><img
+                                src="./Logo/BHC logo.png" alt="BHC" class="h-16 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[140px] min-h-[80px]"><img
+                                src="./Logo/ANAC logo.png" alt="ANAC" class="h-14 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[160px] min-h-[80px]"><img
+                                src="./Logo/george-medicines.svg" alt="George Medicines"
+                                class="h-14 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[160px] min-h-[80px]"><img
+                                src="./Logo/GCNM logo (1).jpg" alt="Ghana College of Nurses and Midwives"
+                                class="h-28 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[180px] min-h-[80px]"><img
+                                src="./Logo/GRNMA logo.png" alt="Ghana Registered Nurses and Midwives Association"
+                                class="h-14 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[160px] min-h-[80px]"><img
+                                src="./Logo/manje.svg" alt="Manje" class="h-14 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[180px] min-h-[80px]"><img
+                                src="./Logo/vigilant_logo.jpg" alt="Vigilant Healthcare Solutions"
+                                class="h-14 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[140px] min-h-[80px]"><img
+                                src="./Logo/image (10).png" alt="inSpring" class="h-14 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[200px] min-h-[80px]"><img
+                                src="./Logo/image (11).png" alt="Ghana Ministry of Health and Nursing Council"
+                                class="h-16 w-auto object-contain"></div>
+                        <div class="flex items-center justify-center px-5 min-w-[140px] min-h-[80px]"><img
+                                src="./Logo/image (15).png" alt="Elijeko Enterprise" class="h-14 w-auto object-contain">
+                        </div>
+                        <div class="flex items-center justify-center px-5 min-w-[140px] min-h-[80px]"><img
+                                src="./Logo/image (7).png" alt="OKB Hope Foundation" class="h-16 w-auto object-contain">
+                        </div>
+                        <div class="flex items-center justify-center px-5 min-w-[200px] min-h-[80px]"><img
+                                src="./Logo/CGI Logo_Blue Vertical (1).png"
+                                alt="Johns Hopkins CGI WHO Collaborating Center" class="h-20 w-auto object-contain">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- News Feed Placeholder -->
+
+
+            <div class="py-16 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-between items-end mb-8">
+                        <div>
+                            <h2
+                                class="font-heading text-2xl md:text-3xl font-extrabold text-pcna-green uppercase tracking-tight">
+                                Latest News & Updates</h2>
+                            <div class="w-16 h-1 bg-pcna-red mt-2"></div>
+                        </div>
+                        <a href="javascript:void(0)" onclick="showSection('events')"
+                            class="text-pcna-red font-bold text-sm uppercase hover:underline">All News &rarr;</a>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="flex gap-4 p-4 border-l-4 border-pcna-green bg-pcna-light rounded-r">
+                            <div class="flex-shrink-0 w-16 text-center">
+                                <span class="block text-2xl font-bold text-pcna-green">21</span>
+                                <span class="block text-xs uppercase font-bold text-gray-500">AUG</span>
+                            </div>
+                            <div>
+                                <h4
+                                    class="font-bold text-pcna-green hover:text-pcna-red cursor-pointer transition-colors">
+                                    G-DNA Global Conference USA: Voices of Change</h4>
+                                <p class="text-sm text-gray-600 mt-1">Translating Innovation into Action for Global
+                                    Health at Johns Hopkins Medical Campus, Baltimore.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 p-4 border-l-4 border-pcna-red bg-pcna-light rounded-r">
+                            <div class="flex-shrink-0 w-16 text-center">
+                                <span class="block text-2xl font-bold text-pcna-red">07</span>
+                                <span class="block text-xs uppercase font-bold text-gray-500">JAN</span>
+                            </div>
+                            <div>
+                                <h4
+                                    class="font-bold text-pcna-green hover:text-pcna-red cursor-pointer transition-colors">
+                                    G-DNA Global Health Conference: Accra 2027</h4>
+                                <p class="text-sm text-gray-600 mt-1">Save the date for our transformative summit in
+                                    Accra, Ghana — connecting nurses worldwide.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Join the Alliance CTA -->
+            <div class="py-16 bg-pcna-green text-white mb-20 md:mb-12">
+                <div
+                    class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
+                    <div class="max-w-2xl">
+                        <h2 class="font-heading text-3xl md:text-4xl font-extrabold uppercase tracking-tight mb-4">Join
+                            the Alliance</h2>
+                        <p class="text-lg opacity-90 leading-relaxed">
+                            Be part of a transformative movement in global health. Connect with experts, access
+                            exclusive benefits, and help shape the future of nursing.
+                        </p>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <a href="#"
+                            class="px-10 py-4 bg-white text-pcna-green font-bold rounded-md hover:bg-gray-100 transition-all duration-300 hover:scale-105 shadow-xl uppercase tracking-widest text-sm">
+                            Join Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section (Organizational Identity - Vertical Alternating Flow) -->
+        <section id="about" class="hidden animate-fade-in">
+            <!-- Block 1: Mission (Light & Airy) -->
+            <div class="py-16 bg-pcna-light">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex flex-col lg:flex-row items-center gap-16">
+                        <!-- Text Side -->
+                        <div class="lg:w-2/5">
+                            <h3 class="font-heading text-pcna-green text-4xl md:text-5xl font-bold tracking-widest uppercase mb-8">
+                                Mission</h3>
+                            <p class="text-gray-800 text-lg font-normal leading-relaxed max-w-2xl"
+                                class="leading-relaxed">
+                                We exist to bridge the gap between African nurses at home and abroad — building lasting
+                                partnerships that strengthen nursing education across Africa and deliver better health
+                                outcomes for African people everywhere.
+                            </p>
+                        </div>
+                        <!-- Image Side -->
+                        <div class="lg:w-3/5 flex justify-center lg:justify-end">
+                            <img src="./Pictures/WhatsApp_Image_2026-04-26_at_9.34.32_PM__3_.jpeg"
+                                alt="A-DNA Mission Team"
+                                class="rounded-xl shadow-lg w-full object-cover border border-gray-200">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Block 2: Vision (Compact Anchor) -->
+            <div class="py-16 bg-pcna-green">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex flex-col lg:flex-row-reverse items-center gap-16">
+                        <!-- Text Side -->
+                        <div class="lg:w-2/5">
+                            <h3 class="font-heading text-white text-4xl md:text-5xl font-bold tracking-widest uppercase mb-8">
+                                Vision</h3>
+                            <p class="text-white opacity-95 text-lg font-light leading-relaxed max-w-2xl"
+                                class="leading-relaxed">
+                                We envision an Africa that shapes the future of global nursing — cultivating a
+                                world-class workforce of nurses whose expertise transforms health outcomes for
+                                communities everywhere.
+                            </p>
+                        </div>
+                        <!-- Image Side -->
+                        <div class="lg:w-3/5 flex justify-center lg:justify-end">
+                            <img src="./Pictures/bannerv.jpg" alt="A-DNA Vision"
+                                class="rounded-xl shadow-lg w-full object-cover border-2 border-white/20">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stationed Background Core Values Section (Jhpiego Style) -->
+            <style>
+                #core-values-parallax {
+                    position: relative;
+                    min-height: 700px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    overflow: hidden;
+                }
+                #core-values-parallax .parallax-bg {
+                    position: absolute;
+                    inset: 0;
+                    background: url('./Pictures/banner2.jpg') center/cover no-repeat fixed;
+                    filter: blur(3px) brightness(0.95);
+                    transform: scale(1.05);
+                    z-index: 1;
+                    transition: filter 0.5s ease;
+                }
+                #core-values-parallax .parallax-overlay {
+                    position: absolute;
+                    inset: 0;
+                    background: rgba(255, 255, 255, 0.5);
+                    z-index: 2;
+                }
+                #core-values-parallax .parallax-content {
+                    position: relative;
+                    z-index: 3;
+                    width: 100%;
+                }
+            </style>
+
+            <div id="core-values-parallax" class="py-24">
+                <div class="parallax-bg"></div>
+                <div class="parallax-overlay"></div>
+                
+                <div class="parallax-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <div class="mb-16 reveal">
+                        <h3 class="font-heading text-pcna-green text-4xl md:text-5xl font-bold tracking-widest uppercase mb-8" style="text-shadow: 0 2px 10px rgba(255,255,255,0.8);">
+                            Core Values
+                        </h3>
+                        <div class="w-20 h-1.5 bg-pcna-red mx-auto rounded-full"></div>
+                    </div>
+
+                    <div class="flex flex-wrap justify-center gap-6">
+                        <!-- Value 1 -->
+                        <div class="px-10 py-4 bg-white/90 text-pcna-green font-bold rounded-full shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-500 border border-pcna-green/10 flex items-center gap-4 text-lg backdrop-blur-md group">
+                            <span class="w-3 h-3 bg-pcna-red rounded-full group-hover:scale-125 transition-transform"></span>
+                            Collaboration
+                        </div>
+                        <!-- Value 2 -->
+                        <div class="px-10 py-4 bg-white/90 text-pcna-green font-bold rounded-full shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-500 border border-pcna-green/10 flex items-center gap-4 text-lg backdrop-blur-md group">
+                            <span class="w-3 h-3 bg-pcna-red rounded-full group-hover:scale-125 transition-transform"></span>
+                            Integrity
+                        </div>
+                        <!-- Value 3 -->
+                        <div class="px-10 py-4 bg-white/90 text-pcna-green font-bold rounded-full shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-500 border border-pcna-green/10 flex items-center gap-4 text-lg backdrop-blur-md group">
+                            <span class="w-3 h-3 bg-pcna-red rounded-full group-hover:scale-125 transition-transform"></span>
+                            Resilience
+                        </div>
+                        <!-- Value 4 -->
+                        <div class="px-10 py-4 bg-white/90 text-pcna-green font-bold rounded-full shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-500 border border-pcna-green/10 flex items-center gap-4 text-lg backdrop-blur-md group">
+                            <span class="w-3 h-3 bg-pcna-red rounded-full group-hover:scale-125 transition-transform"></span>
+                            Perseverance
+                        </div>
+                        <!-- Value 5 -->
+                        <div class="px-10 py-4 bg-white/90 text-pcna-green font-bold rounded-full shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-500 border border-pcna-green/10 flex items-center gap-4 text-lg backdrop-blur-md group">
+                            <span class="w-3 h-3 bg-pcna-red rounded-full group-hover:scale-125 transition-transform"></span>
+                            Excellence
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5 Pillars of Strategy — Vertical List Navigation -->
+            <section id="pillars-section" class="py-16 bg-white overflow-hidden">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    
+                    <!-- Section Header -->
+                    <div class="text-center mb-16 reveal">
+                        <h3 class="font-heading text-pcna-green text-4xl md:text-5xl font-bold tracking-widest uppercase mb-8">
+                            Five Pillars for Strengthening Nursing &amp; Midwifery in Africa
+                        </h3>
+                        <div class="w-16 h-1 bg-pcna-red mx-auto rounded-full"></div>
+                    </div>
+
+                    <div class="flex flex-col lg:flex-row gap-12 items-stretch">
+                        
+                        <!-- LEFT: Vertical Navigation List -->
+                        <div class="lg:w-1/3 flex flex-col gap-4">
+                            <div id="pillar-list" class="flex flex-col gap-3">
+                                <button class="ptab ptab-active group" data-pillar="1" onclick="activatePillar(1)"
+                                    style="display:flex;align-items:center;gap:20px;padding:20px 24px;background:#f8fafc;border:1px solid #e2e8f0;border-left:6px solid #116b53;border-radius:12px;text-align:left;cursor:pointer;transition:all 0.3s cubic-bezier(.22,1,.36,1);">
+                                    <span class="ptab-num" style="flex-shrink:0;width:44px;height:44px;border-radius:50%;background:#116b53;color:#fff;font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.2rem;display:flex;align-items:center;justify-content:center;transition:all 0.3s;">1</span>
+                                    <span class="ptab-title" style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.95rem;color:#116b53;text-transform:uppercase;letter-spacing:0.05em;transition:all 0.3s;">Education &amp; Training</span>
+                                </button>
+                                
+                                <button class="ptab group" data-pillar="2" onclick="activatePillar(2)"
+                                    style="display:flex;align-items:center;gap:20px;padding:20px 24px;background:#f8fafc;border:1px solid #e2e8f0;border-left:6px solid transparent;border-radius:12px;text-align:left;cursor:pointer;transition:all 0.3s cubic-bezier(.22,1,.36,1);">
+                                    <span class="ptab-num" style="flex-shrink:0;width:44px;height:44px;border-radius:50%;background:#e2e8f0;color:#64748b;font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.2rem;display:flex;align-items:center;justify-content:center;transition:all 0.3s;">2</span>
+                                    <span class="ptab-title" style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.95rem;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;transition:all 0.3s;">Advocacy &amp; Policy</span>
+                                </button>
+                                
+                                <button class="ptab group" data-pillar="3" onclick="activatePillar(3)"
+                                    style="display:flex;align-items:center;gap:20px;padding:20px 24px;background:#f8fafc;border:1px solid #e2e8f0;border-left:6px solid transparent;border-radius:12px;text-align:left;cursor:pointer;transition:all 0.3s cubic-bezier(.22,1,.36,1);">
+                                    <span class="ptab-num" style="flex-shrink:0;width:44px;height:44px;border-radius:50%;background:#e2e8f0;color:#64748b;font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.2rem;display:flex;align-items:center;justify-content:center;transition:all 0.3s;">3</span>
+                                    <span class="ptab-title" style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.95rem;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;transition:all 0.3s;">Research, QI &amp; EBP</span>
+                                </button>
+                                
+                                <button class="ptab group" data-pillar="4" onclick="activatePillar(4)"
+                                    style="display:flex;align-items:center;gap:20px;padding:20px 24px;background:#f8fafc;border:1px solid #e2e8f0;border-left:6px solid transparent;border-radius:12px;text-align:left;cursor:pointer;transition:all 0.3s cubic-bezier(.22,1,.36,1);">
+                                    <span class="ptab-num" style="flex-shrink:0;width:44px;height:44px;border-radius:50%;background:#e2e8f0;color:#64748b;font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.2rem;display:flex;align-items:center;justify-content:center;transition:all 0.3s;">4</span>
+                                    <span class="ptab-title" style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.95rem;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;transition:all 0.3s;">Innovation</span>
+                                </button>
+                                
+                                <button class="ptab group" data-pillar="5" onclick="activatePillar(5)"
+                                    style="display:flex;align-items:center;gap:20px;padding:20px 24px;background:#f8fafc;border:1px solid #e2e8f0;border-left:6px solid transparent;border-radius:12px;text-align:left;cursor:pointer;transition:all 0.3s cubic-bezier(.22,1,.36,1);">
+                                    <span class="ptab-num" style="flex-shrink:0;width:44px;height:44px;border-radius:50%;background:#e2e8f0;color:#64748b;font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.2rem;display:flex;align-items:center;justify-content:center;transition:all 0.3s;">5</span>
+                                    <span class="ptab-title" style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.95rem;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;transition:all 0.3s;">Community Impact</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- RIGHT: Content Display -->
+                        <div class="lg:w-2/3 flex flex-col gap-6">
+                            
+                            <!-- Banner area -->
+                            <div id="pillar-banner" style="position:relative;width:100%;height:340px;overflow:hidden;border-radius:16px;box-shadow:0 12px 30px rgba(0,0,0,0.1);">
+                                <img src="./Pictures/banner2.jpg" id="pillar-banner-img" alt="A-DNA Pillars"
+                                    style="width:100%;height:100%;object-fit:cover;display:block;transition:opacity 0.4s ease-in-out;">
+                                <!-- Overlay -->
+                                <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(17,107,83,0.9) 0%,rgba(17,107,83,0.3) 60%,transparent 100%);"></div>
+                                <!-- Text in banner -->
+                                <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 40px;">
+                                    <h2 id="pillar-banner-title" style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:2.2rem;color:#fff;text-transform:uppercase;margin:0 0 10px;line-height:1.1;">Education &amp; Training</h2>
+                                    <p id="pillar-banner-tagline" style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.85rem;color:#cc0000;text-transform:uppercase;letter-spacing:0.3em;margin:0;">STRATEGIC PILLAR</p>
+                                </div>
+                            </div>
+
+                            <!-- Description and Gallery -->
+                            <div id="pillar-content-panel" class="pillar-panel-fade" style="display:flex;flex-direction:column;gap:30px;">
+                                <div style="background:#f4f6f8;border-left:6px solid #116b53;padding:25px 30px;border-radius:0 16px 16px 0;">
+                                    <p id="pillar-desc" style="color:#334155;font-size:1.05rem;line-height:1.8;margin:0;"></p>
+                                </div>
+
+                                <!-- 3-Column Image Gallery -->
+                                <div id="pillar-gallery" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                    <!-- Dynamic images -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <style>
+                    @keyframes pillarFadeIn{from{opacity:0;transform:translateY(15px);}to{opacity:1;transform:translateY(0);}}
+                    .pillar-panel-fade{animation:pillarFadeIn 0.5s cubic-bezier(.22,1,.36,1) forwards;}
+                    
+                    .ptab:hover { background: #f1f5f9!important; border-color: #cbd5e1!important; transform: translateX(6px); }
+                    .ptab-active { background: #fff!important; border-color: #116b53!important; border-left: 8px solid #116b53!important; box-shadow: 0 10px 25px rgba(0,0,0,0.06); transform: translateX(10px); }
+                    .ptab-active .ptab-num { background: #cc0000!important; color: #fff!important; }
+                    .ptab-active .ptab-title { color: #116b53!important; font-weight: 800!important; }
+                    
+                    .gallery-img-wrap { overflow:hidden; border-radius:12px; height:160px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: all 0.3s; }
+                    .gallery-img-wrap:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+                </style>
+
+                <script>
+                var pillarData = {
+                    1:{title:"Education & Training",desc:"Delivering world-class educational and training opportunities that elevate professional and care standards across Africa and the global diaspora.",banner:"./Pictures/edu_01.jpg",imgs:["edu_01.jpg","edu_02.jpg","edu_03.jpeg","edu_04.jpeg","edu_05.jpeg","edu_06.jpeg"]},
+                    2:{title:"Advocacy & Policy",desc:"Championing policies that protect nurses\u2019 rights, improve working conditions, and strengthen health systems globally.",banner:"./Pictures/Adu_01.jpeg",imgs:["Adu_01.jpeg","Adu_02.jpeg","Adu_03.jpeg","Adu_04.jpeg","Adu_05.jpeg","Adu_06.jpeg"]},
+                    3:{title:"Research, QI & Evidence-Based Practice",desc:"Advancing research, evidence-based practice (EBP) and quality improvement (QI) to drive measurable, lasting health outcomes.",banner:"./Pictures/Res_01.jpg",imgs:["Res_01.jpg","Res_02.JPG","Res_03.jpg","Res_04.jpeg","WhatsApp_Image_2026-04-26_at_10.21.19_PM.jpeg","WhatsApp_Image_2026-04-26_at_10.21.20_PM.jpeg"]},
+                    4:{title:"Innovation",desc:"Harnessing digital health, AI, and creative thinking to transform nursing practice, education and patient care delivery.",banner:"./Pictures/Inn_01.JPG",imgs:["Inn_01.JPG","Inn_02.JPG","Inn_03.JPG","Inn_04.JPG","WhatsApp_Image_2026-04-26_at_10.40.42_PM.jpeg","WhatsApp_Image_2026-04-26_at_10.40.46_PM.jpeg"]},
+                    5:{title:"Community Impact",desc:"Mobilizing our diverse member networks to deliver health education, community outreach, and direct care where it matters most.",banner:"./Pictures/Comm_01.JPG",imgs:["Comm_01.JPG","Comm_02.jpeg","Comm_03.jpeg","Comm_04.jpeg","Comm_05.jpeg","Comm_06.jpeg"]}
+                };
+
+                function activatePillar(n){
+                    // Navigation visual state
+                    document.querySelectorAll('.ptab').forEach(function(t){
+                        t.classList.remove('ptab-active');
+                    });
+                    var tab=document.querySelector('.ptab[data-pillar="'+n+'"]');
+                    if(tab) {
+                        tab.classList.add('ptab-active');
+                    }
+
+                    var data=pillarData[n];
+
+                    // Banner update
+                    var bImg = document.getElementById('pillar-banner-img');
+                    if (bImg) {
+                        bImg.style.opacity = '0';
+                        setTimeout(function(){
+                            bImg.src = data.banner;
+                            bImg.style.opacity = '1';
+                            document.getElementById('pillar-banner-title').textContent = data.title;
+                        }, 300);
+                    }
+
+                    // Content panel animation
+                    var panel = document.getElementById('pillar-content-panel');
+                    if (panel) {
+                        panel.classList.remove('pillar-panel-fade');
+                        void panel.offsetWidth;
+                        panel.classList.add('pillar-panel-fade');
+                        document.getElementById('pillar-desc').textContent = data.desc;
+                    }
+
+                    // Gallery build
+                    var gallery = document.getElementById('pillar-gallery');
+                    if (gallery) {
+                        gallery.innerHTML = '';
+                        data.imgs.forEach(function(name){
+                            var wrap = document.createElement('div');
+                            wrap.className = 'gallery-img-wrap';
+                            var img = document.createElement('img');
+                            img.src = './Pictures/'+name;
+                            img.alt = data.title;
+                            img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;transition:all 0.5s;';
+                            img.onmouseover = function(){ this.style.transform = 'scale(1.1)'; };
+                            img.onmouseout = function(){ this.style.transform = 'scale(1)'; };
+                            wrap.appendChild(img);
+                            gallery.appendChild(wrap);
+                        });
+                    }
+                }
+
+                document.addEventListener('DOMContentLoaded', function(){
+                    // Initialize with Pillar 1
+                    activatePillar(1);
+                    
+                    // Hover support for buttons
+                    document.querySelectorAll('.ptab').forEach(function(btn){
+                        btn.addEventListener('mouseenter', function(){
+                            activatePillar(parseInt(this.dataset.pillar));
+                        });
+                    });
+                });
+                </script>
+            </section>
+
+        <!-- Global Executive Team Section -->
+        <section id="executive-team" class="py-20 bg-pcna-green animate-fade-in">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="font-heading text-3xl md:text-4xl font-extrabold text-white uppercase tracking-widest">
+                        Global Executive Team
+                    </h2>
+                    <div class="w-24 h-1 bg-yellow-500 mx-auto mt-6"></div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
+                    <!-- Team Member 1 -->
+                    <div class="team-card bg-transparent text-center reveal reveal-d1">
+                        <div class="overflow-hidden mb-5 border-2 border-yellow-500 inline-block p-1 bg-white">
+                            <img src="./Pictures/Yvonne.png"
+                                alt="Yvonne Commodore-Mensah"
+                                class="w-60 h-72 object-cover object-top team-avatar border border-gray-200">
+                        </div>
+                        <h4 class="text-white font-bold text-lg leading-tight mb-1">Yvonne Commodore-Mensah, <br><span
+                                class="text-sm font-normal">PhD, MHS, RN, FAAN</span></h4>
+                        <p class="text-yellow-500 font-bold text-sm tracking-wide">President</p>
+                    </div>
+
+                    <!-- Team Member 2 -->
+                    <div class="team-card bg-transparent text-center reveal reveal-d2">
+                        <div class="overflow-hidden mb-5 border-2 border-yellow-500 inline-block p-1 bg-white">
+                            <img src="./Pictures/Matilda.png"
+                                alt="Matilda Decker"
+                                class="w-60 h-72 object-cover object-top team-avatar border border-gray-200">
+                        </div>
+                        <h4 class="text-white font-bold text-lg leading-tight mb-1">Matilda Decker, <br><span
+                                class="text-sm font-normal">DNP, APRN, FNP-C</span></h4>
+                        <p class="text-yellow-500 font-bold text-sm tracking-wide">Vice-President</p>
+                    </div>
+
+                    <!-- Team Member 3 -->
+                    <div class="team-card bg-transparent text-center reveal reveal-d3">
+                        <div class="overflow-hidden mb-5 border-2 border-yellow-500 inline-block p-1 bg-white">
+                            <img src="./Pictures/Ruth-Alma.png"
+                                alt="Ruth-Alma Turkson-Ocran"
+                                class="w-60 h-72 object-cover object-top team-avatar border border-gray-200">
+                        </div>
+                        <h4 class="text-white font-bold text-lg leading-tight mb-1">Ruth-Alma Turkson-Ocran, <br><span
+                                class="text-sm font-normal">PhD, MPH, APRN, FNP-BC, CNE</span></h4>
+                        <p class="text-yellow-500 font-bold text-sm tracking-wide">Executive Director/Secretary</p>
+                    </div>
+
+                    <!-- Team Member 4 -->
+                    <div class="team-card bg-transparent text-center reveal reveal-d4">
+                        <div class="overflow-hidden mb-5 border-2 border-yellow-500 inline-block p-1 bg-white">
+                            <img src="./Pictures/Angela.jpeg"
+                                alt="Angela Agore" class="w-60 h-72 object-cover team-avatar border border-gray-200" style="object-position: center 15%;">
+                        </div>
+                        <h4 class="text-white font-bold text-lg leading-tight mb-1">Angela Agore, <br><span
+                                class="text-sm font-normal">MRes, BSc, RN</span></h4>
+                        <p class="text-yellow-500 font-bold text-sm tracking-wide">Director of Research & UK Chapter
+                            Lead</p>
+                    </div>
+
+                    <!-- Team Member 5 -->
+                    <div class="team-card bg-transparent text-center reveal reveal-d5">
+                        <div class="overflow-hidden mb-5 border-2 border-yellow-500 inline-block p-1 bg-white">
+                            <img src="./Pictures/Gifty.png"
+                                alt="Gifty Markey" class="w-60 h-72 object-cover object-top team-avatar border border-gray-200">
+                        </div>
+                        <h4 class="text-white font-bold text-lg leading-tight mb-1">Gifty Markey, <br><span
+                                class="text-sm font-normal">Msc, BSN, RN</span></h4>
+                        <p class="text-yellow-500 font-bold text-sm tracking-wide">UK Chapter Director -at-Large</p>
+                    </div>
+
+                    <!-- Team Member 6 -->
+                    <div class="team-card bg-transparent text-center reveal reveal-d6">
+                        <div class="overflow-hidden mb-5 border-2 border-yellow-500 inline-block p-1 bg-white">
+                            <img src="./Pictures/Jacqueline.png"
+                                alt="Jacqueline Idun" class="w-60 h-72 object-cover object-top team-avatar border border-gray-200">
+                        </div>
+                        <h4 class="text-white font-bold text-lg leading-tight mb-1">Jacqueline Idun, <br><span
+                                class="text-sm font-normal">DNP,FNP</span></h4>
+                        <p class="text-yellow-500 font-bold text-sm tracking-wide">Director of Communications & Global
+                            Affairs</p>
+                    </div>
+
+                    <!-- Team Member 7 -->
+                    <div class="team-card bg-transparent text-center reveal reveal-d7">
+                        <div class="overflow-hidden mb-5 border-2 border-yellow-500 inline-block p-1 bg-white">
+                            <img src="./Pictures/Melonie.png"
+                                alt="Melonie Owusu" class="w-60 h-72 object-cover object-top team-avatar border border-gray-200">
+                        </div>
+                        <h4 class="text-white font-bold text-lg leading-tight mb-1">Melonie Owusu, <br><span
+                                class="text-sm font-normal">DNP, CRNP,FNP-BC,AAHIVS</span></h4>
+                        <p class="text-yellow-500 font-bold text-sm tracking-wide">Director of Strategic Partnerships</p>
+                    </div>
+
+                    <!-- Team Member 8 -->
+                    <div class="team-card bg-transparent text-center reveal reveal-d8">
+                        <div class="overflow-hidden mb-5 border-2 border-yellow-500 inline-block p-1 bg-white">
+                            <img src="./Pictures/Harriet.png"
+                                alt="Harriet Obenewah Tegah"
+                                class="w-60 h-72 object-cover object-top team-avatar border border-gray-200">
+                        </div>
+                        <h4 class="text-white font-bold text-lg leading-tight mb-1">Harriet Obenewah Tegah, <br><span
+                                class="text-sm font-normal">MSc,BSN, RN</span></h4>
+                        <p class="text-yellow-500 font-bold text-sm tracking-wide">Director of Administration</p>
+                    </div>
+
+                    <!-- Team Member 9 -->
+                    <div class="team-card bg-transparent text-center reveal">
+                        <div class="overflow-hidden mb-5 border-2 border-yellow-500 inline-block p-1 bg-white">
+                            <img src="./Pictures/Evelyn.jpeg"
+                                alt="Evelyn Amoako"
+                                class="w-60 h-72 object-cover object-top team-avatar border border-gray-200">
+                        </div>
+                        <h4 class="text-white font-bold text-lg leading-tight mb-1">Evelyn Amoako, <br><span
+                                class="text-sm font-normal">MPH, RN</span></h4>
+                        <p class="text-yellow-500 font-bold text-sm tracking-wide">Strategic Advisor</p>
+                    </div>
+
+                    <!-- Team Member 10 -->
+                    <div class="team-card bg-transparent text-center reveal">
+                        <div class="overflow-hidden mb-5 border-2 border-yellow-500 inline-block p-1 bg-white">
+                            <img src="./Pictures/Stephen.jpeg"
+                                alt="Stephen Adombire"
+                                class="w-60 h-72 object-cover object-top team-avatar border border-gray-200">
+                        </div>
+                        <h4 class="text-white font-bold text-lg leading-tight mb-1">Stephen Adombire, <br><span
+                                class="text-sm font-normal">MScN, BScN, RN</span></h4>
+                        <p class="text-yellow-500 font-bold text-sm tracking-wide">Director of Evidence Based Practice</p>
+                    </div>
+
+                    <!-- Team Member 11 -->
+                    <div class="team-card bg-transparent text-center reveal">
+                        <div class="overflow-hidden mb-5 border-2 border-yellow-500 inline-block p-1 bg-white">
+                            <img src="./Pictures/Sadique.jpg"
+                                alt="Sa-ada Sadique"
+                                class="w-60 h-72 object-cover object-top team-avatar border border-gray-200">
+                        </div>
+                        <h4 class="text-white font-bold text-lg leading-tight mb-1">Sa-ada Sadique, <br><span
+                                class="text-sm font-normal">MScM, BSc, RM</span></h4>
+                        <p class="text-yellow-500 font-bold text-sm tracking-wide">Director of Midwifery</p>
+                    </div>
+
+                    <!-- Team Member 12 -->
+                    <div class="team-card bg-transparent text-center reveal">
+                        <div class="overflow-hidden mb-5 border-2 border-yellow-500 inline-block p-1 bg-white">
+                            <img src="./Pictures/Ann.jpeg"
+                                alt="Ann Bonti"
+                                class="w-60 h-72 object-cover object-top team-avatar border border-gray-200">
+                        </div>
+                        <h4 class="text-white font-bold text-lg leading-tight mb-1">Ann Bonti, <br><span
+                                class="text-sm font-normal">RN, BSN</span></h4>
+                        <p class="text-yellow-500 font-bold text-sm tracking-wide">Director of Women's Health</p>
+                    </div>
+
+                    <!-- Team Member 13 -->
+                    <div class="team-card bg-transparent text-center reveal">
+                        <div class="overflow-hidden mb-5 border-2 border-yellow-500 inline-block p-1 bg-white">
+                            <img src="./Pictures/Gifty.jpeg"
+                                alt="Gifty Boateng"
+                                class="w-60 h-72 object-cover object-top team-avatar border border-gray-200">
+                        </div>
+                        <h4 class="text-white font-bold text-lg leading-tight mb-1">Gifty Boateng, <br><span
+                                class="text-sm font-normal">MSN, RN, BSN</span></h4>
+                        <p class="text-yellow-500 font-bold text-sm tracking-wide">Director of Innovation</p>
+                    </div>
+
+                    <!-- Team Member 14 -->
+                    <div class="team-card bg-transparent text-center reveal">
+                        <div class="overflow-hidden mb-5 border-2 border-yellow-500 inline-block p-1 bg-white">
+                            <img src="./Pictures/Stacey.jpeg"
+                                alt="Stacey Bentil"
+                                class="w-60 h-72 object-cover object-top team-avatar border border-gray-200">
+                        </div>
+                        <h4 class="text-white font-bold text-lg leading-tight mb-1">Stacey Bentil, <br><span
+                                class="text-sm font-normal">DNP, MSN, RN</span></h4>
+                        <p class="text-yellow-500 font-bold text-sm tracking-wide">Director of Leadership Development</p>
+                    </div>
+
+                    <!-- Team Member 15 -->
+                    <div class="team-card bg-transparent text-center reveal">
+                        <div class="overflow-hidden mb-5 border-2 border-yellow-500 inline-block p-1 bg-white">
+                            <img src="./Pictures/Brenda.jpg"
+                                alt="Brenda Owusu"
+                                class="w-60 h-72 object-cover object-top team-avatar border border-gray-200">
+                        </div>
+                        <h4 class="text-white font-bold text-lg leading-tight mb-1">Brenda Owusu, <br><span
+                                class="text-sm font-normal">DNP, APRN, ANP-BC, FNP-BC</span></h4>
+                        <p class="text-yellow-500 font-bold text-sm tracking-wide">Co-Director of Education and Educational Policy</p>
+                    </div>
+
+                    <!-- Team Member 16 (Vacant) -->
+                    <div class="team-card bg-transparent text-center reveal">
+                        <div class="overflow-hidden mb-5 border-2 border-yellow-500 inline-block p-1 bg-white">
+                            <div class="w-60 h-72 bg-[#116b53] flex items-center justify-center team-avatar border border-gray-200">
+                                <span class="text-white/50 text-sm font-bold uppercase tracking-widest">Vacant</span>
+                            </div>
+                        </div>
+                        <h4 class="text-white font-bold text-lg leading-tight mb-1">Vacant <br><span
+                                class="text-sm font-normal invisible">Placeholder</span></h4>
+                        <p class="text-yellow-500 font-bold text-sm tracking-wide">Co-Director of Education and Educational Policy</p>
+                    </div>
+
+                    <!-- Team Member 17 -->
+                    <div class="team-card bg-transparent text-center reveal">
+                        <div class="overflow-hidden mb-5 border-2 border-yellow-500 inline-block p-1 bg-white">
+                            <img src="./Pictures/Nana.jpeg"
+                                alt="Nana Yaa Addai"
+                                class="w-60 h-72 object-cover object-top team-avatar border border-gray-200">
+                        </div>
+                        <h4 class="text-white font-bold text-lg leading-tight mb-1">Nana Yaa Addai, <br><span
+                                class="text-sm font-normal">DNP, AGNP-C, CDIP</span></h4>
+                        <p class="text-yellow-500 font-bold text-sm tracking-wide">USA Chapter Lead</p>
+                    </div>
+
+                    <!-- Team Member 18 -->
+                    <div class="team-card bg-transparent text-center reveal">
+                        <div class="overflow-hidden mb-5 border-2 border-yellow-500 inline-block p-1 bg-white">
+                            <img src="./Pictures/Daniel.jpeg"
+                                alt="Daniel Apau"
+                                class="w-60 h-72 object-cover object-top team-avatar border border-gray-200">
+                        </div>
+                        <h4 class="text-white font-bold text-lg leading-tight mb-1">Daniel Apau, <br><span
+                                class="text-sm font-normal">DNP, AGACNP</span></h4>
+                        <p class="text-yellow-500 font-bold text-sm tracking-wide">Financial Secretary</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+
+
+
+        <!-- Events Section (Linked to All News) -->
+        <section id="events" class="hidden">
+            <div class="py-20 bg-pcna-light">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-16">
+                        <h2 class="font-heading text-pcna-green text-4xl md:text-5xl font-bold tracking-widest uppercase mb-4">
+                            Upcoming Events & Summits</h2>
+                        <div class="w-16 h-1 bg-pcna-red mx-auto mt-4"></div>
+                        <p class="text-gray-600 mt-6 text-lg max-w-2xl mx-auto">Join us at our major global gatherings
+                            as we drive innovation and leadership in the African nursing diaspora.</p>
+                    </div>
+
+                    <div class="grid lg:grid-cols-3 gap-12">
+                        <!-- Main Events Area (Left/Center) -->
+                        <div class="lg:col-span-2 space-y-12">
+                            <!-- Event 1 (Baltimore) -->
+                            <div class="bg-white rounded-2xl shadow-xl overflow-hidden group hover:shadow-2xl transition-all duration-500">
+                                <div class="bg-pcna-green relative overflow-hidden">
+                                    <img src="./Pictures/eventaug.jpeg"
+                                        alt="2026 US Global Conference"
+                                        class="w-full h-auto object-contain group-hover:scale-105 transition-transform duration-700">
+                                </div>
+                                <div class="p-8">
+                                    <div class="flex items-center gap-4 mb-6">
+                                        <div class="w-16 h-16 bg-pcna-light rounded-lg flex flex-col items-center justify-center border border-pcna-green/20 shadow-sm">
+                                            <span class="text-pcna-green font-bold text-xl leading-none">21-22</span>
+                                            <span class="text-pcna-green text-xs font-bold uppercase mt-1">AUG</span>
+                                        </div>
+                                        <div>
+                                            <p class="text-pcna-green font-bold text-lg">Baltimore, Maryland</p>
+                                            <p class="text-sm text-gray-500 font-medium">Johns Hopkins Medical Campus</p>
+                                        </div>
+                                    </div>
+                                    <p class="text-gray-600 leading-relaxed mb-6">Join a prestigious gathering of nursing leaders and innovators to explore new frontiers in global healthcare delivery.</p>
+                                    <a href="https://campaign.g-dna.org/register" target="_blank" rel="noopener noreferrer"
+                                        class="inline-block px-8 py-3 bg-pcna-green text-white font-bold rounded-md hover:bg-green-800 transition-all text-sm uppercase tracking-wider shadow-md hover:shadow-lg">
+                                        Register
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Event 2 (Accra) -->
+                            <div class="bg-white rounded-2xl shadow-xl overflow-hidden group hover:shadow-2xl transition-all duration-500">
+                                <div class="bg-pcna-green relative overflow-hidden">
+                                    <img src="./Pictures/eventupcomingjan.jpg"
+                                        alt="G-DNA Global Health Conference Accra"
+                                        class="w-full h-auto object-contain group-hover:scale-105 transition-transform duration-700">
+                                    <div class="absolute top-6 left-6">
+                                        <span class="px-3 py-1 bg-pcna-red text-xs font-bold uppercase rounded-full shadow-sm">Coming Soon</span>
+                                    </div>
+                                </div>
+                                <div class="p-8">
+                                    <div class="flex items-center gap-4 mb-6">
+                                        <div class="w-16 h-16 bg-pcna-light rounded-lg flex flex-col items-center justify-center border border-pcna-green/20 shadow-sm">
+                                            <span class="text-pcna-green font-bold text-xl leading-none">07-09</span>
+                                            <span class="text-pcna-green text-xs font-bold uppercase mt-1">JAN</span>
+                                        </div>
+                                        <div>
+                                            <p class="text-pcna-green font-bold text-lg">Accra, Ghana</p>
+                                            <p class="text-sm text-gray-500 font-medium">Flagstaff House Area</p>
+                                        </div>
+                                    </div>
+                                    <p class="text-gray-600 leading-relaxed mb-6">A transformative summit connecting African nurses across the diaspora and the continent for a healthier future.</p>
+                                    <button onclick="promptNotifyMe()"
+                                        class="inline-block px-8 py-3 border-2 border-pcna-green text-pcna-green font-bold rounded-md hover:bg-pcna-green hover:text-white transition-all text-sm uppercase tracking-wider shadow-sm hover:shadow-md">
+                                        NOTIFY ME
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar Navigation (Right side) -->
+                        <div class="lg:col-span-1">
+                            <div class="sticky top-24 space-y-10">
+                                
+                                <!-- Upcoming Events List -->
+                                <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-pcna-green">
+                                    <h3 class="font-heading text-xl font-bold text-gray-800 mb-6 uppercase tracking-wider border-b pb-3">Upcoming Events</h3>
+                                    
+                                    <ul class="space-y-6">
+                                        <li class="group cursor-pointer">
+                                            <div class="flex gap-4">
+                                                <div class="flex-shrink-0 w-12 text-center pt-1">
+                                                    <span class="block text-xl font-bold text-pcna-green leading-none">21</span>
+                                                    <span class="block text-[10px] uppercase font-bold text-gray-500 mt-1">AUG 26</span>
+                                                </div>
+                                                <div>
+                                                    <h4 class="font-bold text-sm text-gray-800 group-hover:text-pcna-green transition-colors leading-snug">Baltimore 2026 US Global Conference</h4>
+                                                    <p class="text-xs text-gray-500 mt-1">Baltimore, MD</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        
+                                        <li class="group cursor-pointer">
+                                            <div class="flex gap-4">
+                                                <div class="flex-shrink-0 w-12 text-center pt-1">
+                                                    <span class="block text-xl font-bold text-pcna-green leading-none">07</span>
+                                                    <span class="block text-[10px] uppercase font-bold text-gray-500 mt-1">JAN 27</span>
+                                                </div>
+                                                <div>
+                                                    <h4 class="font-bold text-sm text-gray-800 group-hover:text-pcna-green transition-colors leading-snug">Accra 2027 G-DNA Global Health Conference</h4>
+                                                    <p class="text-xs text-gray-500 mt-1">Accra, Ghana</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <!-- Past Events Archive -->
+                                <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-gray-400">
+                                    <h3 class="font-heading text-xl font-bold text-gray-800 mb-6 uppercase tracking-wider border-b pb-3 text-gray-500">Past Events</h3>
+                                    
+                                    <ul class="space-y-6 opacity-75 hover:opacity-100 transition-opacity">
+                                        <li class="group cursor-pointer">
+                                            <div class="flex gap-4">
+                                                <div class="flex-shrink-0 w-12 text-center pt-1">
+                                                    <span class="block text-xl font-bold text-gray-500 leading-none">01</span>
+                                                    <span class="block text-[10px] uppercase font-bold text-gray-400 mt-1">JAN 26</span>
+                                                </div>
+                                                <div>
+                                                    <h4 class="font-bold text-sm text-gray-600 group-hover:text-gray-800 transition-colors leading-snug">Global Health Conference (January 2026)</h4>
+                                                    <p class="text-xs text-gray-400 mt-1">Past Archive</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function promptNotifyMe() {
+            const email = prompt("Enter your email address to receive a calendar invite (.ics) or 'Add to Calendar' link:");
+            if (email && email.trim() !== "") {
+                alert("Thank you! A calendar invite for Accra 2027 has been sent to " + email);
+            }
+        }
+    </script>
+
+    <!-- Sticky Footer -->
+    <footer
+        class="fixed bottom-0 left-0 right-0 bg-pcna-green text-white py-3 z-50 shadow-[0_-2px_10px_rgba(0,0,0,0.2)] border-t-4 border-pcna-red">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center space-x-6">
+                <a href="#"
+                    class="text-xs font-bold uppercase tracking-widest hover:text-pcna-red transition-colors">Member
+                    Portal</a>
+                <a href="#"
+                    class="text-xs font-bold uppercase tracking-widest hover:text-pcna-red transition-colors">Contact
+                    Us</a>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <span class="text-[10px] opacity-75 uppercase hidden sm:inline">Follow us:</span>
+                <a href="#" aria-label="LinkedIn" class="hover:text-pcna-red transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                    </svg>
+                </a>
+                <a href="#" aria-label="Twitter" class="hover:text-pcna-red transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.84 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
+                    </svg>
+                </a>
+            </div>
+
+            <div class="text-[10px] opacity-50 uppercase tracking-widest hidden lg:block">
+                Â© 2026 A-DNA. Designed by Forge Sync
+            </div>
+        </div>
+    </footer>
+
+    <!-- SPA Logic Script -->
+    <script>
+        function showSection(id) {
+            document.querySelectorAll('main > section').forEach(s => {
+                s.classList.add('hidden');
+            });
+            const target = document.getElementById(id);
+            if (target) {
+                target.classList.remove('hidden');
+                window.scrollTo(0, 0);
+                // Re-trigger reveals for the newly visible section
+                target.querySelectorAll('.reveal').forEach(el => {
+                    el.classList.remove('visible');
+                    revealObserver.observe(el);
+                });
+            }
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('nav-link-active');
+            });
+            const activeLink = document.getElementById('nav-' + id);
+            if (activeLink) activeLink.classList.add('nav-link-active');
+        }
+
+        // Scroll-reveal observer
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12 });
+
+        window.onload = () => {
+            showSection('home');
+            document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+        };
+    </script>
+</body>
+
+</html>

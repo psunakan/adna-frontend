@@ -1,0 +1,6 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="200" height="60" viewBox="0 0 200 60">
+  <text x="4" y="38" font-family="Arial" font-weight="900" font-size="28" fill="#007baa">TruMerit</text>
+  <line x1="140" y1="10" x2="140" y2="50" stroke="#ccc" stroke-width="1.5"/>
+  <text x="148" y="26" font-family="Arial" font-weight="700" font-size="12" fill="#003f7d">CGFNS</text>
+  <text x="148" y="40" font-family="Arial" font-size="9" fill="#003f7d">INTERNATIONAL</text>
+</svg>

@@ -1,0 +1,7 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="160" height="65" viewBox="0 0 160 65">
+  <rect x="2" y="2" width="156" height="61" rx="4" fill="#003f7d"/>
+  <text x="10" y="22" font-family="Arial" font-weight="700" font-size="9" fill="white" letter-spacing="0.5">JOHNS HOPKINS</text>
+  <text x="10" y="34" font-family="Arial" font-size="8" fill="#ccd" letter-spacing="0.3">SCHOOL OF NURSING</text>
+  <text x="10" y="48" font-family="Arial" font-weight="700" font-size="8" fill="white">THE CENTER FOR</text>
+  <text x="10" y="59" font-family="Arial" font-weight="700" font-size="8" fill="white">GLOBAL INITIATIVES</text>
+</svg>

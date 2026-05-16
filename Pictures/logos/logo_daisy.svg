@@ -1,0 +1,6 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="200" height="65" viewBox="0 0 200 65">
+  <rect x="2" y="2" width="196" height="61" rx="6" fill="#4a7c2f" stroke="#4a7c2f" stroke-width="1"/>
+  <text x="10" y="24" font-family="Arial" font-weight="900" font-size="16" fill="white">The DAISY Award</text>
+  <text x="10" y="40" font-family="Arial" font-size="9" fill="#ffe" letter-spacing="0.5">FOR EXTRAORDINARY NURSES</text>
+  <text x="10" y="54" font-family="Arial" font-size="7.5" fill="#cfc">HONORING NURSES INTERNATIONALLY</text>
+</svg>

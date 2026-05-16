@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A-DNA | African-Diaspora Nursing Alliance</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Open Sans', 'sans-serif'],
+                        heading: ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        pcna: {
+                            green: '#15803d',  // Dark Green
+                            red: '#cc0000',    // Alert Red
+                            light: '#f4f6f8',  // Light Gray Background
+                            dark: '#333333',   // Dark Gray Text
+                            teal: '#007b8a',   // Secondary Teal
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-bg {
+            background-image: linear-gradient(rgba(21, 128, 61, 0.4), rgba(21, 128, 61, 0.4)), url('./Pictures/WhatsApp_Image_2026-04-26_at_10.34.39_PM.jpeg');
+            background-color: #15803d;
+            background-size: cover;
+            background-position: center 35%;
+            background-repeat: no-repeat;
+        }
+        .hero-text-shadow {
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        /* Page Frame inspired by PCNA */
+        body {
+            border: 16px solid #16a34a;
+            border-bottom: none;
+        }
+        @media (min-width: 1024px) {
+            body {
+                border: 20px solid #16a34a;
+            }
+        }
+    </style>
+</head>
+<body class="bg-pcna-light text-pcna-dark antialiased font-sans">
+        <!-- Top Utility Bar (Common in PCNA/Medical sites) -->
+    <div class="bg-pcna-green text-white text-xs py-2 hidden md:block">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-end space-x-6">
+            <a href="#about" class="hover:underline">Member Portal</a>
+            <a href="#footer" class="hover:underline">Contact Us</a>
+            <span class="font-bold">+1 301-965-0081</span>
+        </div>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-0">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center gap-3">
+                    <!-- Using local logo image -->
+                    <img src="./logo-transparent.png" alt="A-DNA Logo" class="h-36 object-contain" onerror="this.src='https://via.placeholder.com/150x50?text=A-DNA+Logo'">
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden lg:flex space-x-8 items-center">
+                    <a href="#about" class="text-pcna-green hover:text-pcna-red transition-colors font-bold text-lg uppercase tracking-wide">About Us</a>
+                    <a href="#resources" class="text-pcna-green hover:text-pcna-red transition-colors font-bold text-lg uppercase tracking-wide">Education & Resources</a>
+                    <a href="#community" class="text-pcna-green hover:text-pcna-red transition-colors font-bold text-lg uppercase tracking-wide">Events</a>
+                    <a href="#community" class="text-pcna-green hover:text-pcna-red transition-colors font-bold text-lg uppercase tracking-wide">Membership</a>
+                    <a href="#community" class="text-pcna-green hover:text-pcna-red transition-colors font-bold text-lg uppercase tracking-wide">News & Media</a>
+                    
+                    <!-- Donate Button (Red prominent) -->
+                    <a href="#" class="ml-4 px-8 py-4 bg-pcna-red text-white font-bold rounded hover:bg-red-800 transition-colors uppercase tracking-wider text-lg shadow-md">Donate</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-bg py-32 md:py-48 lg:py-72 min-h-[600px] lg:min-h-[800px] flex items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center text-center gap-12">
+            <div class="max-w-4xl text-white hero-text-shadow">
+                <h1 class="font-heading text-4xl md:text-6xl font-semibold leading-tight mb-6">
+                    Advancing Global Health
+                </h1>
+                <p class="text-lg md:text-xl text-gray-200 mb-8 font-light leading-relaxed">
+                    Join a global network of nursing professionals dedicated to capacity building, clinical excellence, and leadership across the African diaspora and the continent.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="#" class="px-8 py-4 bg-pcna-red text-white font-bold rounded hover:bg-red-800 transition-colors text-center uppercase tracking-wider text-sm shadow-lg">
+                        Join A-DNA Today
+                    </a>
+                    <a href="#" class="px-8 py-4 bg-white text-pcna-green font-bold rounded hover:bg-gray-100 transition-colors text-center uppercase tracking-wider text-sm shadow-lg">
+                        View Upcoming Events
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What We Do Section -->
+    <section id="about" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="font-heading text-3xl md:text-4xl font-extrabold text-pcna-green mb-4 uppercase">Empowering the Nursing Workforce</h2>
+                <div class="w-24 h-1 bg-pcna-red mx-auto mb-6"></div>
+                <p class="text-gray-600 text-lg">Access exclusive resources, connect with peers globally, and advance your nursing career through our dedicated member portal.</p>
+            </div>
+            
+            <div id="resources" class="grid md:grid-cols-3 gap-10">
+                <!-- Feature 1 -->
+                <div class="bg-pcna-light rounded shadow-md border-t-4 border-pcna-navy hover:-translate-y-1 transition-transform">
+                    <div class="p-8">
+                        <h3 class="font-heading text-2xl font-bold text-pcna-green mb-3">Resource Library</h3>
+                        <p class="text-gray-600 mb-6">Gain access to clinical guidelines, research publications, and specialized toolkits tailored for our community.</p>
+                        <a href="#" class="text-pcna-red font-bold uppercase text-sm tracking-wider hover:text-red-800 inline-flex items-center">
+                            Explore Library &rarr;
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="bg-pcna-light rounded shadow-md border-t-4 border-pcna-teal hover:-translate-y-1 transition-transform">
+                    <div class="p-8">
+                        <h3 class="font-heading text-2xl font-bold text-pcna-green mb-3">Job Board</h3>
+                        <p class="text-gray-600 mb-6">Find global and local opportunities in clinical, research, and academic nursing positions.</p>
+                        <a href="#" class="text-pcna-red font-bold uppercase text-sm tracking-wider hover:text-red-800 inline-flex items-center">
+                            View Openings &rarr;
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="bg-pcna-light rounded shadow-md border-t-4 border-pcna-red hover:-translate-y-1 transition-transform">
+                    <div class="p-8">
+                        <h3 class="font-heading text-2xl font-bold text-pcna-green mb-3">AI Assistant</h3>
+                        <p class="text-gray-600 mb-6">Meet "Ask A-DNA," our intelligent chatbot ready to help you navigate CE credits and member benefits instantly.</p>
+                        <a href="#" class="text-pcna-red font-bold uppercase text-sm tracking-wider hover:text-red-800 inline-flex items-center">
+                            Learn More &rarr;
+                        </a>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community in Action Section (Using A-DNA imagery) -->
+    <section id="community" class="py-12 bg-pcna-light border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-8">
+                <h2 class="font-heading text-3xl md:text-4xl font-extrabold text-pcna-green mb-4 uppercase">Our Community in Action</h2>
+                <div class="w-24 h-1 bg-pcna-red mx-auto mb-6"></div>
+                <p class="text-gray-600 text-lg">See the real-world impact of our nursing network across the diaspora and the African continent.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Image 1 -->
+                <div class="overflow-hidden rounded shadow-md border-b-4 border-pcna-teal group">
+                    <img src="./Pictures/WhatsApp_Image_2026-04-26_at_9.34.35_PM__1_.jpeg" alt="A-DNA Community Gathering" class="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <!-- Image 2 -->
+                <div class="overflow-hidden rounded shadow-md border-b-4 border-pcna-red group">
+                    <img src="./Pictures/WhatsApp_Image_2026-04-26_at_9.34.32_PM__3_.jpeg" alt="Nursing Leadership Tour" class="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <!-- Image 3 -->
+                <div class="overflow-hidden rounded shadow-md border-b-4 border-pcna-navy group">
+                    <img src="./Pictures/WhatsApp_Image_2026-04-26_at_9.34.32_PM__4_.jpeg" alt="A-DNA Clinical Achievements" class="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <!-- Image 4 -->
+                <div class="overflow-hidden rounded shadow-md border-b-4 border-pcna-teal group">
+                    <img src="./Pictures/WhatsApp_Image_2026-04-26_at_9.34.32_PM.jpeg" alt="A-DNA Community Event" class="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <!-- Image 5 -->
+                <div class="overflow-hidden rounded shadow-md border-b-4 border-pcna-red group">
+                    <img src="./Pictures/WhatsApp_Image_2026-04-26_at_9.43.45_PM__1_.jpeg" alt="Nursing Excellence" class="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <!-- Image 6 -->
+                <div class="overflow-hidden rounded shadow-md border-b-4 border-pcna-navy group">
+                    <img src="./Pictures/WhatsApp_Image_2026-04-26_at_9.34.33_PM.jpeg" alt="Global Nursing Network" class="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <!-- Image 7 -->
+                <div class="overflow-hidden rounded shadow-md border-b-4 border-pcna-teal group">
+                    <img src="./Pictures/WhatsApp_Image_2026-04-26_at_9.43.49_PM__1_.jpeg" alt="Health Equity Project" class="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500" style="object-position: 50% 0%;">
+                </div>
+                <!-- Image 8 -->
+                <div class="overflow-hidden rounded shadow-md border-b-4 border-pcna-red group">
+                    <img src="./Pictures/WhatsApp_Image_2026-04-26_at_10.40.46_PM.jpeg" alt="Clinical Training" class="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <!-- Image 9 -->
+                <div class="overflow-hidden rounded shadow-md border-b-4 border-pcna-navy group">
+                    <img src="./Pictures/WhatsApp_Image_2026-04-26_at_9.34.35_PM.jpeg" alt="A-DNA Team" class="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <!-- Image 10 -->
+                <div class="overflow-hidden rounded shadow-md border-b-4 border-pcna-teal group">
+                    <img src="./Pictures/WhatsApp_Image_2026-04-26_at_10.40.42_PM__4_.jpeg" alt="Nursing Workshop" class="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <!-- Image 11 -->
+                <div class="overflow-hidden rounded shadow-md border-b-4 border-pcna-red group">
+                    <img src="./Pictures/WhatsApp_Image_2026-04-26_at_10.28.56_PM.jpeg" alt="Nursing Excellence" class="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <!-- Image 12 -->
+                <div class="overflow-hidden rounded shadow-md border-b-4 border-pcna-navy group">
+                    <img src="./Pictures/WhatsApp_Image_2026-04-26_at_10.11.37_PM.jpeg" alt="Community Engagement" class="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500">
+                </div>
+            </div>
+        </div>
+    <!-- Footer -->
+    <footer id="footer" class="mt-12 border-t border-gray-200">
+        <!-- Footer Content Partition -->
+        <div class="bg-white py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+                    <img src="./logo-transparent.png" alt="A-DNA Logo" class="h-16">
+                    <div class="flex space-x-8 text-pcna-green font-bold text-sm uppercase tracking-wider">
+                        <a href="#about" class="hover:text-pcna-red transition-colors">About</a>
+                        <a href="#resources" class="hover:text-pcna-red transition-colors">Resources</a>
+                        <a href="#community" class="hover:text-pcna-red transition-colors">Community</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Bottom Attribution Partition (The last grey box) -->
+        <div class="bg-gray-100 pt-24 pb-12 text-center border-t border-gray-200">
+            <p class="text-[10px] text-gray-500 uppercase tracking-[0.2em] font-bold">
+                Designed by Forge Sync Systems
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>
