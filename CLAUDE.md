@@ -41,7 +41,7 @@ Benchmark site: pcna.net and jhpiego.org
 ## Infrastructure
 
 * Monorepo on GitHub
-* CI/CD via Cloudflare Pages
+* CI/CD via Vercel (auto-deploys on push to main)
 * DNS: Wix registrar pointing to Cloudflare (free tier)
 * Phase 2: AWS RDS or Azure SQL when traffic scales
 
@@ -52,4 +52,11 @@ Benchmark site: pcna.net and jhpiego.org
 * Give me commands I can copy and paste directly
 * Remind me of next steps at the end of every response
 * Never skip steps — walk me through everything
+
+## Git Rules
+
+* Never auto-commit or auto-push without permission
+* Only commit and push when I say "taking a break" or "end of session"
+* Never commit and push mid-task
+* Always tell me what you are about to commit before doing it
 
