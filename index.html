@@ -311,8 +311,8 @@
                         class="nav-link text-pcna-green hover:text-pcna-red transition-colors font-extrabold text-xl uppercase tracking-wide py-4 border-b-4 border-transparent">About Us</a>
                     <a href="javascript:void(0)" onclick="showSection('events')" id="nav-events"
                         class="nav-link text-pcna-green hover:text-pcna-red transition-colors font-extrabold text-xl uppercase tracking-wide py-4 border-b-4 border-transparent">Events</a>
-                    <a href="javascript:void(0)"
-                        class="nav-link text-pcna-green hover:text-pcna-red transition-colors font-extrabold text-xl uppercase tracking-wide py-4 border-b-4 border-transparent">Education</a>
+                    <a href="javascript:void(0)" onclick="showSection('membership')" id="nav-membership"
+                        class="nav-link text-pcna-green hover:text-pcna-red transition-colors font-extrabold text-xl uppercase tracking-wide py-4 border-b-4 border-transparent">Membership</a>
                     <a href="#" aria-label="Donate to A-DNA"
                         class="ml-4 px-8 py-3 bg-pcna-red text-white font-extrabold rounded-md hover:bg-red-800 transition-all duration-300 hover:scale-105 shadow-lg uppercase tracking-widest text-xl">Donate</a>
                 </div>
@@ -336,8 +336,8 @@
                    class="block py-3 px-4 text-pcna-green font-extrabold text-base uppercase tracking-wide hover:bg-pcna-light hover:text-pcna-red rounded-lg transition-colors">About Us</a>
                 <a href="javascript:void(0)" onclick="showSection('events'); toggleMobileMenu()"
                    class="block py-3 px-4 text-pcna-green font-extrabold text-base uppercase tracking-wide hover:bg-pcna-light hover:text-pcna-red rounded-lg transition-colors">Events</a>
-                <a href="javascript:void(0)" onclick="toggleMobileMenu()"
-                   class="block py-3 px-4 text-pcna-green font-extrabold text-base uppercase tracking-wide hover:bg-pcna-light hover:text-pcna-red rounded-lg transition-colors">Education</a>
+                <a href="javascript:void(0)" onclick="showSection('membership'); toggleMobileMenu()"
+                   class="block py-3 px-4 text-pcna-green font-extrabold text-base uppercase tracking-wide hover:bg-pcna-light hover:text-pcna-red rounded-lg transition-colors">Membership</a>
                 <a href="#"
                    class="block py-3 px-4 bg-pcna-red text-white font-extrabold text-base uppercase tracking-wide rounded-lg text-center mt-1">Donate</a>
                 <div class="border-t border-gray-100 mt-2 pt-2">
@@ -1390,6 +1390,293 @@
                 </div>
             </div>
         </section>
+
+        <!-- Membership Section -->
+        <section id="membership" class="hidden animate-fade-in">
+
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&display=swap');
+
+            #membership { font-family: 'Barlow', sans-serif; }
+
+            /* ── layout helpers ── */
+            .mem-pad   { padding: 5rem 3rem; }
+            .mem-inner { max-width: 1200px; margin: 0 auto; }
+
+            .mem-hero-cols {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 4rem;
+                align-items: center;
+            }
+
+            /* ── section label ── */
+            .mem-label {
+                display: block;
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                color: #5DCAA5;
+                margin-bottom: 1rem;
+            }
+
+            /* ── tier cards: flush grid ── */
+            .mem-tiers-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 0;
+            }
+
+            /* ── tier feature list ── */
+            .mem-feat {
+                list-style: none;
+                padding: 0;
+                margin: 0 0 2rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.65rem;
+                flex: 1;
+            }
+            .mem-feat li {
+                padding-left: 1.4rem;
+                position: relative;
+                font-weight: 300;
+                color: #333;
+                font-size: 14px;
+                line-height: 1.7;
+            }
+            .mem-feat li::before {
+                content: "✓";
+                position: absolute;
+                left: 0;
+                color: #5DCAA5;
+                font-weight: 700;
+            }
+            .mem-feat--dark li          { color: #9FE1CB; }
+            .mem-feat--dark li::before  { color: #5DCAA5; }
+
+            /* ── tier card buttons ── */
+            .mem-tier-btn {
+                display: block;
+                width: 100%;
+                box-sizing: border-box;
+                padding: 0.9rem 1rem;
+                font-family: 'Barlow', sans-serif;
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+                text-align: center;
+                text-decoration: none;
+                border: none;
+                border-radius: 0;
+                cursor: pointer;
+                transition: opacity 0.15s;
+            }
+            .mem-tier-btn:hover           { opacity: 0.85; }
+            .mem-tier-btn--dark           { background: #0D3D2B; color: #fff; }
+            .mem-tier-btn--mint           { background: #5DCAA5; color: #0D3D2B; }
+
+            /* ── hero CTA button ── */
+            .mem-hero-btn {
+                display: inline-block;
+                padding: 0.9rem 2.5rem;
+                font-family: 'Barlow', sans-serif;
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+                text-decoration: none;
+                background: #5DCAA5;
+                color: #0D3D2B;
+                border-radius: 0;
+                transition: opacity 0.15s;
+            }
+            .mem-hero-btn:hover { opacity: 0.85; }
+
+            /* ── reasons grid: border-division technique ── */
+            .mem-reasons-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+                border-top: 1px solid #e0e0e0;
+                border-left: 1px solid #e0e0e0;
+                overflow: hidden;
+            }
+            .mem-reason-card {
+                padding: 2.5rem;
+                border-right: 1px solid #e0e0e0;
+                border-bottom: 1px solid #e0e0e0;
+                box-sizing: border-box;
+            }
+
+            /* ── responsive ── */
+            @media (max-width: 600px) {
+                .mem-pad        { padding: 3rem 1.5rem; }
+                .mem-hero-cols  { grid-template-columns: 1fr; gap: 2rem; }
+            }
+        </style>
+
+        <!-- ══ HERO ═══════════════════════════════════════════════════════ -->
+        <div class="mem-pad" style="background:#0D3D2B;">
+            <div class="mem-inner">
+                <div class="mem-hero-cols">
+
+                    <div>
+                        <span class="mem-label">Join A-DNA Today</span>
+                        <h2 style="font-size:clamp(2.4rem,5vw,4rem); font-weight:900; text-transform:uppercase; letter-spacing:-0.02em; color:#fff; line-height:1.05; margin:0 0 1.5rem;">
+                            Become a<br>
+                            <em style="font-weight:300; font-style:italic; color:#9FE1CB;">Member</em><br>
+                            Today
+                        </h2>
+                        <p style="font-weight:300; color:#9FE1CB; font-size:1.05rem; line-height:1.75; max-width:540px; margin:0 0 2.5rem;">
+                            Join a vibrant community of professionals and changemakers committed
+                            to growth, collaboration, and impact. Gain access to exclusive
+                            opportunities and a network that supports your personal and
+                            collective development.
+                        </p>
+                        <a href="/membership-registration" class="mem-hero-btn">Click to Register</a>
+                    </div>
+
+                    <div>
+                        <img src="https://g-dna.org/images/banner/banner-image4.jpg"
+                             alt="A-DNA Membership"
+                             style="width:100%; max-height:420px; object-fit:cover; display:block;">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ MEMBERSHIP BENEFITS ══════════════════════════════════════════ -->
+        <div class="mem-pad" style="background:#f5f5f3;">
+            <div class="mem-inner">
+
+                <div style="margin-bottom:3rem;">
+                    <span class="mem-label">01 — Membership Benefits</span>
+                    <h2 style="font-size:clamp(2rem,4vw,3rem); font-weight:900; text-transform:uppercase; letter-spacing:-0.02em; color:#0D3D2B; line-height:1.1; margin:0;">
+                        Choose Your<br>
+                        <em style="font-weight:300; font-style:italic; color:#5DCAA5;">Path</em>
+                    </h2>
+                </div>
+
+                <div class="mem-tiers-grid">
+
+                    <!-- Professional -->
+                    <div style="background:#fff; border:1px solid #e0e0e0; padding:2.5rem 2rem 2rem; display:flex; flex-direction:column;">
+                        <p style="font-size:11px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:#5DCAA5; margin:0 0 1.25rem;">
+                            Diaspora · $75/yr &nbsp;|&nbsp; Ghana · Free
+                        </p>
+                        <h3 style="font-size:1.35rem; font-weight:900; text-transform:uppercase; color:#0D3D2B; margin:0 0 0.5rem; letter-spacing:0.02em;">Professional</h3>
+                        <div style="display:flex; align-items:baseline; gap:0.35rem; margin:0.75rem 0 1.75rem;">
+                            <span style="font-size:3.5rem; font-weight:900; color:#0D3D2B; line-height:1;">$75</span>
+                            <span style="font-weight:300; color:#888; font-size:0.95rem;">/year</span>
+                        </div>
+                        <ul class="mem-feat">
+                            <li>Support for capacity strengthening efforts</li>
+                            <li>Advance professional career through educational offerings (CPD eligible)</li>
+                            <li>Expedite Ghana nursing licence application</li>
+                            <li>Expand professional network</li>
+                            <li>Support medical outreach projects</li>
+                        </ul>
+                        <a href="/membership-registration" class="mem-tier-btn mem-tier-btn--dark">Register</a>
+                    </div>
+
+                    <!-- Premium -->
+                    <div style="background:#0D3D2B; border:1px solid #0D3D2B; padding:2.5rem 2rem 2rem; display:flex; flex-direction:column;">
+                        <p style="font-size:11px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:#5DCAA5; margin:0 0 1.25rem;">
+                            Diaspora · $150/yr &nbsp;|&nbsp; Ghana · 600 GHS
+                        </p>
+                        <h3 style="font-size:1.35rem; font-weight:900; text-transform:uppercase; color:#fff; margin:0 0 0.5rem; letter-spacing:0.02em;">Premium</h3>
+                        <div style="display:flex; align-items:baseline; gap:0.35rem; margin:0.75rem 0 1.75rem;">
+                            <span style="font-size:3.5rem; font-weight:900; color:#fff; line-height:1;">$150</span>
+                            <span style="font-weight:300; color:#5DCAA5; font-size:0.95rem;">/year</span>
+                        </div>
+                        <ul class="mem-feat mem-feat--dark">
+                            <li>Support for capacity strengthening efforts</li>
+                            <li>Advance professional career through educational offerings (CPD eligible)</li>
+                            <li>Expedite Ghana nursing licence application</li>
+                            <li>Expand professional network</li>
+                            <li>Support medical outreach projects</li>
+                            <li>Free Advance Practice Preceptorship opportunities</li>
+                            <li>Access to Bentil Leadership Institute</li>
+                            <li>Mentorship Program (Enhanced access)</li>
+                            <li>Conference discount</li>
+                            <li>Walden University Tuition benefit</li>
+                        </ul>
+                        <a href="/membership-registration" class="mem-tier-btn mem-tier-btn--mint">Register</a>
+                    </div>
+
+                </div>
+
+                <p style="font-size:13px; font-weight:300; color:#666; margin-top:1.5rem; line-height:1.75;">
+                    Professional Membership: <strong style="font-weight:600;">$75/year</strong> for Diaspora members — Free for members in Ghana/Africa<br>
+                    Premium Membership: <strong style="font-weight:600;">$150/year</strong> for Diaspora members — <strong style="font-weight:600;">600 GHS</strong> for members in Ghana
+                </p>
+
+            </div>
+        </div>
+
+        <!-- ══ REASONS TO JOIN ══════════════════════════════════════════════ -->
+        <div class="mem-pad" style="background:#fff;">
+            <div class="mem-inner">
+
+                <div style="margin-bottom:3rem;">
+                    <span class="mem-label">02 — Reasons to Join</span>
+                    <h2 style="font-size:clamp(2rem,4vw,3rem); font-weight:900; text-transform:uppercase; letter-spacing:-0.02em; color:#0D3D2B; line-height:1.1; margin:0;">
+                        Why You Should<br>
+                        <em style="font-weight:300; font-style:italic; color:#5DCAA5;">Join Us</em>
+                    </h2>
+                </div>
+
+                <div class="mem-reasons-grid">
+
+                    <div class="mem-reason-card">
+                        <span style="display:block; font-size:2.5rem; font-weight:900; color:#e8ede9; line-height:1; margin-bottom:0.75rem;">01</span>
+                        <h4 style="font-size:1rem; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:#0D3D2B; margin:0 0 0.75rem;">Networking &amp; Job Opportunities</h4>
+                        <p style="font-size:14px; font-weight:300; color:#555; line-height:1.75; margin:0;">
+                            Be part of a thriving global community of professionals, students, and
+                            retirees. Gain access to exclusive opportunities designed to help you
+                            grow your network and advance your career — wherever you are in the world.
+                        </p>
+                    </div>
+
+                    <div class="mem-reason-card">
+                        <span style="display:block; font-size:2.5rem; font-weight:900; color:#e8ede9; line-height:1; margin-bottom:0.75rem;">02</span>
+                        <h4 style="font-size:1rem; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:#0D3D2B; margin:0 0 0.75rem;">Preceptorship &amp; Scholarship</h4>
+                        <p style="font-size:14px; font-weight:300; color:#555; line-height:1.75; margin:0;">
+                            Empowering the next generation through education, mentorship, and
+                            real-world exposure. Our Preceptorship and Scholarship programs support
+                            students and young professionals in achieving academic and career excellence.
+                        </p>
+                    </div>
+
+                    <div class="mem-reason-card">
+                        <span style="display:block; font-size:2.5rem; font-weight:900; color:#e8ede9; line-height:1; margin-bottom:0.75rem;">03</span>
+                        <h4 style="font-size:1rem; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:#0D3D2B; margin:0 0 0.75rem;">Professional Advice &amp; Wellness Support</h4>
+                        <p style="font-size:14px; font-weight:300; color:#555; line-height:1.75; margin:0;">
+                            True success goes beyond career achievements — it includes personal growth,
+                            emotional balance, and overall well-being. We offer support systems that
+                            address both your professional journey and your wellness needs.
+                        </p>
+                    </div>
+
+                    <div class="mem-reason-card">
+                        <span style="display:block; font-size:2.5rem; font-weight:900; color:#e8ede9; line-height:1; margin-bottom:0.75rem;">04</span>
+                        <h4 style="font-size:1rem; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:#0D3D2B; margin:0 0 0.75rem;">Educational Materials &amp; Event Discounts</h4>
+                        <p style="font-size:14px; font-weight:300; color:#555; line-height:1.75; margin:0;">
+                            Access exclusive resources and opportunities designed to support your
+                            continuous learning and active participation in the community.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        </section>
+
     </main>
 
     <script>

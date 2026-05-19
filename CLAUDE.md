@@ -15,10 +15,23 @@ Benchmark site: pcna.net and jhpiego.org
 
 ## Frontend
 
-* Framework: React (built with Antigravity prototype)
+* Framework: React (migration in progress — currently HTML/CSS/JS prototype)
+* Styling: Tailwind CSS via CDN (v3, JIT mode)
+* Fonts: Playfair Display (headings), Montserrat (body/nav)
+* Colors: `#116b53` pcna-green, `#c0392b` pcna-red, `#0a3d2e` dark green
 * Deployed on: Vercel
 * Live site: https://adna-frontend.vercel.app
 * Repo: GitHub (adna-frontend)
+* Key files: index.html (homepage), event.html (events page)
+
+## Frontend Design System
+
+* Section headings: `text-4xl sm:text-5xl md:text-6xl font-black uppercase`
+* Body text: `text-base sm:text-lg md:text-xl font-bold`
+* SPA pattern: `showSection(id)` JS function controls page sections
+* Hero: parallax (`background-attachment: fixed`), gradient overlay, blur mask via `::before`
+* Navigation: sticky top nav, hamburger mobile menu, Contact Us dropdown (JS delay)
+* Contact drawer: slide-up panel from footer with all contact info and social links
 
 ## Backend
 

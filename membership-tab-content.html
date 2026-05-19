@@ -1,0 +1,395 @@
+<!--
+  ============================================================
+  A-DNA — Membership Tab Content
+  Cloned from g-dna.org/become-a-member
+  Drop this inside your Membership tab panel.
+  All images reference g-dna.org assets directly — swap with
+  your own CDN paths once you have A-DNA equivalents.
+  ============================================================
+-->
+
+<!-- ── HERO SECTION ─────────────────────────────────────── -->
+<section class="membership-hero">
+  <div class="membership-hero__inner">
+    <div class="membership-hero__text">
+      <span class="membership-eyebrow">Why Join Us</span>
+      <h2 class="membership-hero__title">Become a Member Today</h2>
+      <p class="membership-hero__body">
+        Join a vibrant community of professionals and changemakers committed
+        to growth, collaboration, and impact. As a member, you gain access to
+        exclusive opportunities, resources, and a network that supports your
+        personal and collective development.
+      </p>
+      <a href="/membership-registration" class="membership-btn membership-btn--primary">
+        CLICK TO REGISTER
+      </a>
+    </div>
+    <div class="membership-hero__media">
+      <img
+        src="https://g-dna.org/images/banner/banner-image4.jpg"
+        alt="Membership"
+        class="membership-hero__img"
+      />
+    </div>
+  </div>
+</section>
+
+<!-- ── MEMBERSHIP TIERS ──────────────────────────────────── -->
+<section class="membership-tiers">
+  <div class="membership-container">
+    <span class="membership-eyebrow">From Our Team</span>
+    <h2 class="membership-section-title">Membership Benefits</h2>
+    <hr class="membership-divider" />
+
+    <div class="membership-cards">
+
+      <!-- Regular -->
+      <div class="membership-card">
+        <h3 class="membership-card__name">Regular (Free)</h3>
+        <div class="membership-card__price">$0</div>
+        <ul class="membership-card__features">
+          <li>Networking</li>
+        </ul>
+        <a href="/membership-registration" class="membership-btn membership-btn--outline">
+          Register
+        </a>
+      </div>
+
+      <!-- Professional -->
+      <div class="membership-card membership-card--featured">
+        <h3 class="membership-card__name">Professional</h3>
+        <div class="membership-card__price">$75</div>
+        <ul class="membership-card__features">
+          <li>Support for capacity strengthening efforts</li>
+          <li>Advance professional career through educational offerings (CPD eligible)</li>
+          <li>Expedite Ghana nursing licence application</li>
+          <li>Expand professional network</li>
+          <li>Support medical outreach projects</li>
+        </ul>
+        <a href="/membership-registration" class="membership-btn membership-btn--primary">
+          Register
+        </a>
+      </div>
+
+      <!-- Premium -->
+      <div class="membership-card">
+        <h3 class="membership-card__name">Premium</h3>
+        <div class="membership-card__price">$150</div>
+        <ul class="membership-card__features">
+          <li>Support for capacity strengthening efforts</li>
+          <li>Advance professional career through educational offerings (CPD eligible)</li>
+          <li>Expedite Ghana nursing licence application</li>
+          <li>Expand professional network</li>
+          <li>Support medical outreach projects</li>
+          <li>Free Advance Practice Preceptorship opportunities</li>
+          <li>Access to Bentil Leadership Institute</li>
+          <li>Mentorship Program (Enhanced access)</li>
+          <li>Conference discount</li>
+          <li>Walden University Tuition benefit</li>
+        </ul>
+        <a href="/membership-registration" class="membership-btn membership-btn--outline">
+          Register
+        </a>
+      </div>
+
+    </div><!-- /.membership-cards -->
+
+    <p class="membership-pricing-note">
+      Professional Membership: <strong>$75/year</strong> for Diaspora members —
+      Free for members in Ghana/Africa<br />
+      Premium Membership: <strong>$150/year</strong> for Diaspora members —
+      <strong>600 GHS</strong> for members in Ghana
+    </p>
+  </div>
+</section>
+
+<!-- ── REASONS TO JOIN ───────────────────────────────────── -->
+<section class="membership-reasons">
+  <div class="membership-container">
+    <h2 class="membership-section-title">Reasons to Join</h2>
+
+    <div class="membership-reasons__grid">
+
+      <div class="membership-reason">
+        <span class="membership-reason__num">01</span>
+        <h4 class="membership-reason__title">Networking &amp; Job Opportunities</h4>
+        <p class="membership-reason__body">
+          Be part of a thriving global community of professionals, students, and
+          retirees. Gain access to exclusive opportunities designed to help you
+          grow your network and advance your career — wherever you are in the world.
+        </p>
+      </div>
+
+      <div class="membership-reason">
+        <span class="membership-reason__num">02</span>
+        <h4 class="membership-reason__title">Preceptorship &amp; Scholarship</h4>
+        <p class="membership-reason__body">
+          Empowering the next generation through education, mentorship, and
+          real-world exposure. Our Preceptorship and Scholarship programs support
+          students and young professionals in achieving academic and career excellence.
+        </p>
+      </div>
+
+      <div class="membership-reason">
+        <span class="membership-reason__num">03</span>
+        <h4 class="membership-reason__title">Professional Advice &amp; Wellness Support</h4>
+        <p class="membership-reason__body">
+          True success goes beyond career achievements — it includes personal growth,
+          emotional balance, and overall well-being. We offer support systems that
+          address both your professional journey and your wellness needs.
+        </p>
+      </div>
+
+      <div class="membership-reason">
+        <span class="membership-reason__num">04</span>
+        <h4 class="membership-reason__title">Educational Materials &amp; Event Discounts</h4>
+        <p class="membership-reason__body">
+          Access exclusive resources and opportunities designed to support your
+          continuous learning and active participation in the community.
+        </p>
+      </div>
+
+    </div><!-- /.membership-reasons__grid -->
+  </div>
+</section>
+
+<!-- ── STYLES (scoped — won't leak into the rest of the app) -->
+<style>
+  /* ── Tokens ──────────────────────────────────────────── */
+  .membership-hero,
+  .membership-tiers,
+  .membership-reasons {
+    --mem-green:       #1D9E75;
+    --mem-green-dark:  #0F6E56;
+    --mem-green-light: #E1F5EE;
+    --mem-text:        #1a1a1a;
+    --mem-muted:       #6b7280;
+    --mem-border:      #e5e7eb;
+    --mem-radius:      10px;
+    font-family: inherit;
+    box-sizing: border-box;
+  }
+
+  /* ── Shared ──────────────────────────────────────────── */
+  .membership-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  .membership-eyebrow {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--mem-green);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  .membership-section-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--mem-text);
+    margin: 0 0 0.5rem;
+  }
+
+  .membership-divider {
+    border: none;
+    border-top: 2px solid var(--mem-border);
+    margin: 1rem 0 2.5rem;
+  }
+
+  /* ── Buttons ─────────────────────────────────────────── */
+  .membership-btn {
+    display: inline-block;
+    padding: 11px 26px;
+    border-radius: var(--mem-radius);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  .membership-btn:active { transform: scale(0.98); }
+
+  .membership-btn--primary {
+    background: var(--mem-green);
+    color: #fff;
+    border: none;
+  }
+  .membership-btn--primary:hover { opacity: 0.88; }
+
+  .membership-btn--outline {
+    background: transparent;
+    color: var(--mem-green);
+    border: 1.5px solid var(--mem-green);
+  }
+  .membership-btn--outline:hover {
+    background: var(--mem-green-light);
+  }
+
+  /* ── Hero ────────────────────────────────────────────── */
+  .membership-hero {
+    padding: 4rem 1.5rem;
+  }
+
+  .membership-hero__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .membership-hero__title {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--mem-text);
+    margin: 0 0 1rem;
+    line-height: 1.2;
+  }
+
+  .membership-hero__body {
+    font-size: 15px;
+    color: var(--mem-muted);
+    line-height: 1.75;
+    margin: 0 0 1.75rem;
+  }
+
+  .membership-hero__img {
+    width: 100%;
+    border-radius: 12px;
+    object-fit: cover;
+    max-height: 380px;
+  }
+
+  /* ── Tiers ───────────────────────────────────────────── */
+  .membership-tiers {
+    padding: 3rem 1.5rem 4rem;
+    background: #f9fafb;
+  }
+
+  .membership-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .membership-card {
+    background: #fff;
+    border: 1px solid var(--mem-border);
+    border-radius: 12px;
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .membership-card--featured {
+    border-color: var(--mem-green);
+    box-shadow: 0 0 0 2px var(--mem-green);
+  }
+
+  .membership-card__name {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--mem-text);
+    margin: 0 0 0.5rem;
+  }
+
+  .membership-card__price {
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--mem-green);
+    margin: 0 0 1.25rem;
+    line-height: 1;
+  }
+
+  .membership-card__features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.75rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .membership-card__features li {
+    font-size: 13px;
+    color: var(--mem-muted);
+    padding-left: 1.25rem;
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .membership-card__features li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--mem-green);
+    font-weight: 700;
+  }
+
+  .membership-pricing-note {
+    font-size: 13px;
+    color: var(--mem-muted);
+    text-align: center;
+    line-height: 1.8;
+    margin-top: 1rem;
+  }
+
+  /* ── Reasons ─────────────────────────────────────────── */
+  .membership-reasons {
+    padding: 4rem 1.5rem;
+  }
+
+  .membership-reasons__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .membership-reason {
+    padding: 1.75rem;
+    border: 1px solid var(--mem-border);
+    border-radius: 12px;
+    background: #fff;
+  }
+
+  .membership-reason__num {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--mem-green);
+    margin-bottom: 0.5rem;
+  }
+
+  .membership-reason__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--mem-text);
+    margin: 0 0 0.65rem;
+  }
+
+  .membership-reason__body {
+    font-size: 14px;
+    color: var(--mem-muted);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  /* ── Responsive ──────────────────────────────────────── */
+  @media (max-width: 900px) {
+    .membership-hero__inner { grid-template-columns: 1fr; }
+    .membership-hero__img { max-height: 260px; }
+    .membership-cards { grid-template-columns: 1fr; }
+    .membership-reasons__grid { grid-template-columns: 1fr; }
+  }
+</style>

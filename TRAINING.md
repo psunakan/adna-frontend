@@ -79,6 +79,78 @@
 
 ---
 
+## Session 3 — May 17, 2026
+### Topic: UI engineering, responsive design, animations, section redesign
+
+### Key concepts learned
+
+#### Hero section engineering
+- Gradient overlay on a CSS background-image: stack multiple values separated by comma
+- `background-attachment: fixed` = parallax (image stays still while page scrolls over it)
+- Blur only part of an image: use `::before` pseudo-element with `backdrop-filter: blur()`
+  combined with `mask-image: linear-gradient(...)` to fade the blur from top to transparent
+- Hero text readability: gradient dark at top fades to transparent — text stays in dark zone
+- Dark text box: `background: linear-gradient(to bottom, rgba dark→transparent)` on a
+  full-width div creates seamless blend into image below (no hard edge)
+- `white-space: nowrap` forces a heading onto exactly one line regardless of viewport
+
+#### Navigation patterns
+- Hamburger mobile menu: button with SVG icon, `lg:hidden`, toggle `hidden` class via JS
+- Mobile menu goes INSIDE the sticky `<nav>` so it scrolls with the nav bar correctly
+- Contact Us dropdown: JS `mouseenter`/`mouseleave` with `setTimeout` delay (250ms)
+  prevents dropdown from disappearing when mouse crosses the gap between button and panel
+- `padding-top` (not `margin-top`) on dropdown creates invisible hover bridge
+
+#### Sliding contact drawer
+- `position:fixed; bottom:0; transform:translateY(100%)` hides panel off-screen below
+- `transform:translateY(0)` slides it up with CSS transition
+- Overlay: fixed div covers full screen, click fires `closeContactDrawer()`
+- Delay before hiding overlay (400ms) lets the slide-down animation finish first
+
+#### Responsive design with Tailwind
+- `sm:` = 640px+, `md:` = 768px+, `lg:` = 1024px+
+- Write mobile-first: base class = smallest screen, prefix = larger screen override
+- Equal height cards: `items-stretch` on grid parent + `flex flex-col` on card + `mt-auto` on link
+- `items-start justify-center` on hero = pin content to top-center
+
+#### Font system (established for A-DNA)
+- Section headings: `text-4xl sm:text-5xl md:text-6xl font-black uppercase`
+- Body text: `text-base sm:text-lg md:text-xl font-bold`
+- Subheadings (inside sections): `text-2xl sm:text-3xl md:text-4xl font-black`
+- font-weight 900 = `font-black` in Tailwind (or `style="font-weight:900"` inline)
+
+#### JavaScript counter animations
+- `IntersectionObserver` fires a callback when an element scrolls into the viewport
+- `requestAnimationFrame` runs a function on every screen repaint (60fps)
+- Ease-out cubic formula: `eased = 1 - Math.pow(1 - progress, 3)` — starts fast, slows to stop
+- Pattern: observe element → on intersect, start rAF loop counting from 0 to data-count
+- Real world: same pattern used in dashboards, landing pages, annual report sites
+
+#### SVG decorative elements
+- Inline `<svg>` with `viewBox` and `preserveAspectRatio="none"` stretches to any width
+- Wavy swoosh: cubic bezier path `C` command — `M0,20 C200,40 400,0 600,20...`
+- Two layers: faint fill for body, solid stroke for the wave line
+- Mirror: `transform: scaleY(-1)` flips SVG vertically
+
+#### Section redesign process
+- Replace old HTML by identifying exact opening/closing tags in grep/read
+- Edit tool requires unique old_string — use surrounding comments to make it unique
+- Replace entire section in one edit when structure changes significantly
+- Keep content (text) unchanged when only fixing layout
+
+### Commands used today
+- git push origin master:main --force (force push pattern — used when remote diverged)
+- git add . → git commit -m "message" → git push (standard deploy flow)
+
+### Real world connection
+- IntersectionObserver is how every major site does scroll animations (no jQuery needed)
+- requestAnimationFrame is the professional way to animate — smoother than setInterval
+- Parallax, blur masks, counter animations = standard enterprise landing page techniques
+- Equal-height card grids using flex + mt-auto = used in every product/feature page
+- Force push = senior recovery skill — only safe when you are the sole developer
+
+---
+
 ## Session 2 — May 16, 2026 (Part 2)
 ### Topic: IDE sync issues, dynamic UI engineering, Vercel deployment
 
