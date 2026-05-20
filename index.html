@@ -54,10 +54,17 @@
             background-size: cover;
             background-position: center 30%;
             background-repeat: no-repeat;
-            background-attachment: fixed;
+            background-attachment: scroll;
             min-height: 72vh;
             position: relative;
             overflow: hidden;
+        }
+
+        @media (max-width: 1024px) {
+            .hero-bg {
+                min-height: 60vh;
+                background-position: center center;
+            }
         }
 
         .hero-bg::before {
@@ -744,7 +751,7 @@
                         <div class="lg:w-2/5">
                             <h3 class="font-heading text-pcna-green text-4xl sm:text-5xl md:text-6xl font-black tracking-widest uppercase mb-8" style="color:#0a3d2e;">
                                 Mission</h3>
-                            <p class="text-gray-800 text-base sm:text-lg md:text-xl font-bold leading-relaxed max-w-2xl"
+                            <p class="text-gray-800 text-base sm:text-lg md:text-xl font-normal leading-relaxed max-w-2xl" style="color:#000000;"
                                 class="leading-relaxed">
                                 We exist to bridge the gap between African nurses at home and abroad — building lasting
                                 partnerships that strengthen nursing education across Africa and deliver better health
@@ -769,7 +776,7 @@
                         <div class="lg:w-2/5">
                             <h3 class="font-heading text-white text-4xl sm:text-5xl md:text-6xl font-black tracking-widest uppercase mb-8">
                                 Vision</h3>
-                            <p class="text-white opacity-95 text-base sm:text-lg md:text-xl font-bold leading-relaxed max-w-2xl"
+                            <p class="text-white opacity-95 text-base sm:text-lg md:text-xl font-normal leading-relaxed max-w-2xl"
                                 class="leading-relaxed">
                                 We envision an Africa that shapes the future of global nursing — cultivating a
                                 world-class workforce of nurses whose expertise transforms health outcomes for
@@ -864,8 +871,8 @@
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     
                     <!-- Section Header -->
-                    <div class="text-center mb-16 reveal">
-                        <h3 class="font-heading text-pcna-green text-4xl sm:text-5xl md:text-6xl font-black tracking-widest uppercase mb-8" style="color:#0a3d2e;">
+                    <div class="text-center mb-8 reveal overflow-visible">
+                        <h3 class="font-heading text-pcna-green text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-black tracking-normal sm:tracking-wide lg:tracking-widest uppercase mb-4 overflow-visible break-words leading-tight" style="color:#0a3d2e;">
                             Five Pillars for Strengthening Nursing &amp; Midwifery in Africa
                         </h3>
                         <div class="w-16 h-1 bg-pcna-red mx-auto rounded-full"></div>
@@ -1123,7 +1130,7 @@
                     <!-- Team Member 7 -->
                     <div class="team-card bg-transparent text-center reveal reveal-d7">
                         <div class="overflow-hidden mb-5 border-2 border-yellow-500 inline-block p-1 bg-white">
-                            <img src="./Pictures/Melonie.png"
+                            <img src="./Pictures/Melonienew.jpeg"
                                 alt="Melonie Owusu" class="w-60 h-72 object-cover object-top team-avatar border border-gray-200">
                         </div>
                         <h4 class="text-white font-bold text-lg leading-tight mb-1">Melonie Owusu, <br><span
@@ -1681,7 +1688,8 @@
     <!-- Sticky Footer -->
     <footer
         class="fixed bottom-0 left-0 right-0 bg-pcna-green text-white py-3 z-50 shadow-[0_-2px_10px_rgba(0,0,0,0.2)] border-t-4 border-pcna-red">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap justify-between items-center gap-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-wrap justify-between items-center gap-4">
             <div class="flex items-center space-x-6">
                 <a href="#"
                     class="text-sm font-extrabold uppercase tracking-widest hover:text-pcna-red transition-colors">Member Portal</a>
@@ -1710,10 +1718,12 @@
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                 </a>
             </div>
-
-            <div class="text-[10px] opacity-50 uppercase tracking-widest hidden lg:block">
+        </div>
+        <div class="pt-2" style="border-top: 1px solid rgba(255,255,255,0.15);">
+            <div class="text-center w-full mt-2 opacity-60 text-[10px] uppercase tracking-widest">
                 © 2026 A-DNA. Designed by Forge Sync
             </div>
+        </div>
         </div>
     </footer>
 
