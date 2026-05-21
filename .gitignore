@@ -1,0 +1,5 @@
+﻿node_modules/
+package-lock.json
+secrets_audit.txt
+tracked_files.txt
+.claude/

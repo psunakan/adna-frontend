@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\Paul Akan\\\\Documents\\\\DevOps Claude\\\\a-dna-monorepo\\\\frontend-prototype\\\\Pictures\" | Where-Object { $_.Name -imatch \"manje\" }; Get-ChildItem \"C:\\\\Users\\\\Paul Akan\\\\Documents\\\\DevOps Claude\\\\a-dna-monorepo\\\\frontend-prototype\\\\Logo\" | Where-Object { $_.Name -imatch \"new adna\" })",
-      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\Paul Akan\\\\Documents\\\\DevOps Claude\\\\a-dna-monorepo\\\\frontend-prototype\\\\Pictures\" | Where-Object { $_.Name -imatch \"manje\" }; Get-ChildItem \"C:\\\\Users\\\\Paul Akan\\\\Documents\\\\DevOps Claude\\\\a-dna-monorepo\\\\frontend-prototype\" | Where-Object { $_.Name -imatch \"new adna\" })",
-      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\Paul Akan\\\\Documents\\\\DevOps Claude\\\\a-dna-monorepo\\\\frontend-prototype\\\\Pictures\" | Where-Object { $_.Name -imatch \"new adna\" })"
-    ]
-  }
-}
