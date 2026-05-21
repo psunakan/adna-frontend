@@ -301,13 +301,12 @@
     </div>
 
     <!-- Main Navigation -->
-    <nav class="bg-white shadow-md sticky top-0 z-50">
+    <nav class="bg-white shadow-md sticky top-0 z-50" style="background-color: #ffffff !important; position: sticky; top: 0; z-index: 50;">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center py-0">
+            <div class="flex justify-between items-center" style="min-height:fit-content; padding-top:8px; padding-bottom:8px;">
                 <!-- Logo -->
-                <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer" onclick="showSection('home')">
-                    <img src="./logo-transparent.png" alt="A-DNA Logo" class="h-20 md:h-28 object-contain"
-                        onerror="this.src='https://via.placeholder.com/150x50?text=A-DNA+Logo'">
+                <div class="flex-shrink-0 cursor-pointer" onclick="showSection('home')">
+                    <img src="./Pictures/New adna logo.png" alt="A-DNA Logo" class="h-20 w-auto" style="object-fit:contain; max-height:80px;">
                 </div>
 
                 <!-- Desktop Menu (lg and above) -->
@@ -489,7 +488,6 @@
                             <p class="mb-4" style="font-weight:600; color:#444;">We connect African nurses and midwives across the diaspora, building a
                                 professional network that transcends borders. Through knowledge sharing, mentorship, and
                                 collaborative advocacy, we amplify African nursing voices on a truly international scale.</p>
-                            <a href="#" class="mt-auto text-sm uppercase tracking-wider whitespace-nowrap hover:underline" style="color:#c0392b; font-weight:900;">Explore Hub →</a>
                         </div>
 
                         <!-- Card 2: Advancement -->
@@ -504,7 +502,6 @@
                             <p class="mb-4" style="font-weight:600; color:#444;">We champion the professional growth of African nurses and midwives —
                                 addressing a critical gap in the face of a global nursing shortage and the longstanding
                                 underrepresentation of African perspectives in healthcare leadership.</p>
-                            <a href="#" class="mt-auto text-sm uppercase tracking-wider whitespace-nowrap hover:underline" style="color:#c0392b; font-weight:900;">Learn More →</a>
                         </div>
 
                         <!-- Card 3: Global Health Impact -->
@@ -519,7 +516,6 @@
                             <p class="mb-4" style="font-weight:600; color:#444;">By elevating African nurses and midwives, A-DNA strengthens the communities
                                 that need it most. We believe that when African nurses and midwives thrive, the world's most
                                 underserved populations receive the quality care they deserve.</p>
-                            <a href="#" class="mt-auto text-sm uppercase tracking-wider whitespace-nowrap hover:underline" style="color:#c0392b; font-weight:900;">See Our Impact →</a>
                         </div>
 
                     </div>
@@ -653,7 +649,7 @@
                                 src="./Logo/GRNMA logo.png" alt="Ghana Registered Nurses and Midwives Association"
                                 class="h-14 w-auto object-contain"></div>
                         <div class="flex items-center justify-center px-5 min-w-[160px] min-h-[80px]"><img
-                                src="./Logo/manje.svg" alt="Manje" class="h-14 w-auto object-contain"></div>
+                                src="./Pictures/Manje logo.jpg" alt="Manje" class="h-14 w-auto object-contain"></div>
                         <div class="flex items-center justify-center px-5 min-w-[180px] min-h-[80px]"><img
                                 src="./Logo/vigilant_logo.jpg" alt="Vigilant Healthcare Solutions"
                                 class="h-14 w-auto object-contain"></div>
@@ -717,7 +713,7 @@
                                 src="./Logo/GRNMA logo.png" alt="Ghana Registered Nurses and Midwives Association"
                                 class="h-14 w-auto object-contain"></div>
                         <div class="flex items-center justify-center px-5 min-w-[160px] min-h-[80px]"><img
-                                src="./Logo/manje.svg" alt="Manje" class="h-14 w-auto object-contain"></div>
+                                src="./Pictures/Manje logo.jpg" alt="Manje" class="h-14 w-auto object-contain"></div>
                         <div class="flex items-center justify-center px-5 min-w-[180px] min-h-[80px]"><img
                                 src="./Logo/vigilant_logo.jpg" alt="Vigilant Healthcare Solutions"
                                 class="h-14 w-auto object-contain"></div>
@@ -1748,19 +1744,33 @@
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.25rem;">
+            <div style="margin-bottom:1.25rem;">
                 <a href="mailto:info@a-dna.org"
-                   style="display:flex; align-items:center; gap:0.75rem; color:#0d2818; text-decoration:none; font-weight:700; font-size:1rem;"
+                   style="display:flex; align-items:center; gap:0.75rem; color:#0d2818; text-decoration:none; font-weight:700; font-size:1rem; margin-bottom:0.75rem;"
                    onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
                     <svg style="width:1.25rem;height:1.25rem;flex-shrink:0;" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
                     info@a-dna.org
                 </a>
-                <a href="tel:+13019650081"
-                   style="display:flex; align-items:center; gap:0.75rem; color:#0d2818; text-decoration:none; font-weight:700; font-size:1rem;"
-                   onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
-                    <svg style="width:1.25rem;height:1.25rem;flex-shrink:0;" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/></svg>
-                    +1 301-965-0081
-                </a>
+                <div style="display:flex; flex-wrap:wrap; gap:0.75rem;">
+                    <a href="tel:+13019650081"
+                       style="display:flex; align-items:center; gap:0.75rem; color:#0d2818; text-decoration:none; font-weight:700; font-size:1rem; min-width:180px;"
+                       onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+                        <svg style="width:1.25rem;height:1.25rem;flex-shrink:0;" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/></svg>
+                        US: +1 301 965 0081
+                    </a>
+                    <a href="tel:+447423618694"
+                       style="display:flex; align-items:center; gap:0.75rem; color:#0d2818; text-decoration:none; font-weight:700; font-size:1rem; min-width:180px;"
+                       onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+                        <svg style="width:1.25rem;height:1.25rem;flex-shrink:0;" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/></svg>
+                        UK: +44 7423 618694
+                    </a>
+                    <a href="tel:+233539824538"
+                       style="display:flex; align-items:center; gap:0.75rem; color:#0d2818; text-decoration:none; font-weight:700; font-size:1rem; min-width:180px;"
+                       onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+                        <svg style="width:1.25rem;height:1.25rem;flex-shrink:0;" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/></svg>
+                        Ghana: +233 53 982 4538
+                    </a>
+                </div>
             </div>
             <div style="display:flex; align-items:flex-start; gap:0.75rem; margin-bottom:1.75rem; color:#0d2818; font-size:0.9rem; font-weight:600; line-height:1.6;">
                 <svg style="width:1.25rem;height:1.25rem;flex-shrink:0;margin-top:2px;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
