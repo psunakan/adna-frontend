@@ -410,13 +410,13 @@
                     </div>
 
                     <!-- Split Section -->
-                    <div class="flex flex-col lg:flex-row gap-8 items-stretch mt-2">
-                        <div class="lg:w-1/2">
-                            <img src="./Pictures/WhatsApp_Image_2026-04-26_at_9.34.35_PM__1_.jpeg"
-                                 alt="A-DNA Nurses and Midwives"
-                                 class="rounded-xl shadow-lg w-full h-full object-cover">
+                    <div class="flex flex-col lg:flex-row items-stretch mt-2">
+                        <div class="lg:w-1/2 relative overflow-hidden" style="min-height:420px;">
+                            <img src="./Pictures/Homepage3.jpeg"
+                                 alt="A-DNA Community Event"
+                                 class="absolute inset-0 w-full h-full object-cover">
                         </div>
-                        <div class="lg:w-1/2 flex flex-col justify-center">
+                        <div class="lg:w-1/2 flex flex-col justify-center" style="padding: 3rem 2rem;">
                             <h3 class="font-heading text-2xl sm:text-3xl md:text-4xl font-black mb-4" style="color:#0a3d2e; font-weight:900;">
                                 Linking and Advancing African Nurses and Midwives Globally
                             </h3>
@@ -479,6 +479,7 @@
                         <!-- Card 1: Global Connectivity -->
                         <div class="flex flex-col p-8 rounded-xl transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
                              style="background:white; border:1px solid #e0e0e0;">
+                            <img src="./Pictures/Homepage1.jpeg" class="w-full h-40 object-cover rounded-lg mb-4" alt="Global Connectivity">
                             <div class="w-12 h-12 rounded-full flex items-center justify-center mb-4" style="background:#e8f4f0;">
                                 <svg class="w-6 h-6" fill="none" stroke="#116b53" stroke-width="2" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -493,6 +494,7 @@
                         <!-- Card 2: Advancement -->
                         <div class="flex flex-col p-8 rounded-xl transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
                              style="background:white; border:1px solid #e0e0e0;">
+                            <img src="./Pictures/Homepage2.jpeg" class="w-full h-40 object-cover rounded-lg mb-4" alt="Advancement">
                             <div class="w-12 h-12 rounded-full flex items-center justify-center mb-4" style="background:#e8f4f0;">
                                 <svg class="w-6 h-6" fill="none" stroke="#116b53" stroke-width="2" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
@@ -507,6 +509,7 @@
                         <!-- Card 3: Global Health Impact -->
                         <div class="flex flex-col p-8 rounded-xl transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
                              style="background:white; border:1px solid #e0e0e0;">
+                            <img src="./Pictures/Homepage5.jpeg" class="w-full h-40 object-cover rounded-lg mb-4" alt="Global Health Impact">
                             <div class="w-12 h-12 rounded-full flex items-center justify-center mb-4" style="background:#e8f4f0;">
                                 <svg class="w-6 h-6" fill="none" stroke="#116b53" stroke-width="2" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
@@ -523,9 +526,12 @@
             </div>
 
             <!-- Join the Alliance CTA -->
-            <div class="py-16 bg-pcna-green text-white mb-20 md:mb-12">
+            <div class="text-white mb-20 md:mb-12 relative overflow-hidden"
+                 style="background-image: url('./Pictures/JointheAlliance.jpeg'); background-size: cover; background-position: center 25%; background-repeat: no-repeat; background-attachment: scroll; min-height: 500px;">
+                <div class="absolute inset-0" style="background: rgba(13, 61, 43, 0.75);"></div>
                 <div
-                    class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
+                    class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+                    style="padding: 2rem; display:flex; flex-direction:row; align-items:flex-end; justify-content:space-between; min-height: 500px; flex-wrap:wrap; gap:1rem;">
                     <div class="max-w-2xl">
                         <h2 class="font-heading text-3xl md:text-4xl font-extrabold uppercase tracking-tight mb-4">Join
                             the Alliance</h2>
