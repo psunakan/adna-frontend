@@ -261,6 +261,71 @@
                 transform: translateX(-50%);
             }
         }
+
+        @media (max-width: 640px) {
+
+          /* Hero/Banner background image */
+          .hero-bg,
+          [class*="hero"],
+          section[style*="background-image"] {
+            background-attachment: scroll !important;
+            background-position: center center !important;
+            background-size: cover !important;
+            min-height: 60vh !important;
+          }
+
+          /* Join the Alliance background image */
+          .join-alliance,
+          [style*="JointheAlliance"] {
+            background-attachment: scroll !important;
+            background-position: center 25% !important;
+            background-size: cover !important;
+            min-height: 400px !important;
+          }
+
+          /* Featured news card image */
+          .news-featured-img,
+          [class*="news"] img,
+          [class*="card"] img {
+            height: 180px !important;
+            object-position: center 20% !important;
+            width: 100% !important;
+          }
+
+          /* Split section image */
+          [class*="split"] img,
+          [class*="lg:w-1/2"] img {
+            height: 280px !important;
+            object-position: center top !important;
+            width: 100% !important;
+          }
+
+          /* Three cards images */
+          [class*="card"] img,
+          [class*="rounded-lg"] {
+            height: 180px !important;
+            object-position: center top !important;
+          }
+
+          /* Global Collaborators logo carousel */
+          [class*="collaborator"] div,
+          [class*="logo-track"] div,
+          [class*="carousel"] div,
+          [class*="slider"] div {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+          }
+
+          [class*="collaborator"] img,
+          [class*="logo-track"] img,
+          [class*="carousel"] img,
+          [class*="slider"] img {
+            margin: auto !important;
+            display: block !important;
+          }
+
+        }
     </style>
 </head>
 
@@ -564,13 +629,13 @@
                         <a href="javascript:void(0)" onclick="showSection('events')"
                             class="text-pcna-red font-bold text-sm uppercase hover:underline">All News &rarr;</a>
                     </div>
-                    <div class="grid md:grid-cols-2 gap-8">
+                    <div class="grid md:grid-cols-2 gap-8" style="align-items:stretch;">
                         <!-- News Card: Capitol Hill -->
-                        <div class="flex flex-col border-l-4 border-pcna-green bg-pcna-light rounded-r overflow-hidden">
-                            <img src="./Pictures/lastestnew526.jpg"
+                        <div class="flex flex-col border-l-4 border-pcna-green bg-pcna-light rounded-r overflow-hidden" style="flex:1;">
+                            <img src="./Pictures/lastestnew52126.jpeg"
                                  alt="A-DNA Advocates on Capitol Hill"
-                                 class="w-full object-cover object-top"
-                                 style="height:180px;">
+                                 class="w-full object-cover"
+                                 style="height:280px; width:100%; object-fit:cover; object-position: center 20%;">
                             <div class="p-4 flex flex-col gap-2">
                                 <span class="text-xs font-bold uppercase tracking-wider text-gray-500">May 2026 &middot; Advocacy</span>
                                 <h4 class="font-bold text-pcna-green hover:text-pcna-red cursor-pointer transition-colors">A-DNA Advocates on Capitol Hill</h4>
@@ -1316,7 +1381,7 @@
                                         </div>
                                     </div>
                                     <p class="text-gray-600 leading-relaxed mb-6 text-base sm:text-lg md:text-xl font-bold">Join a prestigious gathering of nursing leaders and innovators to explore new frontiers in global healthcare delivery.</p>
-                                    <a href="https://campaign.g-dna.org/register" target="_blank" rel="noopener noreferrer"
+                                    <a onclick="openRegModal()" style="cursor:pointer;"
                                         class="inline-block px-8 py-3 bg-pcna-green text-white font-bold rounded-md hover:bg-green-800 transition-all text-sm uppercase tracking-wider shadow-md hover:shadow-lg">
                                         Register
                                     </a>
@@ -1554,7 +1619,7 @@
                             opportunities and a network that supports your personal and
                             collective development.
                         </p>
-                        <a href="/membership-registration" class="mem-hero-btn">Click to Register</a>
+                        <a class="mem-hero-btn" onclick="openMembershipModal()" style="cursor:pointer;">Click to Register</a>
                     </div>
 
                     <div>
@@ -1597,7 +1662,7 @@
                             <li>Expand professional network</li>
                             <li>Support medical outreach projects</li>
                         </ul>
-                        <a href="/membership-registration" class="mem-tier-btn mem-tier-btn--dark">Register</a>
+                        <button onclick="openMembershipModal()" class="mem-tier-btn mem-tier-btn--dark">Register</button>
                     </div>
 
                     <!-- Premium -->
@@ -1622,7 +1687,7 @@
                             <li>Conference discount</li>
                             <li>Walden University Tuition benefit</li>
                         </ul>
-                        <a href="/membership-registration" class="mem-tier-btn mem-tier-btn--mint">Register</a>
+                        <button onclick="openMembershipModal()" class="mem-tier-btn mem-tier-btn--mint">Register</button>
                     </div>
 
                 </div>
@@ -1919,6 +1984,729 @@
             document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
             document.querySelectorAll('.stat-figure[data-count]').forEach(el => statObserver.observe(el));
         };
+    </script>
+
+    <!-- Registration Modal -->
+    <div id="reg-modal" style="display:none; position:fixed;
+         top:0; left:0; width:100%; height:100%;
+         background:rgba(0,0,0,0.85); z-index:9999;
+         justify-content:center; align-items:flex-start;
+         padding: 1rem;
+         box-sizing: border-box;
+         overflow-y: auto;">
+      <div style="position:relative; width:100%; max-width:900px;
+           min-height:90vh; background:#fff; border-radius:12px;
+           overflow:hidden; margin: auto;">
+        <button onclick="closeRegModal()"
+                style="position:fixed; top:16px; right:16px;
+                       font-size:1.5rem; background:#0D3D2B;
+                       border:none; border-radius:50%;
+                       width:36px; height:36px;
+                       cursor:pointer; z-index:10000;
+                       color:#fff; line-height:1;
+                       display:flex; align-items:center;
+                       justify-content:center;">✕</button>
+        <iframe id="reg-iframe" src="" width="100%"
+                style="border:none; display:block;
+                       height:100vh; min-height:600px;"
+                frameborder="0"
+                allow="payment">
+        </iframe>
+      </div>
+    </div>
+
+    <script>
+    function openRegModal() {
+      document.getElementById('reg-iframe').src = 'https://campaign.g-dna.org/register';
+      document.getElementById('reg-modal').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+    function closeRegModal() {
+      document.getElementById('reg-modal').style.display = 'none';
+      document.getElementById('reg-iframe').src = '';
+      document.body.style.overflow = '';
+    }
+    document.getElementById('reg-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeRegModal();
+    });
+    </script>
+
+    <!-- ══ MEMBERSHIP REGISTRATION MODAL ══════════════════════════════════ -->
+    <div id="membership-modal" aria-modal="true" role="dialog" aria-labelledby="mm-title"
+         style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+                background:rgba(0,0,0,0.85); z-index:9999;
+                justify-content:center; align-items:flex-start;
+                overflow-y:auto; box-sizing:border-box;">
+        <div id="mm-panel"
+             style="position:relative; width:100%; max-width:700px;
+                    background:#fff; border-radius:12px;
+                    margin:1rem auto; box-sizing:border-box;
+                    display:flex; flex-direction:column; overflow:hidden;">
+
+          <!-- Header bar -->
+          <div style="background:#0D3D2B; padding:1rem 1.25rem;
+                      display:flex; align-items:center; justify-content:space-between;
+                      flex-shrink:0;">
+            <img src="./logo-transparent.png" alt="A-DNA"
+                 style="height:40px; width:auto; object-fit:contain;">
+            <button onclick="closeMembershipModal()"
+                    aria-label="Close"
+                    style="background:transparent; border:2px solid rgba(255,255,255,0.5);
+                           border-radius:50%; width:36px; height:36px; cursor:pointer;
+                           color:#fff; font-size:1.1rem; display:flex;
+                           align-items:center; justify-content:center; flex-shrink:0;">✕</button>
+          </div>
+
+          <!-- Progress steps -->
+          <div class="mm-steps-bar" style="background:#f8f9fa; border-bottom:1px solid #e5e7eb;
+                      padding:0.75rem 1rem; overflow-x:auto; white-space:nowrap; flex-shrink:0;">
+            <div id="mm-steps"
+                 style="display:flex; gap:0; min-width:max-content; width:100%;
+                        justify-content:stretch;">
+              <!-- Steps injected by JS -->
+            </div>
+          </div>
+
+          <!-- Progress bar -->
+          <div style="height:4px; background:#e5e7eb; flex-shrink:0;">
+            <div id="mm-progress-bar"
+                 style="height:100%; background:#0D3D2B;
+                        transition:width 0.3s ease; width:25%;"></div>
+          </div>
+
+          <!-- Form pages -->
+          <div style="flex:1; padding:1.75rem 1.5rem 1rem; overflow-y:auto;">
+
+            <!-- PAGE 1 — Personal Information -->
+            <div id="mm-page-1" class="mm-page">
+              <h2 id="mm-title"
+                  style="font-size:1.25rem; font-weight:700; color:#0D3D2B;
+                         margin:0 0 0.25rem;">Personal Information</h2>
+              <p style="font-size:0.85rem; color:#6b7280; margin:0 0 0.5rem;">
+                Fields marked <span style="color:#cc0000;">*</span> are required.
+              </p>
+
+              <!-- Title -->
+              <div class="mm-field">
+                <label class="mm-label">Title <span class="mm-req">*</span></label>
+                <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+                  <label class="mm-radio-lbl"><input type="radio" name="mm_title" value="Ms"> Ms</label>
+                  <label class="mm-radio-lbl"><input type="radio" name="mm_title" value="Mr"> Mr</label>
+                  <label class="mm-radio-lbl"><input type="radio" name="mm_title" value="Dr."> Dr.</label>
+                  <label class="mm-radio-lbl"><input type="radio" name="mm_title" value="Mrs"> Mrs</label>
+                </div>
+                <span class="mm-err" id="err-title"></span>
+              </div>
+
+              <div class="mm-name-grid" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.5rem;">
+                <div class="mm-field">
+                  <label class="mm-label" for="mm_first">First Name <span class="mm-req">*</span></label>
+                  <input id="mm_first" type="text" class="mm-input" placeholder="First name" autocomplete="given-name">
+                  <span class="mm-err" id="err-first"></span>
+                </div>
+                <div class="mm-field">
+                  <label class="mm-label" for="mm_middle">Middle <span style="color:#9ca3af; font-weight:400;">(Optional)</span></label>
+                  <input id="mm_middle" type="text" class="mm-input" placeholder="Middle name" autocomplete="additional-name">
+                </div>
+                <div class="mm-field">
+                  <label class="mm-label" for="mm_last">Last Name <span class="mm-req">*</span></label>
+                  <input id="mm_last" type="text" class="mm-input" placeholder="Last name" autocomplete="family-name">
+                  <span class="mm-err" id="err-last"></span>
+                </div>
+              </div>
+
+              <div class="mm-field">
+                <label class="mm-label" for="mm_country_res">Country of Residence <span class="mm-req">*</span></label>
+                <select id="mm_country_res" class="mm-input">
+                  <option value="">— Select country —</option>
+                  <option>United States</option><option>United Kingdom</option>
+                  <option>Canada</option><option>Ghana</option>
+                  <option>Nigeria</option><option>South Africa</option>
+                  <option>Kenya</option><option>Germany</option>
+                  <option>France</option><option>Australia</option>
+                  <option>Netherlands</option><option>Ireland</option>
+                  <option>Italy</option><option>Spain</option>
+                  <option>Other</option>
+                </select>
+                <span class="mm-err" id="err-country-res"></span>
+              </div>
+
+              <div class="mm-field">
+                <label class="mm-label" for="mm_phone">Phone / Mobile <span class="mm-req">*</span></label>
+                <div style="display:flex; gap:0.5rem;">
+                  <select id="mm_phone_code" class="mm-input" style="width:110px; flex-shrink:0;">
+                    <option value="+1">🇺🇸 +1</option>
+                    <option value="+44">🇬🇧 +44</option>
+                    <option value="+233">🇬🇭 +233</option>
+                    <option value="+234">🇳🇬 +234</option>
+                    <option value="+27">🇿🇦 +27</option>
+                    <option value="+254">🇰🇪 +254</option>
+                    <option value="+1-CA">🇨🇦 +1</option>
+                    <option value="+49">🇩🇪 +49</option>
+                    <option value="+33">🇫🇷 +33</option>
+                    <option value="+61">🇦🇺 +61</option>
+                    <option value="+31">🇳🇱 +31</option>
+                    <option value="+353">🇮🇪 +353</option>
+                    <option value="+other">Other</option>
+                  </select>
+                  <input id="mm_phone" type="tel" class="mm-input" placeholder="Phone number"
+                         style="flex:1;" autocomplete="tel">
+                </div>
+                <span class="mm-err" id="err-phone"></span>
+              </div>
+
+              <div class="mm-field">
+                <label class="mm-label" for="mm_email">Email <span class="mm-req">*</span></label>
+                <input id="mm_email" type="email" class="mm-input" placeholder="your@email.com" autocomplete="email">
+                <span class="mm-err" id="err-email"></span>
+              </div>
+            </div><!-- /page 1 -->
+
+            <!-- PAGE 2 — Professional Information -->
+            <div id="mm-page-2" class="mm-page" style="display:none;">
+              <h2 style="font-size:1.25rem; font-weight:700; color:#0D3D2B; margin:0 0 0.25rem;">
+                Professional Information
+              </h2>
+              <p style="font-size:0.85rem; color:#6b7280; margin:0 0 1.5rem;">
+                Fields marked <span style="color:#cc0000;">*</span> are required.
+              </p>
+
+              <div class="mm-field">
+                <label class="mm-label">Are you a student? <span class="mm-req">*</span></label>
+                <div style="display:flex; gap:1.5rem; flex-wrap:wrap;">
+                  <label class="mm-radio-lbl"><input type="radio" name="mm_student" value="Yes"> Yes</label>
+                  <label class="mm-radio-lbl"><input type="radio" name="mm_student" value="No"> No</label>
+                </div>
+                <span class="mm-err" id="err-student"></span>
+              </div>
+
+              <div class="mm-field">
+                <label class="mm-label" for="mm_edu">Highest Level of Education <span class="mm-req">*</span></label>
+                <select id="mm_edu" class="mm-input">
+                  <option value="">— Select —</option>
+                  <option>Diploma</option>
+                  <option>Bachelors</option>
+                  <option>Masters</option>
+                  <option>DNP</option>
+                  <option>PhD</option>
+                  <option>Other</option>
+                </select>
+                <span class="mm-err" id="err-edu"></span>
+              </div>
+
+              <div class="mm-field">
+                <label class="mm-label">Nurse License(s) Held <span class="mm-req">*</span></label>
+                <div style="display:flex; flex-direction:column; gap:0.6rem;">
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_license" value="Not Applicable"> Not Applicable</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_license" value="Registered Nurse"> Registered Nurse</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_license" value="Registered Midwife"> Registered Midwife</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_license" value="Diploma Nurse"> Diploma Nurse</label>
+                  <label class="mm-check-lbl" id="mm-speciality-check-lbl">
+                    <input type="checkbox" name="mm_license" value="Specify Speciality Nurse" id="mm_speciality_check"
+                           onchange="document.getElementById('mm_speciality_row').style.display=this.checked?'block':'none'">
+                    Specify Speciality Nurse
+                  </label>
+                </div>
+                <span class="mm-err" id="err-license"></span>
+              </div>
+
+              <div id="mm_speciality_row" class="mm-field" style="display:none;">
+                <label class="mm-label" for="mm_speciality">Speciality</label>
+                <input id="mm_speciality" type="text" class="mm-input" placeholder="Enter speciality">
+              </div>
+
+              <div class="mm-field">
+                <label class="mm-label" for="mm_country_practice">Country of Practice <span class="mm-req">*</span></label>
+                <select id="mm_country_practice" class="mm-input">
+                  <option value="">— Select country —</option>
+                  <option>United States</option><option>United Kingdom</option>
+                  <option>Canada</option><option>Ghana</option>
+                  <option>Nigeria</option><option>South Africa</option>
+                  <option>Kenya</option><option>Germany</option>
+                  <option>France</option><option>Australia</option>
+                  <option>Netherlands</option><option>Ireland</option>
+                  <option>Italy</option><option>Spain</option>
+                  <option>Other</option>
+                </select>
+                <span class="mm-err" id="err-country-practice"></span>
+              </div>
+
+              <div class="mm-field">
+                <label class="mm-label" for="mm_license_status">License Status <span class="mm-req">*</span></label>
+                <select id="mm_license_status" class="mm-input">
+                  <option value="">— Select —</option>
+                  <option>Active</option>
+                  <option>InActive</option>
+                  <option>Not Applicable</option>
+                </select>
+                <span class="mm-err" id="err-license-status"></span>
+              </div>
+            </div><!-- /page 2 -->
+
+            <!-- PAGE 3 — Professional Information Cont. -->
+            <div id="mm-page-3" class="mm-page" style="display:none;">
+              <h2 style="font-size:1.25rem; font-weight:700; color:#0D3D2B; margin:0 0 0.25rem;">
+                Professional Information Cont.
+              </h2>
+              <p style="font-size:0.85rem; color:#6b7280; margin:0 0 1.5rem;">
+                Fields marked <span style="color:#cc0000;">*</span> are required.
+              </p>
+
+              <div class="mm-field">
+                <label class="mm-label" for="mm_edu_country">Entry-Level Nursing Education Country <span class="mm-req">*</span></label>
+                <input id="mm_edu_country" type="text" class="mm-input" placeholder="Country where you received your nursing education">
+                <span class="mm-err" id="err-edu-country"></span>
+              </div>
+
+              <div class="mm-field">
+                <label class="mm-label">Employment Status <span class="mm-req">*</span></label>
+                <div style="display:flex; flex-direction:column; gap:0.6rem;">
+                  <label class="mm-radio-lbl"><input type="radio" name="mm_employment" value="Full-time"> Full-time</label>
+                  <label class="mm-radio-lbl"><input type="radio" name="mm_employment" value="Part-time"> Part-time</label>
+                  <label class="mm-radio-lbl"><input type="radio" name="mm_employment" value="Per-diem"> Per-diem</label>
+                  <label class="mm-radio-lbl"><input type="radio" name="mm_employment" value="Retired"> Retired</label>
+                  <label class="mm-radio-lbl"><input type="radio" name="mm_employment" value="Unemployed"> Unemployed</label>
+                </div>
+                <span class="mm-err" id="err-employment"></span>
+              </div>
+
+              <div class="mm-field">
+                <label class="mm-label">Specialty <span style="color:#9ca3af; font-weight:400;">(Select all that apply)</span></label>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.4rem 1rem; max-height:260px; overflow-y:auto; border:1px solid #e5e7eb; border-radius:6px; padding:0.75rem;">
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Acute Care"> Acute Care</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Adult Health"> Adult Health</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Anesthesia"> Anesthesia</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Cardiology"> Cardiology</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Community"> Community</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Critical Care"> Critical Care</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Family Health"> Family Health</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Genetics"> Genetics</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Geriatric"> Geriatric</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Home Health"> Home Health</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Hospice"> Hospice</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="IT / Informatics"> IT / Informatics</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Maternal-Child Health"> Maternal-Child Health</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Medical Surgical"> Medical Surgical</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Neonatal"> Neonatal</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Nephrology"> Nephrology</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Neurology"> Neurology</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Neurosurgical"> Neurosurgical</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Occupational"> Occupational</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Orthopedic"> Orthopedic</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Palliative Care"> Palliative Care</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Pediatrics"> Pediatrics</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Perioperative"> Perioperative</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Primary Care"> Primary Care</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Psychiatric/Mental Health"> Psychiatric/Mental Health</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Public Health"> Public Health</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Rehabilitation"> Rehabilitation</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Research"> Research</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="School Health"> School Health</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Substance Abuse"> Substance Abuse</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Trauma"> Trauma</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Urology"> Urology</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Women's Health"> Women's Health</label>
+                  <label class="mm-check-lbl"><input type="checkbox" name="mm_specialty" value="Other"> Other</label>
+                </div>
+              </div>
+
+              <div class="mm-field">
+                <label class="mm-label" for="mm_position">Position Title <span class="mm-req">*</span></label>
+                <select id="mm_position" class="mm-input">
+                  <option value="">— Select —</option>
+                  <option>Staff Nurse</option>
+                  <option>Advance Practice Registered Nurse</option>
+                  <option>Case Manager</option>
+                  <option>Consultant</option>
+                  <option>Nurse Manager</option>
+                  <option>Nurse Researcher</option>
+                  <option>Nurse Executive</option>
+                  <option>Nurse Faculty/Educator</option>
+                  <option>Other-Health Related</option>
+                  <option>Other-Non Health Related</option>
+                </select>
+                <span class="mm-err" id="err-position"></span>
+              </div>
+
+              <div class="mm-field">
+                <label class="mm-label" for="mm_setting">Practice Setting <span class="mm-req">*</span></label>
+                <select id="mm_setting" class="mm-input">
+                  <option value="">— Select —</option>
+                  <option>Hospital</option>
+                  <option>Nursing Home/Extended Care</option>
+                  <option>Assisted Living</option>
+                  <option>School of Nursing</option>
+                  <option>Community Health</option>
+                  <option>Dialysis Center</option>
+                  <option>Policy/Planning/Regulatory/Licensing</option>
+                  <option>Agency</option>
+                  <option>Clinic</option>
+                  <option>Urgent Care</option>
+                  <option>Government</option>
+                </select>
+                <span class="mm-err" id="err-setting"></span>
+              </div>
+            </div><!-- /page 3 -->
+
+            <!-- PAGE 4 — Membership Type -->
+            <div id="mm-page-4" class="mm-page" style="display:none;">
+              <h2 style="font-size:1.25rem; font-weight:700; color:#0D3D2B; margin:0 0 0.25rem;">
+                Membership Type
+              </h2>
+              <p style="font-size:0.85rem; color:#6b7280; margin:0 0 1.5rem;">
+                Select the membership that's right for you.
+              </p>
+
+              <div class="mm-field">
+                <label class="mm-label">Select Membership <span class="mm-req">*</span></label>
+                <div style="display:flex; flex-direction:column; gap:0.85rem;">
+
+                  <label id="mm-tier-premium" class="mm-tier-card">
+                    <input type="radio" name="mm_membership" value="Premium" onchange="mmSelectTier(this)">
+                    <div style="flex:1;">
+                      <div style="font-weight:700; color:#0D3D2B;">Premium Membership</div>
+                      <div style="font-size:0.82rem; color:#6b7280; margin-top:0.15rem;">Diaspora: $150/year &nbsp;|&nbsp; Ghana: 600 GHS</div>
+                    </div>
+                    <div style="font-size:1.5rem; font-weight:900; color:#0D3D2B; white-space:nowrap;">$150</div>
+                  </label>
+
+                  <label id="mm-tier-professional" class="mm-tier-card">
+                    <input type="radio" name="mm_membership" value="Professional" onchange="mmSelectTier(this)">
+                    <div style="flex:1;">
+                      <div style="font-weight:700; color:#0D3D2B;">Professional Membership</div>
+                      <div style="font-size:0.82rem; color:#6b7280; margin-top:0.15rem;">Diaspora: $75/year &nbsp;|&nbsp; Ghana: 300 GHS</div>
+                    </div>
+                    <div style="font-size:1.5rem; font-weight:900; color:#0D3D2B; white-space:nowrap;">$75</div>
+                  </label>
+
+                  <label id="mm-tier-regular" class="mm-tier-card">
+                    <input type="radio" name="mm_membership" value="Regular" onchange="mmSelectTier(this)">
+                    <div style="flex:1;">
+                      <div style="font-weight:700; color:#0D3D2B;">Regular Membership</div>
+                      <div style="font-size:0.82rem; color:#6b7280; margin-top:0.15rem;">Free for all members &nbsp;·&nbsp; Networking access</div>
+                    </div>
+                    <div style="font-size:1.5rem; font-weight:900; color:#116b53; white-space:nowrap;">FREE</div>
+                  </label>
+                </div>
+                <p style="font-size:0.8rem; color:#6b7280; margin-top:0.75rem;">
+                  Professional and Premium memberships are <strong>free for members in Ghana/Africa</strong>.
+                </p>
+                <span class="mm-err" id="err-membership"></span>
+              </div>
+            </div><!-- /page 4 -->
+
+            <!-- CONFIRMATION -->
+            <div id="mm-page-confirm" class="mm-page" style="display:none; text-align:center; padding:3rem 1rem;">
+              <div style="font-size:3rem; margin-bottom:1rem;">✅</div>
+              <h2 style="font-size:1.4rem; font-weight:700; color:#0D3D2B; margin:0 0 0.75rem;">
+                Thank you for registering!
+              </h2>
+              <p style="color:#374151; font-size:1rem; line-height:1.7; margin:0 0 2rem;">
+                We will be in touch shortly.
+              </p>
+              <button onclick="closeMembershipModal()"
+                      style="background:#0D3D2B; color:#fff; border:none; border-radius:6px;
+                             padding:0.85rem 2rem; font-size:1rem; font-weight:600;
+                             cursor:pointer; letter-spacing:0.04em;">
+                Close
+              </button>
+            </div>
+
+          </div><!-- /form area -->
+
+          <!-- Navigation footer -->
+          <div id="mm-nav-footer"
+               style="background:#f8f9fa; border-top:1px solid #e5e7eb;
+                      padding:1rem 1.5rem; display:flex; justify-content:space-between;
+                      align-items:center; flex-shrink:0; gap:1rem;">
+            <button id="mm-btn-prev" onclick="mmPrev()"
+                    style="background:transparent; border:1.5px solid #0D3D2B;
+                           color:#0D3D2B; border-radius:6px; padding:0.7rem 1.5rem;
+                           font-size:0.9rem; font-weight:600; cursor:pointer;
+                           visibility:hidden; letter-spacing:0.03em;">
+              ← Previous
+            </button>
+            <span id="mm-page-indicator"
+                  style="font-size:0.8rem; color:#6b7280; font-weight:500;">
+              Page 1 of 4
+            </span>
+            <button id="mm-btn-next" onclick="mmNext()"
+                    style="background:#0D3D2B; color:#fff; border:none;
+                           border-radius:6px; padding:0.7rem 1.75rem;
+                           font-size:0.9rem; font-weight:600; cursor:pointer;
+                           letter-spacing:0.03em;">
+              Next →
+            </button>
+          </div>
+
+        </div>
+    </div><!-- /#membership-modal -->
+
+    <style>
+    /* Membership modal shared styles */
+    .mm-page { animation: mmFadeIn 0.2s ease; }
+    @keyframes mmFadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+
+    .mm-field { margin-bottom:0.75rem; }
+
+    .mm-label {
+      display:block; font-size:0.85rem; font-weight:600;
+      color:#374151; margin-bottom:0.3rem;
+    }
+    .mm-req { color:#cc0000; }
+
+    .mm-input {
+      width:100%; padding:8px 10px;
+      border:1.5px solid #d1d5db; border-radius:6px;
+      font-size:1rem; color:#111827;
+      background:#fff; box-sizing:border-box;
+      appearance:auto; -webkit-appearance:auto;
+      transition:border-color 0.15s;
+    }
+    .mm-input:focus { outline:none; border-color:#0D3D2B; box-shadow:0 0 0 3px rgba(13,61,43,0.12); }
+    .mm-input.mm-input-error { border-color:#cc0000; }
+
+    .mm-err {
+      display:block; font-size:0.78rem; color:#cc0000;
+      margin-top:0.3rem; min-height:1rem;
+    }
+
+    .mm-radio-lbl, .mm-check-lbl {
+      display:flex; align-items:center; gap:0.5rem;
+      font-size:0.9rem; color:#374151; cursor:pointer;
+      padding:0.2rem 0;
+    }
+    .mm-radio-lbl input, .mm-check-lbl input { width:16px; height:16px; cursor:pointer; accent-color:#0D3D2B; }
+
+    /* Step tabs */
+    .mm-step {
+      flex:1; display:flex; flex-direction:column; align-items:center;
+      gap:0.3rem; padding:0.4rem 0.5rem; cursor:pointer;
+      font-size:0.7rem; font-weight:600; color:#9ca3af;
+      border-bottom:2px solid transparent; transition:all 0.15s;
+      min-width:80px; text-align:center; user-select:none;
+    }
+    .mm-step.active { color:#0D3D2B; border-bottom-color:#0D3D2B; }
+    .mm-step.done { color:#116b53; cursor:pointer; }
+    .mm-step.done .mm-step-num { background:#116b53; }
+    .mm-step-num {
+      width:24px; height:24px; border-radius:50%;
+      background:#d1d5db; color:#fff; font-size:0.75rem; font-weight:700;
+      display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    }
+    .mm-step.active .mm-step-num { background:#0D3D2B; }
+
+    /* Membership tier cards */
+    .mm-tier-card {
+      display:flex; align-items:center; gap:1rem;
+      border:1.5px solid #e5e7eb; border-radius:8px;
+      padding:1rem 1.25rem; cursor:pointer;
+      transition:border-color 0.15s, box-shadow 0.15s;
+    }
+    .mm-tier-card:hover { border-color:#0D3D2B; }
+    .mm-tier-card.selected { border-color:#0D3D2B; box-shadow:0 0 0 2px rgba(13,61,43,0.15); }
+    .mm-tier-card input[type="radio"] { width:18px; height:18px; accent-color:#0D3D2B; flex-shrink:0; }
+
+    /* Mobile overrides */
+    @media (max-width: 640px) {
+      #mm-panel {
+        border-radius:0 !important;
+        margin:0 !important;
+        min-height:100vh !important;
+        padding:1rem !important;
+      }
+      .mm-name-grid { grid-template-columns:1fr !important; }
+      .mm-field > div[style*="grid-template-columns"] { grid-template-columns:1fr !important; }
+      #membership-modal input,
+      #membership-modal select { font-size:16px !important; padding:10px !important; }
+      .mm-steps-bar { overflow-x:auto !important; white-space:nowrap !important; }
+    }
+    </style>
+
+    <script>
+    (function() {
+      var MM_CURRENT = 1;
+      var MM_TOTAL = 4;
+
+      var STEPS = [
+        { label:'Personal Info' },
+        { label:'Professional Info' },
+        { label:'Prof. Info Cont.' },
+        { label:'Membership Type' }
+      ];
+
+      function mmRenderSteps() {
+        var container = document.getElementById('mm-steps');
+        container.innerHTML = '';
+        STEPS.forEach(function(s, i) {
+          var n = i + 1;
+          var cls = 'mm-step';
+          if (n < MM_CURRENT) cls += ' done';
+          else if (n === MM_CURRENT) cls += ' active';
+          var numContent = n < MM_CURRENT ? '✓' : n;
+          var div = document.createElement('div');
+          div.className = cls;
+          div.setAttribute('data-step', n);
+          div.innerHTML =
+            '<div class="mm-step-num">' + numContent + '</div>' +
+            '<span>' + s.label + '</span>';
+          if (n < MM_CURRENT) {
+            div.addEventListener('click', function() { mmGoTo(parseInt(this.getAttribute('data-step'))); });
+          }
+          container.appendChild(div);
+        });
+      }
+
+      function mmGoTo(n) {
+        document.getElementById('mm-page-' + MM_CURRENT).style.display = 'none';
+        MM_CURRENT = n;
+        document.getElementById('mm-page-' + MM_CURRENT).style.display = 'block';
+        mmSyncUI();
+      }
+
+      function mmSyncUI() {
+        mmRenderSteps();
+        document.getElementById('mm-progress-bar').style.width = ((MM_CURRENT / MM_TOTAL) * 100) + '%';
+        document.getElementById('mm-page-indicator').textContent = 'Page ' + MM_CURRENT + ' of ' + MM_TOTAL;
+        document.getElementById('mm-btn-prev').style.visibility = MM_CURRENT > 1 ? 'visible' : 'hidden';
+        var nextBtn = document.getElementById('mm-btn-next');
+        nextBtn.textContent = MM_CURRENT === MM_TOTAL ? 'Submit' : 'Next →';
+        document.getElementById('mm-panel').scrollTop = 0;
+      }
+
+      function mmClearErrors() {
+        document.querySelectorAll('.mm-err').forEach(function(el) { el.textContent = ''; });
+        document.querySelectorAll('.mm-input').forEach(function(el) { el.classList.remove('mm-input-error'); });
+      }
+
+      function mmShowErr(id, msg, inputId) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = msg;
+        if (inputId) {
+          var inp = document.getElementById(inputId);
+          if (inp) inp.classList.add('mm-input-error');
+        }
+      }
+
+      function mmValidatePage(n) {
+        mmClearErrors();
+        var ok = true;
+
+        if (n === 1) {
+          if (!document.querySelector('input[name="mm_title"]:checked')) {
+            mmShowErr('err-title', 'Please select a title.'); ok = false;
+          }
+          var first = document.getElementById('mm_first');
+          if (!first.value.trim()) { mmShowErr('err-first', 'First name is required.', 'mm_first'); ok = false; }
+          var last = document.getElementById('mm_last');
+          if (!last.value.trim()) { mmShowErr('err-last', 'Last name is required.', 'mm_last'); ok = false; }
+          var res = document.getElementById('mm_country_res');
+          if (!res.value) { mmShowErr('err-country-res', 'Please select your country of residence.', 'mm_country_res'); ok = false; }
+          var ph = document.getElementById('mm_phone');
+          if (!ph.value.trim()) { mmShowErr('err-phone', 'Phone number is required.', 'mm_phone'); ok = false; }
+          var em = document.getElementById('mm_email');
+          if (!em.value.trim() || !em.value.includes('@')) { mmShowErr('err-email', 'A valid email is required.', 'mm_email'); ok = false; }
+        }
+
+        if (n === 2) {
+          if (!document.querySelector('input[name="mm_student"]:checked')) {
+            mmShowErr('err-student', 'Please select yes or no.'); ok = false;
+          }
+          if (!document.getElementById('mm_edu').value) {
+            mmShowErr('err-edu', 'Please select your education level.', 'mm_edu'); ok = false;
+          }
+          if (!document.querySelector('input[name="mm_license"]:checked')) {
+            mmShowErr('err-license', 'Please select at least one option.'); ok = false;
+          }
+          if (!document.getElementById('mm_country_practice').value) {
+            mmShowErr('err-country-practice', 'Please select your country of practice.', 'mm_country_practice'); ok = false;
+          }
+          if (!document.getElementById('mm_license_status').value) {
+            mmShowErr('err-license-status', 'Please select your license status.', 'mm_license_status'); ok = false;
+          }
+        }
+
+        if (n === 3) {
+          if (!document.getElementById('mm_edu_country').value.trim()) {
+            mmShowErr('err-edu-country', 'Please enter your nursing education country.', 'mm_edu_country'); ok = false;
+          }
+          if (!document.querySelector('input[name="mm_employment"]:checked')) {
+            mmShowErr('err-employment', 'Please select your employment status.'); ok = false;
+          }
+          if (!document.getElementById('mm_position').value) {
+            mmShowErr('err-position', 'Please select your position title.', 'mm_position'); ok = false;
+          }
+          if (!document.getElementById('mm_setting').value) {
+            mmShowErr('err-setting', 'Please select your practice setting.', 'mm_setting'); ok = false;
+          }
+        }
+
+        if (n === 4) {
+          if (!document.querySelector('input[name="mm_membership"]:checked')) {
+            mmShowErr('err-membership', 'Please select a membership type.'); ok = false;
+          }
+        }
+
+        return ok;
+      }
+
+      window.mmNext = function() {
+        if (!mmValidatePage(MM_CURRENT)) return;
+        if (MM_CURRENT === MM_TOTAL) {
+          mmSubmit(); return;
+        }
+        document.getElementById('mm-page-' + MM_CURRENT).style.display = 'none';
+        MM_CURRENT++;
+        document.getElementById('mm-page-' + MM_CURRENT).style.display = 'block';
+        mmSyncUI();
+      };
+
+      window.mmPrev = function() {
+        if (MM_CURRENT <= 1) return;
+        document.getElementById('mm-page-' + MM_CURRENT).style.display = 'none';
+        MM_CURRENT--;
+        document.getElementById('mm-page-' + MM_CURRENT).style.display = 'block';
+        mmSyncUI();
+      };
+
+      window.mmSelectTier = function(radio) {
+        document.querySelectorAll('.mm-tier-card').forEach(function(c) { c.classList.remove('selected'); });
+        if (radio.closest) radio.closest('.mm-tier-card').classList.add('selected');
+      };
+
+      function mmSubmit() {
+        document.getElementById('mm-page-4').style.display = 'none';
+        document.getElementById('mm-nav-footer').style.display = 'none';
+        document.getElementById('mm-steps').parentElement.style.display = 'none';
+        document.getElementById('mm-progress-bar').parentElement.style.display = 'none';
+        document.getElementById('mm-page-confirm').style.display = 'block';
+      }
+
+      window.openMembershipModal = function() {
+        MM_CURRENT = 1;
+        document.querySelectorAll('.mm-page').forEach(function(p) { p.style.display = 'none'; });
+        document.getElementById('mm-page-1').style.display = 'block';
+        document.getElementById('mm-nav-footer').style.display = 'flex';
+        var stepsBar = document.getElementById('mm-steps').parentElement;
+        stepsBar.style.display = '';
+        document.getElementById('mm-progress-bar').parentElement.style.display = '';
+        mmClearErrors();
+        mmSyncUI();
+        document.getElementById('membership-modal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      };
+
+      window.closeMembershipModal = function() {
+        document.getElementById('membership-modal').style.display = 'none';
+        document.body.style.overflow = '';
+      };
+
+      document.getElementById('membership-modal').addEventListener('click', function(e) {
+        if (e.target === this) closeMembershipModal();
+      });
+
+      mmRenderSteps();
+    })();
     </script>
 </body>
 
