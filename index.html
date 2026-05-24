@@ -325,13 +325,49 @@
             display: block !important;
           }
 
+          /* ── About section: reduce massive gap when stacked ── */
+          #about .gap-16 { gap: 2rem !important; }
+          #about img { max-height: 260px !important; object-fit: cover !important; }
+
+          /* ── Core Values pills: shrink padding + font on mobile ── */
+          #core-values-parallax .flex-wrap > div {
+            padding: 0.5rem 1.25rem !important;
+            font-size: 0.875rem !important;
+            gap: 0.5rem !important;
+          }
+
+          /* ── Join the Alliance: shrink and stack on mobile ── */
+          [style*="JointheAlliance"] { min-height: 320px !important; }
+          [style*="JointheAlliance"] .z-10 {
+            min-height: 280px !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            justify-content: flex-end !important;
+          }
+
+          /* ── Home news card main image: reduce fixed 280px height ── */
+          #home .border-l-4.border-pcna-green.bg-pcna-light img {
+            height: 180px !important;
+          }
+
+          /* ── Events: reduce excessive gap between stacked cards ── */
+          #events .gap-12 { gap: 2rem !important; }
+
+          /* ── Membership reason cards: tighter on mobile ── */
+          .mem-reason-card { padding: 1.25rem !important; }
+          .mem-reason-card span:first-child { font-size: 1.75rem !important; }
+          .mem-reason-card p { font-size: 0.95rem !important; }
+
+          /* ── Nav logo: slightly smaller on mobile ── */
+          nav img[alt*="Logo"] { max-height: 56px !important; }
+
         }
     </style>
 </head>
 
 <body class="bg-pcna-light text-pcna-dark antialiased font-sans">
     <!-- Top Utility Bar -->
-    <div class="bg-pcna-green text-white text-sm py-2 block relative z-[60]">
+    <div class="bg-pcna-green text-white text-sm py-2 block relative z-[99999]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-end items-center space-x-6">
             <a href="javascript:void(0)" class="hover:underline">Member Portal</a>
             <!-- Contact Us Dropdown -->
@@ -345,7 +381,7 @@
                 </button>
                 <div id="contact-panel"
                      onmouseenter="cancelHideContactDropdown()" onmouseleave="scheduleHideContactDropdown()"
-                     style="display:none; position:absolute; right:0; top:100%; padding-top:6px; width:230px; z-index:70;">
+                     style="display:none; position:absolute; right:0; top:100%; padding-top:6px; width:230px; z-index:9999999;">
                     <div style="background:white; color:#1f2937; box-shadow:0 20px 60px rgba(0,0,0,0.15); border-radius:0.5rem; padding:1.25rem; border:1px solid #f3f4f6;">
                         <a href="mailto:info@a-dna.org"
                            style="display:flex; align-items:center; gap:0.75rem; color:#116b53; text-decoration:none; font-weight:600; font-size:0.875rem; margin-bottom:0.875rem;"
@@ -398,29 +434,64 @@
             </div>
         </div>
 
-        <!-- Mobile Dropdown Menu -->
-        <div id="mobile-menu" class="hidden border-t-2 border-gray-100 bg-white"
-             style="position:relative; z-index:9998; background-color:#ffffff;">
-            <div class="px-4 py-2 space-y-0" style="line-height:1;">
-                <a href="javascript:void(0)" onclick="showSection('home'); toggleMobileMenu()"
-                   class="block py-2 px-4 text-pcna-green font-extrabold text-sm uppercase tracking-wide hover:bg-pcna-light hover:text-pcna-red rounded-lg transition-colors" style="line-height:1; display:block; padding:8px 16px;">Home</a>
-                <a href="javascript:void(0)" onclick="showSection('about'); toggleMobileMenu()"
-                   class="block py-2 px-4 text-pcna-green font-extrabold text-sm uppercase tracking-wide hover:bg-pcna-light hover:text-pcna-red rounded-lg transition-colors" style="line-height:1; display:block; padding:8px 16px;">About Us</a>
-                <a href="javascript:void(0)" onclick="showSection('events'); toggleMobileMenu()"
-                   class="block py-2 px-4 text-pcna-green font-extrabold text-sm uppercase tracking-wide hover:bg-pcna-light hover:text-pcna-red rounded-lg transition-colors" style="line-height:1; display:block; padding:8px 16px;">Events</a>
-                <a href="javascript:void(0)" onclick="showSection('membership'); toggleMobileMenu()"
-                   class="block py-2 px-4 text-pcna-green font-extrabold text-sm uppercase tracking-wide hover:bg-pcna-light hover:text-pcna-red rounded-lg transition-colors" style="line-height:1; display:block; padding:8px 16px;">Membership</a>
-                <a href="#"
-                   class="block py-2 px-4 bg-pcna-red text-white font-extrabold text-sm uppercase tracking-wide rounded-lg text-center mt-1">Donate</a>
-                <div class="border-t border-gray-100 mt-2 pt-2">
-                    <a href="javascript:void(0)" onclick="toggleMobileMenu()"
-                       class="block py-2 px-4 text-gray-500 font-bold text-sm uppercase tracking-wide hover:bg-pcna-light hover:text-pcna-red rounded-lg transition-colors" style="display:block; padding: 6px 16px; margin:0;">Member Portal</a>
-                    <a href="javascript:void(0)" onclick="openContactDrawer(); toggleMobileMenu()"
-                       class="block py-2 px-4 text-gray-500 font-bold text-sm uppercase tracking-wide hover:bg-pcna-light hover:text-pcna-red rounded-lg transition-colors" style="display:block; padding: 6px 16px; margin:0;">Contact Us</a>
-                </div>
-            </div>
-        </div>
     </nav>
+
+    <!-- Mobile menu backdrop (lives in <body>, not inside <nav>) -->
+    <div id="mobile-menu-backdrop"
+         onclick="toggleMobileMenu()"
+         style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:999998;"></div>
+
+    <!-- Mobile Side-Panel Menu (lives in <body>, not inside <nav>) -->
+    <div id="mobile-menu"
+         style="position:fixed; top:0; right:0; width:25vw; min-width:200px; height:auto;
+                background:rgba(255,255,255,0.75); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+                z-index:999999; overflow-y:auto;
+                box-shadow:-4px 0 24px rgba(0,0,0,0.15);
+                transform:translateX(100%); transition:transform 0.25s ease;
+                display:block;">
+        <nav style="display:flex; flex-direction:column; padding-top:16px;">
+
+            <!-- Close button -->
+            <div style="display:flex; justify-content:flex-end; padding:0 12px 12px;">
+                <button onclick="toggleMobileMenu()"
+                        style="background:none; border:none; cursor:pointer; color:#6b7280; font-size:1.5rem; line-height:1; padding:4px;">&#x2715;</button>
+            </div>
+
+            <a href="javascript:void(0)" onclick="showSection('home'); toggleMobileMenu()"
+               style="display:block; padding:11px 16px; font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#116b53; text-decoration:none; border-left:3px solid transparent; transition:background 0.15s, border-color 0.15s; white-space:nowrap;"
+               onmouseover="this.style.background='#f0faf6'; this.style.borderLeftColor='#116b53';"
+               onmouseout="this.style.background=''; this.style.borderLeftColor='transparent';">Home</a>
+
+            <a href="javascript:void(0)" onclick="showSection('about'); toggleMobileMenu()"
+               style="display:block; padding:11px 16px; font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#116b53; text-decoration:none; border-left:3px solid transparent; transition:background 0.15s, border-color 0.15s; white-space:nowrap;"
+               onmouseover="this.style.background='#f0faf6'; this.style.borderLeftColor='#116b53';"
+               onmouseout="this.style.background=''; this.style.borderLeftColor='transparent';">About Us</a>
+
+            <a href="javascript:void(0)" onclick="showSection('events'); toggleMobileMenu()"
+               style="display:block; padding:11px 16px; font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#116b53; text-decoration:none; border-left:3px solid transparent; transition:background 0.15s, border-color 0.15s; white-space:nowrap;"
+               onmouseover="this.style.background='#f0faf6'; this.style.borderLeftColor='#116b53';"
+               onmouseout="this.style.background=''; this.style.borderLeftColor='transparent';">Events</a>
+
+            <a href="javascript:void(0)" onclick="showSection('membership'); toggleMobileMenu()"
+               style="display:block; padding:11px 16px; font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#116b53; text-decoration:none; border-left:3px solid transparent; transition:background 0.15s, border-color 0.15s; white-space:nowrap;"
+               onmouseover="this.style.background='#f0faf6'; this.style.borderLeftColor='#116b53';"
+               onmouseout="this.style.background=''; this.style.borderLeftColor='transparent';">Membership</a>
+
+            <div style="padding:10px 16px;">
+                <a href="#" style="display:block; padding:9px 12px; background:#c0392b; color:#fff; font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; text-align:center; border-radius:6px; text-decoration:none; white-space:nowrap;">Donate</a>
+            </div>
+
+            <div style="border-top:1px solid #e5e7eb; margin-top:8px; padding-top:8px;">
+                <a href="javascript:void(0)" onclick="toggleMobileMenu()"
+                   style="display:block; padding:9px 16px; font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:#6b7280; text-decoration:none; white-space:nowrap;"
+                   onmouseover="this.style.color='#c0392b';" onmouseout="this.style.color='#6b7280';">Member Portal</a>
+                <a href="javascript:void(0)" onclick="openContactDrawer(); toggleMobileMenu()"
+                   style="display:block; padding:9px 16px; font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:#6b7280; text-decoration:none; white-space:nowrap;"
+                   onmouseover="this.style.color='#c0392b';" onmouseout="this.style.color='#6b7280';">Contact Us</a>
+            </div>
+
+        </nav>
+    </div>
 
     <!-- SPA Sections Container -->
     <main>
@@ -1600,9 +1671,14 @@
             }
 
             /* â”€â”€ responsive â”€â”€ */
-            @media (max-width: 600px) {
-                .mem-pad        { padding: 3rem 1.5rem; }
+            @media (max-width: 768px) {
+                .mem-pad        { padding: 2.5rem 1.25rem; }
                 .mem-hero-cols  { grid-template-columns: 1fr; gap: 2rem; }
+                .mem-tiers-grid { grid-template-columns: 1fr; }
+                .mem-reasons-grid { grid-template-columns: 1fr; }
+            }
+            @media (max-width: 480px) {
+                .mem-pad { padding: 1.75rem 1rem; }
             }
         </style>
 
@@ -2795,15 +2871,16 @@
 
         function toggleMobileMenu() {
           const menu = document.getElementById('mobile-menu');
-          const isHidden = menu.classList.contains('hidden');
-          if (isHidden) {
-            menu.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-            document.querySelector('main').style.display = 'none';
-          } else {
-            menu.classList.add('hidden');
+          const backdrop = document.getElementById('mobile-menu-backdrop');
+          const isOpen = menu.style.transform === 'translateX(0%)';
+          if (isOpen) {
+            menu.style.transform = 'translateX(100%)';
+            backdrop.style.display = 'none';
             document.body.style.overflow = '';
-            document.querySelector('main').style.display = '';
+          } else {
+            menu.style.transform = 'translateX(0%)';
+            backdrop.style.display = 'block';
+            document.body.style.overflow = 'hidden';
           }
         }
 
