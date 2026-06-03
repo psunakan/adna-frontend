@@ -3,3 +3,7 @@ package-lock.json
 secrets_audit.txt
 tracked_files.txt
 .claude/
+CLAUDE.md
+SKILLS.md
+TRAINING.md
+MEMORY.md
