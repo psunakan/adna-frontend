@@ -1,5 +1,57 @@
 {
+  "name": "adna-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "db:link": "node --env-file=.env node_modules/.bin/supabase link --yes",
+    "db:push": "node --env-file=.env node_modules/.bin/supabase db push --yes",
+    "functions:deploy": "node --env-file=.env node_modules/.bin/supabase functions deploy password-reset-request",
+    "connect:supabase": "bash scripts/connect-supabase.sh",
+    "import:membership": "python3 scripts/import-legacy-membership.py",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:report": "playwright show-report",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "docker:build": "bash scripts/docker-run.sh build",
+    "docker:up": "bash scripts/docker-run.sh up",
+    "docker:dev": "bash scripts/docker-run.sh dev"
+  },
   "devDependencies": {
-    "sharp": "^0.34.5"
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.60.0",
+    "@tailwindcss/vite": "^4.3.0",
+    "@tanstack/router-plugin": "^1.168.18",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^4.7.0",
+    "eslint": "^10.4.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "prettier": "^3.8.4",
+    "sharp": "^0.34.5",
+    "supabase": "^2.105.0",
+    "tailwindcss": "^4.3.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.61.0",
+    "vite": "^6.4.3"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5.4.0",
+    "@supabase/supabase-js": "^2.108.1",
+    "@tanstack/react-router": "^1.170.15",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "react-hook-form": "^7.78.0",
+    "react-hot-toast": "^2.6.0",
+    "zod": "^4.4.3"
   }
 }

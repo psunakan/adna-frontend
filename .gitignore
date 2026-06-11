@@ -1,5 +1,37 @@
-﻿node_modules/
-package-lock.json
+﻿# Dependencies
+node_modules/
+
+# Build output
+dist/
+.vite/
+
+# Environment & secrets
+.env*
+
+# Supabase
+supabase/seed/
+supabase/.temp/
+supabase/.branches/
+
+# Python
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# Personal / audit notes
 secrets_audit.txt
 tracked_files.txt
 .claude/
