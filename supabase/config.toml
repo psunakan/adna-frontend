@@ -330,6 +330,9 @@ deno_version = 2
 [functions.password-reset-request]
 verify_jwt = true
 
+[functions.membership-registration-email]
+verify_jwt = true
+
 [analytics]
 enabled = true
 port = 54327

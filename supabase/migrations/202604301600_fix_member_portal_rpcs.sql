@@ -1,4 +1,4 @@
--- Member portal authentication (legacy bcrypt-compatible)
+-- Fix member portal: create missing sessions table + RPCs + reload PostgREST schema
 
 create extension if not exists pgcrypto;
 
@@ -209,6 +209,8 @@ revoke all on function public.login_member(text, text) from public;
 revoke all on function public.get_member_profile(uuid) from public;
 revoke all on function public.logout_member(uuid) from public;
 
-grant execute on function public.login_member(text, text) to anon, authenticated;
-grant execute on function public.get_member_profile(uuid) to anon, authenticated;
-grant execute on function public.logout_member(uuid) to anon, authenticated;
+grant execute on function public.login_member(text, text) to anon, authenticated, service_role;
+grant execute on function public.get_member_profile(uuid) to anon, authenticated, service_role;
+grant execute on function public.logout_member(uuid) to anon, authenticated, service_role;
+
+notify pgrst, 'reload schema';

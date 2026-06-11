@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { MailIcon, PhoneIcon, useContactDrawer } from './ContactDrawer'
+import { MemberProfileButton } from './MemberProfileButton'
 import { useMemberAuth } from '../lib/MemberAuthProvider'
-import { PORTAL_LOGIN_PATH, PORTAL_PATH } from '../lib/memberAuth'
 
 const NAV_LINKS = [
   { to: '/', label: 'Home' },
@@ -14,8 +14,6 @@ const NAV_LINKS = [
 export function TopBar() {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const hideTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
-  const { isAuthenticated } = useMemberAuth()
-  const portalTo = isAuthenticated ? PORTAL_PATH : PORTAL_LOGIN_PATH
 
   const show = () => {
     clearTimeout(hideTimer.current)
@@ -28,9 +26,7 @@ export function TopBar() {
   return (
     <div className="bg-pcna-green text-white text-sm py-2 block relative z-[99999]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-end items-center space-x-6">
-        <Link to={portalTo} className="hover:underline">
-          Member Portal
-        </Link>
+        <MemberProfileButton variant="light" size="sm" />
         <div className="relative" onMouseEnter={show} onMouseLeave={scheduleHide}>
           <button className="flex items-center gap-1 hover:underline bg-transparent border-0 text-white text-sm font-sans cursor-pointer p-0">
             Contact Us
@@ -109,8 +105,7 @@ export function TopBar() {
 export function MainNav() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const { open: openContactDrawer } = useContactDrawer()
-  const { isAuthenticated } = useMemberAuth()
-  const portalTo = isAuthenticated ? PORTAL_PATH : PORTAL_LOGIN_PATH
+  const { isAuthenticated, profile } = useMemberAuth()
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? 'hidden' : ''
@@ -164,10 +159,13 @@ export function MainNav() {
               >
                 Donate
               </Link>
+              <MemberProfileButton variant="dark" className="ml-2" />
             </div>
 
-            {/* Hamburger */}
-            <button
+            {/* Mobile: profile + hamburger */}
+            <div className="lg:hidden flex items-center gap-2">
+              <MemberProfileButton variant="dark" size="sm" />
+              <button
               className="lg:hidden p-2 text-pcna-green hover:text-pcna-red transition-colors rounded-md focus:outline-none"
               onClick={() => setMobileOpen(true)}
               aria-label="Open menu"
@@ -181,6 +179,7 @@ export function MainNav() {
                 />
               </svg>
             </button>
+            </div>
           </div>
         </div>
       </nav>
@@ -278,29 +277,55 @@ export function MainNav() {
           </div>
 
           <div style={{ borderTop: '1px solid #e5e7eb', marginTop: 8, paddingTop: 8 }}>
-            <Link
-              to={portalTo}
-              onClick={closeAnd()}
-              className="hover:text-[#c0392b]"
-              style={{
-                display: 'block',
-                width: '100%',
-                textAlign: 'left',
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                padding: '9px 16px',
-                fontSize: '0.7rem',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                letterSpacing: '0.06em',
-                color: '#6b7280',
-                whiteSpace: 'nowrap',
-                textDecoration: 'none',
-              }}
-            >
-              Member Portal
-            </Link>
+            {isAuthenticated && profile ? (
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                  padding: '8px 16px 12px',
+                  borderLeft: '3px solid #0D3D2B',
+                  background: '#f0faf6',
+                }}
+              >
+                <MemberProfileButton variant="dark" size="sm" onNavigate={closeAnd()} />
+                <span
+                  style={{
+                    fontSize: '0.65rem',
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.06em',
+                    color: '#64748b',
+                  }}
+                >
+                  My Profile
+                </span>
+              </div>
+            ) : (
+              <Link
+                to="/portal/login"
+                onClick={closeAnd()}
+                className="hover:text-[#c0392b]"
+                style={{
+                  display: 'block',
+                  width: '100%',
+                  textAlign: 'left',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: '9px 16px',
+                  fontSize: '0.7rem',
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.06em',
+                  color: '#6b7280',
+                  whiteSpace: 'nowrap',
+                  textDecoration: 'none',
+                }}
+              >
+                Member Portal
+              </Link>
+            )}
             <button
               onClick={closeAnd(openContactDrawer)}
               className="hover:text-[#c0392b]"

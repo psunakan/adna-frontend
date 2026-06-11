@@ -22,7 +22,7 @@ create or replace function public.create_member_password_reset(p_email text)
 returns json
 language plpgsql
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
 declare
   v_member public.members%rowtype;
@@ -70,7 +70,7 @@ create or replace function public.reset_member_password(p_token uuid, p_password
 returns json
 language plpgsql
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
 declare
   v_row public.member_password_reset_tokens%rowtype;

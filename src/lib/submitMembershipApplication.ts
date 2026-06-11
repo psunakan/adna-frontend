@@ -1,4 +1,5 @@
 import { isSupabaseConfigured, supabase } from './supabase'
+import { sendRegistrationConfirmationEmail } from './sendRegistrationEmail'
 import { MEMBERSHIP_TYPE_IDS, type MemberInsert, type MembershipType } from '../types/database'
 
 export type MembershipFormData = {
@@ -65,4 +66,10 @@ export async function submitMembershipApplication(data: MembershipFormData) {
   if (error) {
     throw new Error(error.message)
   }
+
+  await sendRegistrationConfirmationEmail({
+    email: data.email,
+    first_name: data.first_name,
+    membership_type: data.membership_type,
+  })
 }

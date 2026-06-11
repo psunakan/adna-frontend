@@ -251,6 +251,7 @@ export function MembershipForm() {
           </h3>
           <p style={{ fontSize: '1.05rem', color: '#334155', lineHeight: 1.7 }}>
             We have received your membership application.
+            <br />A confirmation email has been sent to your inbox.
             <br />
             We will be in touch shortly.
           </p>
