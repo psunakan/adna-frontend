@@ -29,6 +29,22 @@ type MemberAuthContextValue = {
 
 const MemberAuthContext = createContext<MemberAuthContextValue | null>(null)
 
+const PROFILE_FETCH_TIMEOUT_MS = 10_000
+
+async function fetchProfileWithTimeout(token: string) {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined
+  try {
+    return await Promise.race([
+      fetchMemberProfile(token),
+      new Promise<never>((_, reject) => {
+        timeoutId = setTimeout(() => reject(new Error('Profile fetch timed out')), PROFILE_FETCH_TIMEOUT_MS)
+      }),
+    ])
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId)
+  }
+}
+
 export function MemberAuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<MemberSession | null>(() => getStoredSession())
   const [profile, setProfile] = useState<MemberProfile | null>(null)
@@ -43,7 +59,7 @@ export function MemberAuthProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      const nextProfile = await fetchMemberProfile(current.token)
+      const nextProfile = await fetchProfileWithTimeout(current.token)
       setSession(current)
       setProfile(nextProfile)
     } catch {
@@ -68,7 +84,7 @@ export function MemberAuthProvider({ children }: { children: ReactNode }) {
       }
 
       try {
-        const nextProfile = await fetchMemberProfile(current.token)
+        const nextProfile = await fetchProfileWithTimeout(current.token)
         if (!cancelled) {
           setSession(current)
           setProfile(nextProfile)

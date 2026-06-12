@@ -1,8 +1,13 @@
 import { test, expect } from '@playwright/test'
 
 test.describe('Forgot password', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 720 })
+  })
+
   test('renders forgot password form from login page', async ({ page }) => {
     await page.goto('/portal/login')
+    await expect(page.getByRole('heading', { name: 'Member Portal' })).toBeVisible()
     await page.getByRole('link', { name: 'Forgot password?' }).click()
     await expect(page).toHaveURL(/\/portal\/forgot-password/)
     await expect(page.getByRole('heading', { name: 'Forgot Password' })).toBeVisible()
@@ -12,6 +17,7 @@ test.describe('Forgot password', () => {
 
   test('validates empty email submission', async ({ page }) => {
     await page.goto('/portal/forgot-password')
+    await expect(page.getByRole('heading', { name: 'Forgot Password' })).toBeVisible()
     await page.getByRole('button', { name: 'Send reset link' }).click()
     await expect(page.getByText('Email is required.')).toBeVisible()
   })
