@@ -166,19 +166,19 @@ export function MainNav() {
             <div className="lg:hidden flex items-center gap-2">
               <MemberProfileButton variant="dark" size="sm" />
               <button
-              className="lg:hidden p-2 text-pcna-green hover:text-pcna-red transition-colors rounded-md focus:outline-none"
-              onClick={() => setMobileOpen(true)}
-              aria-label="Open menu"
-            >
-              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2.5"
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            </button>
+                className="lg:hidden p-2 text-pcna-green hover:text-pcna-red transition-colors rounded-md focus:outline-none"
+                onClick={() => setMobileOpen(true)}
+                aria-label="Open menu"
+              >
+                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2.5"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>

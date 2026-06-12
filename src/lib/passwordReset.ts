@@ -17,7 +17,10 @@ export async function requestPasswordReset(email: string): Promise<{ message: st
   }
 
   const message =
-    typeof data === 'object' && data !== null && 'message' in data && typeof data.message === 'string'
+    typeof data === 'object' &&
+    data !== null &&
+    'message' in data &&
+    typeof data.message === 'string'
       ? data.message
       : GENERIC_MESSAGE
 

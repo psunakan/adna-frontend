@@ -3,10 +3,7 @@ import { Link } from '@tanstack/react-router'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import toast from 'react-hot-toast'
-import {
-  forgotPasswordSchema,
-  type ForgotPasswordFormValues,
-} from '../lib/passwordResetSchema'
+import { forgotPasswordSchema, type ForgotPasswordFormValues } from '../lib/passwordResetSchema'
 import { requestPasswordReset } from '../lib/passwordReset'
 import { PORTAL_LOGIN_PATH } from '../lib/memberAuth'
 
@@ -148,7 +145,14 @@ export function ForgotPasswordPage() {
           )}
 
           {!sent && (
-            <p style={{ marginTop: '1.5rem', fontSize: '0.9rem', color: '#64748b', textAlign: 'center' }}>
+            <p
+              style={{
+                marginTop: '1.5rem',
+                fontSize: '0.9rem',
+                color: '#64748b',
+                textAlign: 'center',
+              }}
+            >
               <Link to={PORTAL_LOGIN_PATH} style={{ color: '#0D3D2B', fontWeight: 700 }}>
                 Back to sign in
               </Link>

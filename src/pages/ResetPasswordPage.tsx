@@ -3,10 +3,7 @@ import { Link, useNavigate, useSearch } from '@tanstack/react-router'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import toast from 'react-hot-toast'
-import {
-  resetPasswordSchema,
-  type ResetPasswordFormValues,
-} from '../lib/passwordResetSchema'
+import { resetPasswordSchema, type ResetPasswordFormValues } from '../lib/passwordResetSchema'
 import { resetMemberPassword } from '../lib/passwordReset'
 import { PORTAL_FORGOT_PASSWORD_PATH, PORTAL_LOGIN_PATH } from '../lib/memberAuth'
 
@@ -74,10 +71,17 @@ export function ResetPasswordPage() {
     return (
       <section
         className="animate-fade-in"
-        style={{ background: '#f9fafb', minHeight: 'calc(100vh - 180px)', padding: '3rem 1rem 6rem' }}
+        style={{
+          background: '#f9fafb',
+          minHeight: 'calc(100vh - 180px)',
+          padding: '3rem 1rem 6rem',
+        }}
       >
         <div style={{ maxWidth: 480, margin: '0 auto', textAlign: 'center' }}>
-          <h1 className="font-heading" style={{ fontSize: '2rem', fontWeight: 900, color: '#0D3D2B' }}>
+          <h1
+            className="font-heading"
+            style={{ fontSize: '2rem', fontWeight: 900, color: '#0D3D2B' }}
+          >
             Invalid reset link
           </h1>
           <p style={{ color: '#64748b', margin: '1rem 0 1.5rem' }}>
@@ -109,7 +113,9 @@ export function ResetPasswordPage() {
           >
             Reset Password
           </h1>
-          <p style={{ color: '#64748b', fontSize: '1.05rem' }}>Choose a new password for your account.</p>
+          <p style={{ color: '#64748b', fontSize: '1.05rem' }}>
+            Choose a new password for your account.
+          </p>
         </div>
 
         <div
@@ -174,7 +180,14 @@ export function ResetPasswordPage() {
             </button>
           </form>
 
-          <p style={{ marginTop: '1.5rem', fontSize: '0.9rem', color: '#64748b', textAlign: 'center' }}>
+          <p
+            style={{
+              marginTop: '1.5rem',
+              fontSize: '0.9rem',
+              color: '#64748b',
+              textAlign: 'center',
+            }}
+          >
             <Link to={PORTAL_LOGIN_PATH} style={{ color: '#0D3D2B', fontWeight: 700 }}>
               Back to sign in
             </Link>
