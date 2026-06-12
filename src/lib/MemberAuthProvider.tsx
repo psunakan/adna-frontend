@@ -37,7 +37,10 @@ async function fetchProfileWithTimeout(token: string) {
     return await Promise.race([
       fetchMemberProfile(token),
       new Promise<never>((_, reject) => {
-        timeoutId = setTimeout(() => reject(new Error('Profile fetch timed out')), PROFILE_FETCH_TIMEOUT_MS)
+        timeoutId = setTimeout(
+          () => reject(new Error('Profile fetch timed out')),
+          PROFILE_FETCH_TIMEOUT_MS,
+        )
       }),
     ])
   } finally {
