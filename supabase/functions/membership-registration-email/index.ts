@@ -1,40 +1,13 @@
+import { Resend } from 'npm:resend@4'
+import {
+  buildRegistrationEmailHtml,
+  buildRegistrationEmailText,
+  REGISTRATION_EMAIL_SUBJECT,
+} from '../_shared/email/registrationEmailTemplate.ts'
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-}
-
-function escapeHtml(value: string) {
-  return value
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-}
-
-function buildEmailHtml(firstName: string, membershipLabel: string, siteUrl: string) {
-  const safeName = escapeHtml(firstName)
-  const safeLabel = escapeHtml(membershipLabel)
-  const safeSite = escapeHtml(siteUrl)
-
-  return `<!DOCTYPE html>
-<html>
-  <body style="font-family: 'Open Sans', Arial, sans-serif; line-height: 1.6; color: #1f2937;">
-    <p>Hello ${safeName},</p>
-    <p>Thank you for registering with the <strong>African-Diaspora Nursing Alliance (A-DNA)</strong>.</p>
-    <p>We have received your membership application for:</p>
-    <p style="background:#f0faf6;border-left:4px solid #0D3D2B;padding:12px 16px;border-radius:4px;">
-      <strong>${safeLabel}</strong>
-    </p>
-    <p>Our team will review your application and follow up if anything else is needed. In the meantime, you can visit our website:</p>
-    <p>
-      <a href="${safeSite}" style="display:inline-block;background:#0D3D2B;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700;">
-        Visit A-DNA
-      </a>
-    </p>
-    <p>If you have questions, reply to this email or contact us at <a href="mailto:info@a-dna.org">info@a-dna.org</a>.</p>
-    <p style="color:#64748b;font-size:14px;">African-Diaspora Nursing Alliance (A-DNA)</p>
-  </body>
-</html>`
 }
 
 Deno.serve(async (req) => {
@@ -81,12 +54,14 @@ Deno.serve(async (req) => {
       )
     }
 
+    const emailData = { firstName, membershipLabel, siteUrl }
     const resend = new Resend(resendApiKey)
     const { error: sendError } = await resend.emails.send({
       from: fromEmail,
       to: email,
-      subject: 'Your A-DNA membership application',
-      html: buildEmailHtml(firstName, membershipLabel, siteUrl),
+      subject: REGISTRATION_EMAIL_SUBJECT,
+      html: buildRegistrationEmailHtml(emailData),
+      text: buildRegistrationEmailText(emailData),
     })
 
     if (sendError) {

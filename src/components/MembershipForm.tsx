@@ -1,4 +1,5 @@
 import { useState, type CSSProperties } from 'react'
+import { Link } from '@tanstack/react-router'
 import { useForm, Controller, type FieldErrors } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import toast from 'react-hot-toast'
@@ -9,7 +10,11 @@ import {
   STEP_FIELDS,
   type MembershipFormValues,
 } from '../lib/membershipFormSchema'
-import { submitMembershipApplication } from '../lib/submitMembershipApplication'
+import {
+  submitMembershipApplication,
+  DuplicateMemberEmailError,
+} from '../lib/submitMembershipApplication'
+import { PORTAL_LOGIN_PATH } from '../lib/memberAuth'
 import type { MembershipType } from '../types/database'
 
 const inputStyle: CSSProperties = {
@@ -55,6 +60,35 @@ function fieldStyle(hasError: boolean): CSSProperties {
 function FieldError({ message }: { message?: string }) {
   if (!message) return null
   return <p style={errorTextStyle}>{message}</p>
+}
+
+function DuplicateEmailAlert() {
+  return (
+    <div
+      role="alert"
+      style={{
+        marginTop: '0.75rem',
+        padding: '12px 14px',
+        borderRadius: 8,
+        background: '#fef2f2',
+        border: '1px solid #fecaca',
+        color: '#991b1b',
+        fontSize: '0.9rem',
+        lineHeight: 1.6,
+      }}
+    >
+      <p style={{ margin: 0 }}>
+        An account with this email already exists. Please{' '}
+        <Link
+          to={PORTAL_LOGIN_PATH}
+          style={{ color: '#0D3D2B', fontWeight: 700, textDecoration: 'underline' }}
+        >
+          sign in to the Member Portal
+        </Link>{' '}
+        instead, or use a different email address.
+      </p>
+    </div>
+  )
 }
 
 function StateField({
@@ -105,6 +139,7 @@ export function MembershipForm() {
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const [duplicateEmail, setDuplicateEmail] = useState(false)
 
   const {
     register,
@@ -191,6 +226,7 @@ export function MembershipForm() {
   const onSubmit = async (data: MembershipFormValues) => {
     setSubmitting(true)
     setSubmitError(null)
+    setDuplicateEmail(false)
 
     try {
       await submitMembershipApplication({
@@ -220,6 +256,13 @@ export function MembershipForm() {
       toast.success('Application submitted successfully!')
       setSubmitted(true)
     } catch (error) {
+      if (error instanceof DuplicateMemberEmailError) {
+        setDuplicateEmail(true)
+        setStep(1)
+        setCompleted((prev) => prev.filter((n) => n !== 1))
+        toast.error('An account with this email already exists.')
+        return
+      }
       const message =
         error instanceof Error ? error.message : 'Submission failed. Please try again.'
       setSubmitError(message)
@@ -511,10 +554,13 @@ export function MembershipForm() {
                 <input
                   type="email"
                   placeholder="your@email.com"
-                  style={fieldStyle(!!errors.email)}
-                  {...register('email')}
+                  style={fieldStyle(!!errors.email || duplicateEmail)}
+                  {...register('email', {
+                    onChange: () => setDuplicateEmail(false),
+                  })}
                 />
                 <FieldError message={errors.email?.message} />
+                {duplicateEmail && <DuplicateEmailAlert />}
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>

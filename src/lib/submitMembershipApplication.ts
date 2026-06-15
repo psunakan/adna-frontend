@@ -2,6 +2,19 @@ import { isSupabaseConfigured, supabase } from './supabase'
 import { sendRegistrationConfirmationEmail } from './sendRegistrationEmail'
 import { MEMBERSHIP_TYPE_IDS, type MemberInsert, type MembershipType } from '../types/database'
 
+export class DuplicateMemberEmailError extends Error {
+  constructor() {
+    super('An account with this email already exists. Please sign in instead.')
+    this.name = 'DuplicateMemberEmailError'
+  }
+}
+
+function isDuplicateEmailError(error: { code?: string; message?: string }): boolean {
+  if (error.code === '23505') return true
+  const message = error.message?.toLowerCase() ?? ''
+  return message.includes('members_email_unique') || message.includes('duplicate key')
+}
+
 export type MembershipFormData = {
   title: string
   first_name: string
@@ -64,6 +77,9 @@ export async function submitMembershipApplication(data: MembershipFormData) {
   const { error } = await supabase.from('members').insert(toMemberInsert(data))
 
   if (error) {
+    if (isDuplicateEmailError(error)) {
+      throw new DuplicateMemberEmailError()
+    }
     throw new Error(error.message)
   }
 

@@ -1,4 +1,9 @@
 import { test, expect } from '@playwright/test'
+import {
+  fillAndSubmitMembershipForm,
+  fillMembershipFormStep1,
+  mockDuplicateMemberEmail,
+} from './helpers/membershipForm'
 
 test.describe('Membership form', () => {
   test.beforeEach(async ({ page }) => {
@@ -17,21 +22,30 @@ test.describe('Membership form', () => {
   })
 
   test('advances to step 2 when step 1 is valid', async ({ page }) => {
-    await page.getByRole('radio', { name: 'Ms' }).check()
-    await page.getByPlaceholder('First name').fill('Jane')
-    await page.getByPlaceholder('Last name').fill('Doe')
-    await page.locator('select').first().selectOption({ label: 'United States' })
-    await page.getByPlaceholder('Phone number').fill('3015550100')
-    await page.getByPlaceholder('your@email.com').fill('jane.doe@example.com')
-
-    const stateField = page.getByPlaceholder('State / Province / Region')
-    if (await stateField.isVisible()) {
-      await stateField.fill('Maryland')
-    } else {
-      await page.locator('#membership-form select').nth(1).selectOption({ index: 1 })
-    }
-
-    await page.getByRole('button', { name: /Next/i }).click()
+    await fillMembershipFormStep1(page.locator('#membership-form'))
     await expect(page.getByText('Professional Information')).toBeVisible()
+  })
+
+  test('shows duplicate email message with login link', async ({ page }) => {
+    await mockDuplicateMemberEmail(page)
+    await fillAndSubmitMembershipForm(page, 'existing@example.com')
+
+    const form = page.locator('#membership-form')
+    await expect(form.getByRole('heading', { name: 'Personal Information' })).toBeVisible()
+    await expect(form.getByRole('alert')).toContainText('An account with this email already exists')
+    await expect(form.getByRole('link', { name: 'sign in to the Member Portal' })).toHaveAttribute(
+      'href',
+      '/portal/login',
+    )
+  })
+
+  test('clears duplicate email message when email is edited', async ({ page }) => {
+    await mockDuplicateMemberEmail(page)
+    await fillAndSubmitMembershipForm(page, 'existing@example.com')
+
+    const form = page.locator('#membership-form')
+    await expect(form.getByRole('alert')).toBeVisible()
+    await form.getByPlaceholder('your@email.com').fill('another@example.com')
+    await expect(form.getByRole('alert')).not.toBeVisible()
   })
 })
