@@ -10,6 +10,7 @@
     "db:link": "node --env-file=.env node_modules/.bin/supabase link --yes",
     "db:push": "node --env-file=.env node_modules/.bin/supabase db push --yes",
     "functions:deploy": "node --env-file=.env node_modules/.bin/supabase functions deploy password-reset-request && node --env-file=.env node_modules/.bin/supabase functions deploy membership-registration-email",
+    "secrets:set": "node --env-file=.env scripts/secrets-set.mjs",
     "connect:supabase": "bash scripts/connect-supabase.sh",
     "import:membership": "python3 scripts/import-legacy-membership.py",
     "test:e2e": "playwright test",
