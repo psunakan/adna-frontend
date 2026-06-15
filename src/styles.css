@@ -1,0 +1,520 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Open Sans', sans-serif;
+  --font-heading: 'Montserrat', sans-serif;
+
+  --color-pcna-green: #116b53;
+  --color-pcna-red: #cc0000;
+  --color-pcna-light: #f4f6f8;
+  --color-pcna-dark: #333333;
+  --color-pcna-teal: #007b8a;
+
+  --animate-fade-in: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Page Frame inspired by PCNA */
+body {
+  border: 16px solid #116b53;
+  border-bottom: none;
+  padding-bottom: 60px; /* Space for sticky footer */
+  background-color: var(--color-pcna-light);
+  color: var(--color-pcna-dark);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (min-width: 1024px) {
+  body {
+    border: 20px solid #116b53;
+  }
+}
+
+/* === HERO === */
+.hero-bg {
+  background-image:
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.82) 0%,
+      rgba(0, 0, 0, 0.55) 28%,
+      rgba(0, 0, 0, 0.1) 58%,
+      rgba(0, 0, 0, 0) 78%
+    ),
+    url('/Pictures/Newlandingpage.jpg');
+  background-color: #116b53;
+  background-size: cover;
+  background-position: center 30%;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  min-height: 72vh;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (max-width: 1024px) {
+  .hero-bg {
+    min-height: 60vh;
+    background-position: center center;
+  }
+}
+
+.hero-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60%;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 50%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 0%, black 50%, transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+@media (min-width: 1024px) {
+  .hero-bg {
+    background-position: center 35%;
+    min-height: 80vh;
+  }
+}
+
+.hero-text-shadow {
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+.nav-link-active {
+  border-bottom: 3px solid #cc0000;
+  color: #cc0000 !important;
+}
+
+/* === SCROLL REVEAL === */
+.reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-d1 {
+  transition-delay: 0.08s;
+}
+.reveal-d2 {
+  transition-delay: 0.16s;
+}
+.reveal-d3 {
+  transition-delay: 0.24s;
+}
+.reveal-d4 {
+  transition-delay: 0.32s;
+}
+.reveal-d5 {
+  transition-delay: 0.4s;
+}
+.reveal-d6 {
+  transition-delay: 0.48s;
+}
+
+/* === STATS BAR === */
+.stat-figure {
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+/* === TEAM CARDS === */
+.team-card {
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.team-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+}
+
+.team-avatar {
+  transition: transform 0.3s ease;
+}
+
+.team-card:hover .team-avatar {
+  transform: scale(1.08);
+}
+
+/* Global Collaborators Marquee */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 35s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* === CORE VALUES PARALLAX === */
+#core-values-parallax {
+  position: relative;
+  min-height: 700px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+#core-values-parallax .parallax-bg {
+  position: absolute;
+  inset: 0;
+  background: url('/Pictures/banner2.jpg') center/cover no-repeat fixed;
+  filter: blur(3px) brightness(0.95);
+  transform: scale(1.05);
+  z-index: 1;
+  transition: filter 0.5s ease;
+}
+#core-values-parallax .parallax-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.5);
+  z-index: 2;
+}
+#core-values-parallax .parallax-content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+}
+
+/* === PILLARS === */
+@keyframes pillarFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.pillar-panel-fade {
+  animation: pillarFadeIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.ptab:hover {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  transform: translateX(6px);
+}
+.ptab-active {
+  background: #fff !important;
+  border-color: #116b53 !important;
+  border-left: 8px solid #116b53 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+  transform: translateX(10px);
+}
+.ptab-active .ptab-num {
+  background: #cc0000 !important;
+  color: #fff !important;
+}
+.ptab-active .ptab-title {
+  color: #116b53 !important;
+  font-weight: 800 !important;
+}
+
+.gallery-img-wrap {
+  overflow: hidden;
+  border-radius: 12px;
+  height: 160px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s;
+}
+.gallery-img-wrap:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* === MEMBERSHIP === */
+.mem-pad {
+  padding: 5rem 3rem;
+}
+.mem-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.mem-hero-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.mem-tiers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 0;
+}
+
+.mem-feat {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  flex: 1;
+}
+.mem-feat li {
+  padding-left: 1.4rem;
+  position: relative;
+  font-weight: 400;
+  color: #334155;
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+.mem-feat li::before {
+  content: '\2713';
+  position: absolute;
+  left: 0;
+  color: #5dcaa5;
+  font-weight: 700;
+}
+.mem-feat--dark li {
+  color: #ffffff;
+}
+.mem-feat--dark li::before {
+  color: #5dcaa5;
+}
+
+.mem-tier-btn {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.9rem 1rem;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.mem-tier-btn:hover {
+  opacity: 0.85;
+}
+.mem-tier-btn--dark {
+  background: #0d3d2b;
+  color: #fff;
+}
+.mem-tier-btn--mint {
+  background: #ffffff;
+  color: #0d3d2b;
+}
+
+.mem-hero-btn {
+  display: inline-block;
+  padding: 0.9rem 2.5rem;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: #5dcaa5;
+  color: #0d3d2b;
+  border-radius: 0.375rem;
+  transition: opacity 0.15s;
+  width: fit-content;
+  height: auto;
+  align-self: flex-start;
+  cursor: pointer;
+  border: none;
+}
+.mem-hero-btn:hover {
+  opacity: 0.85;
+}
+
+.mem-reasons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  border-top: 1px solid #e0e0e0;
+  border-left: 1px solid #e0e0e0;
+  overflow: hidden;
+}
+.mem-reason-card {
+  padding: 2.5rem;
+  border-right: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .mem-pad {
+    padding: 2.5rem 1.25rem;
+  }
+  .mem-hero-cols {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .mem-tiers-grid {
+    grid-template-columns: 1fr;
+  }
+  .mem-reasons-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 480px) {
+  .mem-pad {
+    padding: 1.75rem 1rem;
+  }
+}
+
+/* Membership form font sizes */
+#membership-form label {
+  font-size: 0.95rem !important;
+}
+#membership-form label:has(input[type='radio']),
+#membership-form label:has(input[type='checkbox']) {
+  font-size: 1rem !important;
+}
+#membership-form input:not([type='radio']):not([type='checkbox']),
+#membership-form select {
+  font-size: 1.05rem !important;
+}
+#membership-form .form-step h3 {
+  font-size: 1.4rem !important;
+}
+#membership-form .form-step > p {
+  font-size: 0.95rem !important;
+}
+
+/* === MOBILE OVERRIDES === */
+@media (max-width: 640px) {
+  .hero-bg,
+  [class*='hero'],
+  section[style*='background-image'] {
+    background-attachment: scroll !important;
+    background-position: center center !important;
+    background-size: cover !important;
+    min-height: 60vh !important;
+  }
+
+  .join-alliance,
+  [style*='JointheAlliance'] {
+    background-attachment: scroll !important;
+    background-position: center 25% !important;
+    background-size: cover !important;
+    min-height: 400px !important;
+  }
+
+  [class*='split'] img,
+  [class*='lg:w-1/2'] img {
+    height: 280px !important;
+    object-position: center top !important;
+    width: 100% !important;
+  }
+
+  [class*='card'] img,
+  [class*='rounded-lg'] {
+    height: 180px !important;
+    object-position: center top !important;
+  }
+
+  #about .gap-16 {
+    gap: 2rem !important;
+  }
+  #about img {
+    max-height: 260px !important;
+    object-fit: cover !important;
+  }
+
+  #core-values-parallax .flex-wrap > div {
+    padding: 0.5rem 1.25rem !important;
+    font-size: 0.875rem !important;
+    gap: 0.5rem !important;
+  }
+
+  [style*='JointheAlliance'] {
+    min-height: 320px !important;
+  }
+  [style*='JointheAlliance'] .z-10 {
+    min-height: 280px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: flex-end !important;
+  }
+
+  #home .border-l-4.border-pcna-green.bg-pcna-light img {
+    height: 180px !important;
+  }
+
+  #events .gap-12 {
+    gap: 2rem !important;
+  }
+
+  .mem-reason-card {
+    padding: 1.25rem !important;
+  }
+  .mem-reason-card span:first-child {
+    font-size: 1.75rem !important;
+  }
+  .mem-reason-card p {
+    font-size: 0.95rem !important;
+  }
+
+  nav img[alt*='Logo'] {
+    max-height: 56px !important;
+  }
+
+  #membership-form .mem-inner {
+    padding: 1rem !important;
+  }
+  #membership-form input,
+  #membership-form select {
+    font-size: 16px !important;
+  }
+  #form-steps {
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    padding-bottom: 4px !important;
+  }
+
+  .mem-hero-btn {
+    display: inline-block !important;
+    width: fit-content !important;
+    height: auto !important;
+    padding: 12px 24px !important;
+    align-self: flex-start !important;
+  }
+}

@@ -1,0 +1,16 @@
+node_modules
+dist
+.git
+.github
+test-results
+playwright-report
+blob-report
+playwright/.cache
+e2e
+.env*
+legacy
+supabase/seed
+supabase/.temp
+*.md
+!README.md
+.DS_Store
