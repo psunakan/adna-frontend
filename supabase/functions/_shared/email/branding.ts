@@ -8,8 +8,8 @@ export const BRAND = {
   surface: '#f9fafb',
   highlightBg: '#f0faf6',
   white: '#ffffff',
-  fontFamily: "'Open Sans', Arial, Helvetica, sans-serif",
-  headingFont: "'Montserrat', 'Open Sans', Arial, Helvetica, sans-serif",
+  fontFamily: "'Source Sans 3', Arial, Helvetica, sans-serif",
+  headingFont: "'Plus Jakarta Sans', 'Source Sans 3', Arial, Helvetica, sans-serif",
 } as const
 
 export const CONTACT_EMAIL = 'info@a-dna.org'
