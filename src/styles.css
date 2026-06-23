@@ -56,7 +56,9 @@ h5,
 h6,
 .font-heading {
   font-family: var(--font-heading);
-  font-feature-settings: 'liga' 1, 'kern' 1;
+  font-feature-settings:
+    'liga' 1,
+    'kern' 1;
   line-height: 1.2;
 }
 
