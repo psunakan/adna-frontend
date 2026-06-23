@@ -69,4 +69,11 @@ jobs:
           echo "Deployed to $url"
 
       - name: Alias preview.a-dna.org
-        run: vercel alias set "${{ steps.deploy.outputs.url }}" preview.a-dna.org --token="$VERCEL_TOKEN"
+        continue-on-error: true
+        run: |
+          if vercel alias set "${{ steps.deploy.outputs.url }}" preview.a-dna.org --token="$VERCEL_TOKEN"; then
+            echo "Aliased to https://preview.a-dna.org"
+          else
+            echo "::warning::Could not alias preview.a-dna.org — add the domain in Vercel Project → Settings → Domains first."
+            echo "Preview URL: ${{ steps.deploy.outputs.url }}"
+          fi
