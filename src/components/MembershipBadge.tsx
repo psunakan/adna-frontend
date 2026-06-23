@@ -29,9 +29,9 @@ export function MembershipBadge({ tier = 'regular', size = 18, title, className 
       width={size}
       height={size}
       viewBox="0 0 24 24"
-      aria-hidden={title ? undefined : true}
-      role={title ? 'img' : undefined}
-      aria-label={title}
+      aria-hidden={false}
+      role="img"
+      aria-label={label}
       style={{ flexShrink: 0, display: 'inline-block', verticalAlign: 'middle' }}
     >
       <circle cx="12" cy="12" r="11" fill={colors.fill} />
