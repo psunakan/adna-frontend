@@ -22,6 +22,7 @@ export type MemberProfile = MemberSession['member'] & {
   phone_number: string
   country_residence: string
   membership_label: string
+  membership_tier: 'regular' | 'diaspora' | 'premium'
   last_login_at: string | null
 }
 

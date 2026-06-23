@@ -547,6 +547,124 @@ b {
   display: none;
 }
 
+/* === MEMBER PORTAL — membership upgrade === */
+.portal-membership-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.5rem 1.75rem;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e8ecef;
+}
+
+.portal-membership-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.portal-membership-card__eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.portal-membership-card__refresh {
+  border: 1.5px solid #0d3d2b;
+  background: #fff;
+  color: #0d3d2b;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.portal-membership-card__refresh:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.portal-membership-card__lead {
+  margin: 0 0 1.25rem;
+  color: #475569;
+  line-height: 1.65;
+  font-size: 1rem;
+}
+
+.portal-membership-card__options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.portal-membership-card__option {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.15rem 1.25rem;
+  background: #f8fafc;
+}
+
+.portal-membership-card__option-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.65rem;
+}
+
+.portal-membership-card__option-head h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0d3d2b;
+}
+
+.portal-membership-card__price {
+  margin: 0.2rem 0 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.portal-membership-card__option-copy {
+  margin: 0 0 1rem;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: #475569;
+}
+
+.portal-membership-card__pay-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1.15rem;
+  border-radius: 8px;
+  background: #0d3d2b;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.portal-membership-card__pay-btn:hover {
+  opacity: 0.88;
+}
+
+.portal-membership-card__footnote {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #64748b;
+  line-height: 1.55;
+}
+
 .mem-hero-content {
   display: flex;
   flex-direction: column;
