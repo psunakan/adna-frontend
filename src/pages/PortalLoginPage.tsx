@@ -6,11 +6,14 @@ import toast from 'react-hot-toast'
 import { loginSchema, type LoginFormValues } from '../lib/loginSchema'
 import { useMemberAuth } from '../lib/MemberAuthProvider'
 import { PORTAL_FORGOT_PASSWORD_PATH, PORTAL_PATH } from '../lib/memberAuth'
+import { PasswordField } from '../components/form/PasswordField'
 
 const inputStyle: CSSProperties = {
   width: '100%',
   padding: '12px 14px',
-  border: '1px solid #d1d5db',
+  borderWidth: 1,
+  borderStyle: 'solid',
+  borderColor: '#d1d5db',
   borderRadius: 8,
   fontSize: '1rem',
   fontFamily: 'inherit',
@@ -119,12 +122,12 @@ export function PortalLoginPage() {
               <label style={labelStyle} htmlFor="password">
                 Password <span style={{ color: '#cc0000' }}>*</span>
               </label>
-              <input
+              <PasswordField
                 id="password"
-                type="password"
                 autoComplete="current-password"
                 placeholder="Enter your password"
-                style={fieldStyle(!!errors.password)}
+                hasError={!!errors.password}
+                testId="portal-login-password"
                 {...register('password')}
               />
               {errors.password?.message && <p style={errorTextStyle}>{errors.password.message}</p>}

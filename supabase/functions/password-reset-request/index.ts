@@ -1,5 +1,10 @@
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { Resend } from 'npm:resend@4'
+import {
+  buildPasswordResetEmailHtml,
+  buildPasswordResetEmailText,
+  PASSWORD_RESET_EMAIL_SUBJECT,
+} from '../_shared/email/passwordResetEmailTemplate.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -8,25 +13,6 @@ const corsHeaders = {
 
 const GENERIC_MESSAGE =
   'If an account exists for that email, you will receive reset instructions shortly.'
-
-function buildEmailHtml(firstName: string, resetUrl: string) {
-  return `<!DOCTYPE html>
-<html>
-  <body style="font-family: 'Open Sans', Arial, sans-serif; line-height: 1.6; color: #1f2937;">
-    <p>Hello ${firstName},</p>
-    <p>We received a request to reset your A-DNA Member Portal password.</p>
-    <p>
-      <a href="${resetUrl}" style="display:inline-block;background:#0D3D2B;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700;">
-        Reset password
-      </a>
-    </p>
-    <p>Or copy this link into your browser:</p>
-    <p style="word-break:break-all;color:#64748b;">${resetUrl}</p>
-    <p>This link expires in 1 hour. If you did not request a reset, you can ignore this email.</p>
-    <p style="color:#64748b;font-size:14px;">African-Diaspora Nursing Alliance (A-DNA)</p>
-  </body>
-</html>`
-}
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -55,10 +41,17 @@ Deno.serve(async (req) => {
     const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
     const resendApiKey = Deno.env.get('RESEND_API_KEY')
     const fromEmail = Deno.env.get('RESEND_FROM_EMAIL')
-    const siteUrl = Deno.env.get('SITE_URL') ?? 'http://localhost:5173'
+    const siteUrl = (Deno.env.get('SITE_URL') ?? 'http://localhost:5173').replace(/\/$/, '')
 
     if (!supabaseUrl || !serviceRoleKey) {
       console.error('Missing Supabase environment variables.')
+      return new Response(JSON.stringify({ success: true, message: GENERIC_MESSAGE }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+
+    if (!resendApiKey || !fromEmail) {
+      console.error('Resend is not configured (RESEND_API_KEY / RESEND_FROM_EMAIL).')
       return new Response(JSON.stringify({ success: true, message: GENERIC_MESSAGE }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
@@ -78,23 +71,37 @@ Deno.serve(async (req) => {
 
     const resetData = data as { token: string; email: string; first_name: string } | null
 
-    if (resetData?.token && resendApiKey && fromEmail) {
-      const resetUrl = `${siteUrl.replace(/\/$/, '')}/portal/reset-password?token=${resetData.token}`
-      const resend = new Resend(resendApiKey)
-
-      const { error: sendError } = await resend.emails.send({
-        from: fromEmail,
-        to: resetData.email,
-        subject: 'Reset your A-DNA Member Portal password',
-        html: buildEmailHtml(resetData.first_name, resetUrl),
+    if (!resetData?.token) {
+      console.info('password-reset-request: no matching portal account for email.')
+      return new Response(JSON.stringify({ success: true, message: GENERIC_MESSAGE }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
-
-      if (sendError) {
-        console.error('Resend send failed:', sendError)
-      }
-    } else if (resetData?.token) {
-      console.error('Resend is not configured (RESEND_API_KEY / RESEND_FROM_EMAIL).')
     }
+
+    const resetUrl = `${siteUrl}/portal/reset-password?token=${resetData.token}`
+    const resend = new Resend(resendApiKey)
+    const emailData = {
+      firstName: resetData.first_name,
+      resetUrl,
+      siteUrl,
+    }
+
+    const { error: sendError } = await resend.emails.send({
+      from: fromEmail,
+      to: resetData.email,
+      subject: PASSWORD_RESET_EMAIL_SUBJECT,
+      html: buildPasswordResetEmailHtml(emailData),
+      text: buildPasswordResetEmailText(emailData),
+    })
+
+    if (sendError) {
+      console.error('Resend send failed:', JSON.stringify(sendError))
+      return new Response(JSON.stringify({ success: true, message: GENERIC_MESSAGE }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+
+    console.info('password-reset-request: reset email sent.', { email: resetData.email })
 
     return new Response(JSON.stringify({ success: true, message: GENERIC_MESSAGE }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

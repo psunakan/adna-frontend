@@ -4,7 +4,7 @@ const REASONS = [
   {
     num: '01',
     title: 'Networking & Job Opportunities',
-    text: 'Be part of a thriving global community of professionals, students, and retirees. Gain access to exclusive opportunities designed to help you grow your network and advance your career — wherever you are in the world.',
+    text: 'Be part of a thriving global community of professionals, students, and retirees. Gain access to exclusive opportunities designed to help you grow your network and advance your career, wherever you are in the world.',
   },
   {
     num: '02',
@@ -14,7 +14,7 @@ const REASONS = [
   {
     num: '03',
     title: 'Professional Advice & Wellness Support',
-    text: 'True success goes beyond career achievements — it includes personal growth, emotional balance, and overall well-being. We offer support systems that address both your professional journey and your wellness needs.',
+    text: 'True success goes beyond career achievements; it includes personal growth, emotional balance, and overall well-being. We offer support systems that address both your professional journey and your wellness needs.',
   },
   {
     num: '04',
@@ -228,10 +228,10 @@ export function MembershipPage() {
             }}
           >
             Professional Membership: <strong style={{ fontWeight: 600 }}>$75/year</strong> for
-            Diaspora members — 300 GHS for members in Ghana/Africa
+            Diaspora members; 300 GHS for members in Ghana/Africa
             <br />
             Premium Membership: <strong style={{ fontWeight: 600 }}>$150/year</strong> for Diaspora
-            members — <strong style={{ fontWeight: 600 }}>600 GHS</strong> for members in Ghana
+            members; <strong style={{ fontWeight: 600 }}>600 GHS</strong> for members in Ghana
           </p>
         </div>
       </div>

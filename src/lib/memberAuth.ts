@@ -14,6 +14,7 @@ export type MemberSession = {
     first_name: string
     last_name: string
     is_first_login: boolean
+    is_active: boolean
   }
 }
 

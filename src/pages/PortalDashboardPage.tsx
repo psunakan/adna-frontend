@@ -8,7 +8,7 @@ import { PORTAL_LOGIN_PATH } from '../lib/memberAuth'
 import { normalizeMembershipTier } from '../lib/membershipTier'
 
 function formatDate(value: string | null) {
-  if (!value) return '—'
+  if (!value) return '-'
   return new Date(value).toLocaleString(undefined, {
     dateStyle: 'medium',
     timeStyle: 'short',
@@ -147,6 +147,24 @@ export function PortalDashboardPage() {
           >
             This is your first login. If you have not changed your password yet, please update it
             when that option becomes available.
+          </div>
+        )}
+
+        {profile.is_active === false && (
+          <div
+            style={{
+              background: '#fffbeb',
+              border: '1px solid #fcd34d',
+              borderRadius: 10,
+              padding: '1rem 1.25rem',
+              marginBottom: '1.5rem',
+              color: '#92400e',
+              fontSize: '0.95rem',
+              lineHeight: 1.6,
+            }}
+          >
+            Your membership payment is still pending. Complete payment on Zeffy to activate full
+            access, then return here and click <strong>Refresh status</strong> below.
           </div>
         )}
 

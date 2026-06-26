@@ -9,21 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as MembershipRouteImport } from './routes/membership'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as DonateRouteImport } from './routes/donate'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as MembershipRouteRouteImport } from './routes/membership/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PortalIndexRouteImport } from './routes/portal/index'
+import { Route as MembershipIndexRouteImport } from './routes/membership/index'
 import { Route as PortalResetPasswordRouteImport } from './routes/portal/reset-password'
 import { Route as PortalLoginRouteImport } from './routes/portal/login'
 import { Route as PortalForgotPasswordRouteImport } from './routes/portal/forgot-password'
+import { Route as MembershipConfirmationRouteImport } from './routes/membership/confirmation'
 
-const MembershipRoute = MembershipRouteImport.update({
-  id: '/membership',
-  path: '/membership',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const EventsRoute = EventsRouteImport.update({
   id: '/events',
   path: '/events',
@@ -39,6 +36,11 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MembershipRouteRoute = MembershipRouteRouteImport.update({
+  id: '/membership',
+  path: '/membership',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -48,6 +50,11 @@ const PortalIndexRoute = PortalIndexRouteImport.update({
   id: '/portal/',
   path: '/portal/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const MembershipIndexRoute = MembershipIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MembershipRouteRoute,
 } as any)
 const PortalResetPasswordRoute = PortalResetPasswordRouteImport.update({
   id: '/portal/reset-password',
@@ -64,16 +71,23 @@ const PortalForgotPasswordRoute = PortalForgotPasswordRouteImport.update({
   path: '/portal/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MembershipConfirmationRoute = MembershipConfirmationRouteImport.update({
+  id: '/confirmation',
+  path: '/confirmation',
+  getParentRoute: () => MembershipRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/membership': typeof MembershipRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/donate': typeof DonateRoute
   '/events': typeof EventsRoute
-  '/membership': typeof MembershipRoute
+  '/membership/confirmation': typeof MembershipConfirmationRoute
   '/portal/forgot-password': typeof PortalForgotPasswordRoute
   '/portal/login': typeof PortalLoginRoute
   '/portal/reset-password': typeof PortalResetPasswordRoute
+  '/membership/': typeof MembershipIndexRoute
   '/portal/': typeof PortalIndexRoute
 }
 export interface FileRoutesByTo {
@@ -81,35 +95,40 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/donate': typeof DonateRoute
   '/events': typeof EventsRoute
-  '/membership': typeof MembershipRoute
+  '/membership/confirmation': typeof MembershipConfirmationRoute
   '/portal/forgot-password': typeof PortalForgotPasswordRoute
   '/portal/login': typeof PortalLoginRoute
   '/portal/reset-password': typeof PortalResetPasswordRoute
+  '/membership': typeof MembershipIndexRoute
   '/portal': typeof PortalIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/membership': typeof MembershipRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/donate': typeof DonateRoute
   '/events': typeof EventsRoute
-  '/membership': typeof MembershipRoute
+  '/membership/confirmation': typeof MembershipConfirmationRoute
   '/portal/forgot-password': typeof PortalForgotPasswordRoute
   '/portal/login': typeof PortalLoginRoute
   '/portal/reset-password': typeof PortalResetPasswordRoute
+  '/membership/': typeof MembershipIndexRoute
   '/portal/': typeof PortalIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/membership'
     | '/about'
     | '/donate'
     | '/events'
-    | '/membership'
+    | '/membership/confirmation'
     | '/portal/forgot-password'
     | '/portal/login'
     | '/portal/reset-password'
+    | '/membership/'
     | '/portal/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -117,30 +136,33 @@ export interface FileRouteTypes {
     | '/about'
     | '/donate'
     | '/events'
-    | '/membership'
+    | '/membership/confirmation'
     | '/portal/forgot-password'
     | '/portal/login'
     | '/portal/reset-password'
+    | '/membership'
     | '/portal'
   id:
     | '__root__'
     | '/'
+    | '/membership'
     | '/about'
     | '/donate'
     | '/events'
-    | '/membership'
+    | '/membership/confirmation'
     | '/portal/forgot-password'
     | '/portal/login'
     | '/portal/reset-password'
+    | '/membership/'
     | '/portal/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  MembershipRouteRoute: typeof MembershipRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   DonateRoute: typeof DonateRoute
   EventsRoute: typeof EventsRoute
-  MembershipRoute: typeof MembershipRoute
   PortalForgotPasswordRoute: typeof PortalForgotPasswordRoute
   PortalLoginRoute: typeof PortalLoginRoute
   PortalResetPasswordRoute: typeof PortalResetPasswordRoute
@@ -149,13 +171,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/membership': {
-      id: '/membership'
-      path: '/membership'
-      fullPath: '/membership'
-      preLoaderRoute: typeof MembershipRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/events': {
       id: '/events'
       path: '/events'
@@ -177,6 +192,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/membership': {
+      id: '/membership'
+      path: '/membership'
+      fullPath: '/membership'
+      preLoaderRoute: typeof MembershipRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -190,6 +212,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/portal/'
       preLoaderRoute: typeof PortalIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/membership/': {
+      id: '/membership/'
+      path: '/'
+      fullPath: '/membership/'
+      preLoaderRoute: typeof MembershipIndexRouteImport
+      parentRoute: typeof MembershipRouteRoute
     }
     '/portal/reset-password': {
       id: '/portal/reset-password'
@@ -212,15 +241,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/membership/confirmation': {
+      id: '/membership/confirmation'
+      path: '/confirmation'
+      fullPath: '/membership/confirmation'
+      preLoaderRoute: typeof MembershipConfirmationRouteImport
+      parentRoute: typeof MembershipRouteRoute
+    }
   }
 }
 
+interface MembershipRouteRouteChildren {
+  MembershipConfirmationRoute: typeof MembershipConfirmationRoute
+  MembershipIndexRoute: typeof MembershipIndexRoute
+}
+
+const MembershipRouteRouteChildren: MembershipRouteRouteChildren = {
+  MembershipConfirmationRoute: MembershipConfirmationRoute,
+  MembershipIndexRoute: MembershipIndexRoute,
+}
+
+const MembershipRouteRouteWithChildren = MembershipRouteRoute._addFileChildren(
+  MembershipRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  MembershipRouteRoute: MembershipRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   DonateRoute: DonateRoute,
   EventsRoute: EventsRoute,
-  MembershipRoute: MembershipRoute,
   PortalForgotPasswordRoute: PortalForgotPasswordRoute,
   PortalLoginRoute: PortalLoginRoute,
   PortalResetPasswordRoute: PortalResetPasswordRoute,
