@@ -1,7 +1,10 @@
-import type { Page } from '@playwright/test'
+import { expect, type Page } from '@playwright/test'
 
 export const DEMO_SESSION_TOKEN = 'a1111111-1111-1111-1111-111111111111'
 export const ZEFFY_MEMBERSHIP_URL_PATTERN = /zeffy\.com.*memberships/i
+
+const MOCK_PROFILE_INDEX_KEY = '__adnaMockProfileIndex'
+const MOCK_PROFILES_KEY = '__adnaMockProfiles'
 
 export type MockMemberTier = 'regular' | 'diaspora' | 'premium'
 
@@ -42,33 +45,47 @@ export function buildMockSession(tier: MockMemberTier = 'regular') {
 }
 
 type MockPortalOptions = {
-  /** Profiles returned on successive get_member_profile calls (last entry repeats). */
+  /** Profiles indexed for manual refresh simulation (see refreshMembershipStatus). */
   profileSequence?: ReturnType<typeof buildMockMember>[]
   initialTier?: MockMemberTier
 }
 
-/** Portal loads profile on mount; dashboard may fetch again on window focus before a manual refresh. */
-function resolveProfileSequence(
-  profileSequence: ReturnType<typeof buildMockMember>[],
-): ReturnType<typeof buildMockMember>[] {
-  if (profileSequence.length < 2) return profileSequence
-  return [profileSequence[0], profileSequence[0], ...profileSequence.slice(1)]
+declare global {
+  interface Window {
+    [MOCK_PROFILE_INDEX_KEY]?: number
+    [MOCK_PROFILES_KEY]?: ReturnType<typeof buildMockMember>[]
+  }
 }
 
 export async function mockMemberPortalApi(page: Page, options: MockPortalOptions = {}) {
   const initialTier = options.initialTier ?? 'regular'
-  const rawSequence =
+  const profiles =
     options.profileSequence ??
     (options.initialTier ? [buildMockMember(options.initialTier)] : [buildMockMember('regular')])
-  const profileSequence = resolveProfileSequence(rawSequence)
 
-  let profileCallIndex = 0
+  await page.addInitScript(
+    ({ profileIndexKey, profilesKey, seededProfiles }) => {
+      window[profileIndexKey] = 0
+      window[profilesKey] = seededProfiles
+    },
+    {
+      profileIndexKey: MOCK_PROFILE_INDEX_KEY,
+      profilesKey: MOCK_PROFILES_KEY,
+      seededProfiles: profiles,
+    },
+  )
 
   await page.route('**/rest/v1/rpc/get_member_profile', async (route) => {
+    const { index, sequence } = await page.evaluate(
+      ({ profileIndexKey, profilesKey }) => ({
+        index: window[profileIndexKey] ?? 0,
+        sequence: window[profilesKey] ?? [],
+      }),
+      { profileIndexKey: MOCK_PROFILE_INDEX_KEY, profilesKey: MOCK_PROFILES_KEY },
+    )
+
     const profile =
-      profileSequence[Math.min(profileCallIndex, profileSequence.length - 1)] ??
-      buildMockMember(initialTier)
-    profileCallIndex += 1
+      sequence[Math.min(index, sequence.length - 1)] ?? buildMockMember(initialTier)
 
     await route.fulfill({
       status: 200,
@@ -100,6 +117,16 @@ export async function seedPortalSession(page: Page, tier: MockMemberTier = 'regu
   await page.addInitScript((value) => {
     localStorage.setItem('adna_member_session', value)
   }, JSON.stringify(session))
+}
+
+/** Simulates a Zeffy payment clearing: next profile fetch returns the upgraded tier. */
+export async function refreshMembershipStatus(page: Page) {
+  await page.evaluate((profileIndexKey) => {
+    window[profileIndexKey] = (window[profileIndexKey] ?? 0) + 1
+  }, MOCK_PROFILE_INDEX_KEY)
+
+  await page.getByRole('button', { name: 'Refresh status' }).click()
+  await expect(page.getByText('Membership status updated.')).toBeVisible()
 }
 
 export async function openPortalDashboard(

@@ -4,6 +4,7 @@ import {
   membershipCard,
   mockMemberPortalApi,
   openPortalDashboard,
+  refreshMembershipStatus,
   seedPortalSession,
   ZEFFY_MEMBERSHIP_URL_PATTERN,
 } from './helpers/portalAuth'
@@ -60,7 +61,7 @@ test.describe('Member portal membership upgrades', () => {
 
     const card = membershipCard(page)
     await expect(card.getByText('Free Member', { exact: true })).toBeVisible()
-    await page.getByRole('button', { name: 'Refresh status' }).click()
+    await refreshMembershipStatus(page)
     await expect(card.getByText('Professional Member', { exact: true })).toBeVisible({
       timeout: 10_000,
     })
@@ -78,7 +79,7 @@ test.describe('Member portal membership upgrades', () => {
 
     const card = membershipCard(page)
     await expect(card.getByText('Professional Member', { exact: true })).toBeVisible()
-    await page.getByRole('button', { name: 'Refresh status' }).click()
+    await refreshMembershipStatus(page)
     await expect(card.getByText('Premium Member', { exact: true })).toBeVisible({
       timeout: 10_000,
     })
