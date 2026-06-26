@@ -27,7 +27,9 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 export function stripSensitiveFormValues(
   values: MembershipFormValues,
 ): SavedMembershipFormValues {
-  const { password: _password, confirmPassword: _confirmPassword, ...rest } = values
+  const rest = { ...values }
+  delete rest.password
+  delete rest.confirmPassword
   return rest
 }
 
