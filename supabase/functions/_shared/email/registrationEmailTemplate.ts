@@ -8,7 +8,7 @@ export type RegistrationEmailData = {
 }
 
 export const REGISTRATION_EMAIL_SUBJECT =
-  'Welcome to A-DNA — your membership application is received'
+  'Welcome to A-DNA: your membership application is received'
 
 export function buildRegistrationEmailHtml(data: RegistrationEmailData) {
   const firstName = escapeHtml(data.firstName)
@@ -35,28 +35,8 @@ export function buildRegistrationEmailHtml(data: RegistrationEmailData) {
         </td>
       </tr>
     </table>
-    <h2 style="margin:0 0 12px;font-family:${BRAND.headingFont};font-size:18px;font-weight:700;color:${BRAND.text};">
-      What happens next
-    </h2>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px;">
-      <tr>
-        <td style="padding:0 0 12px;font-size:15px;line-height:1.7;vertical-align:top;">
-          <strong style="color:${BRAND.green};">1.</strong>&nbsp; Our team will review your application.
-        </td>
-      </tr>
-      <tr>
-        <td style="padding:0 0 12px;font-size:15px;line-height:1.7;vertical-align:top;">
-          <strong style="color:${BRAND.green};">2.</strong>&nbsp; We will email you if any additional information is needed.
-        </td>
-      </tr>
-      <tr>
-        <td style="padding:0;font-size:15px;line-height:1.7;vertical-align:top;">
-          <strong style="color:${BRAND.green};">3.</strong>&nbsp; Once approved, you can sign in to the Member Portal to access your account.
-        </td>
-      </tr>
-    </table>
     <p style="margin:0 0 20px;font-size:16px;line-height:1.7;">
-      Explore our community, events, and resources while you wait:
+      Explore our community, events, and resources:
     </p>
     <p style="margin:0 0 28px;">
       ${emailButton(siteUrl, 'Visit A-DNA website')}
@@ -85,11 +65,6 @@ Thank you for applying to join the African-Diaspora Nursing Alliance (A-DNA).
 
 We have received your membership application for:
 ${data.membershipLabel}
-
-WHAT HAPPENS NEXT
-1. Our team will review your application.
-2. We will email you if any additional information is needed.
-3. Once approved, you can sign in to the Member Portal to access your account.
 
 Visit our website: ${siteUrl}
 Member Portal: ${portalUrl}

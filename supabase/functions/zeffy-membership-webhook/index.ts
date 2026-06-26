@@ -103,7 +103,7 @@ Deno.serve(async (req) => {
           {
             success: true,
             debug: true,
-            message: 'Payload captured — check Supabase function logs for the full body.',
+            message: 'Payload captured. Check Supabase function logs for the full body.',
             event_type: payload.type ?? payload.event ?? null,
             parsed_payment: payment ?? null,
             resolved_tier: tier,

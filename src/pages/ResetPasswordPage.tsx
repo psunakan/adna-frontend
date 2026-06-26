@@ -6,16 +6,7 @@ import toast from 'react-hot-toast'
 import { resetPasswordSchema, type ResetPasswordFormValues } from '../lib/passwordResetSchema'
 import { resetMemberPassword } from '../lib/passwordReset'
 import { PORTAL_FORGOT_PASSWORD_PATH, PORTAL_LOGIN_PATH } from '../lib/memberAuth'
-
-const inputStyle: CSSProperties = {
-  width: '100%',
-  padding: '12px 14px',
-  border: '1px solid #d1d5db',
-  borderRadius: 8,
-  fontSize: '1rem',
-  fontFamily: 'inherit',
-  boxSizing: 'border-box',
-}
+import { PasswordField } from '../components/form/PasswordField'
 
 const labelStyle: CSSProperties = {
   fontSize: '0.85rem',
@@ -29,10 +20,6 @@ const errorTextStyle: CSSProperties = {
   color: '#cc0000',
   fontSize: '0.8rem',
   marginTop: '0.35rem',
-}
-
-function fieldStyle(hasError: boolean): CSSProperties {
-  return hasError ? { ...inputStyle, borderColor: '#cc0000' } : inputStyle
 }
 
 export function ResetPasswordPage() {
@@ -145,12 +132,12 @@ export function ResetPasswordPage() {
               <label style={labelStyle} htmlFor="password">
                 New password <span style={{ color: '#cc0000' }}>*</span>
               </label>
-              <input
+              <PasswordField
                 id="password"
-                type="password"
                 autoComplete="new-password"
                 placeholder="At least 8 characters"
-                style={fieldStyle(!!errors.password)}
+                hasError={!!errors.password}
+                testId="portal-reset-password"
                 {...registerField('password')}
               />
               {errors.password?.message && <p style={errorTextStyle}>{errors.password.message}</p>}
@@ -160,12 +147,12 @@ export function ResetPasswordPage() {
               <label style={labelStyle} htmlFor="confirmPassword">
                 Confirm password <span style={{ color: '#cc0000' }}>*</span>
               </label>
-              <input
+              <PasswordField
                 id="confirmPassword"
-                type="password"
                 autoComplete="new-password"
                 placeholder="Re-enter your password"
-                style={fieldStyle(!!errors.confirmPassword)}
+                hasError={!!errors.confirmPassword}
+                testId="portal-reset-confirm-password"
                 {...registerField('confirmPassword')}
               />
               {errors.confirmPassword?.message && (

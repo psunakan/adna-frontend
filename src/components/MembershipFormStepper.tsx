@@ -3,6 +3,7 @@ const STEPS = [
   { id: 2, label: 'Professional', short: 'Professional' },
   { id: 3, label: 'Experience', short: 'Experience' },
   { id: 4, label: 'Membership', short: 'Membership' },
+  { id: 5, label: 'Review & Submit', short: 'Review' },
 ] as const
 
 type Props = {
@@ -12,42 +13,46 @@ type Props = {
 }
 
 export function MembershipFormStepper({ step, completed, onGoToStep }: Props) {
-  const current = STEPS[step - 1]
-  const progress = ((step - 1) / (STEPS.length - 1)) * 100
+  const current = STEPS[step - 1] ?? STEPS[STEPS.length - 1]
+  const progress = (step / STEPS.length) * 100
 
   return (
     <div className="mem-form-stepper" aria-label="Registration progress">
-      <div className="mem-form-stepper__meta">
-        <p className="mem-form-stepper__eyebrow">
-          Step {step} of {STEPS.length}
-        </p>
-        <p className="mem-form-stepper__title">{current.label}</p>
+      <div className="mem-form-stepper__head">
+        <div className="mem-form-stepper__intro">
+          <p className="mem-form-stepper__kicker">Membership application</p>
+          <h3 className="mem-form-stepper__title">{current.label}</h3>
+        </div>
+        <div className="mem-form-stepper__status" aria-hidden="true">
+          <span className="mem-form-stepper__status-value">{Math.round(progress)}%</span>
+          <span className="mem-form-stepper__status-label">complete</span>
+        </div>
       </div>
 
       <div
-        className="mem-form-stepper__rail"
+        className="mem-form-stepper__bar"
         role="progressbar"
         aria-valuenow={step}
         aria-valuemin={1}
         aria-valuemax={STEPS.length}
-        aria-label={`Step ${step} of ${STEPS.length}: ${current.label}`}
+        aria-label={`${current.label}, ${Math.round(progress)}% complete`}
       >
-        <div className="mem-form-stepper__rail-line" aria-hidden="true">
-          <div className="mem-form-stepper__rail-fill" style={{ width: `${progress}%` }} />
-        </div>
+        <div className="mem-form-stepper__bar-fill" style={{ width: `${progress}%` }} />
+      </div>
 
-        <ol className="mem-form-stepper__nodes">
+      <nav className="mem-form-stepper__nav" aria-label="Form sections">
+        <ol className="mem-form-stepper__segments">
           {STEPS.map(({ id, label, short }) => {
             const isActive = step === id
             const isDone = id < step || completed.includes(id)
             const isClickable = isActive || id < step
 
             return (
-              <li key={id} className="mem-form-stepper__node-wrap">
+              <li key={id} className="mem-form-stepper__segment-item">
                 <button
                   type="button"
                   className={[
-                    'mem-form-stepper__node',
+                    'mem-form-stepper__segment',
                     isActive ? 'is-active' : '',
                     isDone ? 'is-done' : '',
                   ]
@@ -56,56 +61,19 @@ export function MembershipFormStepper({ step, completed, onGoToStep }: Props) {
                   onClick={() => isClickable && onGoToStep(id)}
                   disabled={!isClickable}
                   aria-current={isActive ? 'step' : undefined}
-                  aria-label={`${label}${isDone ? ', completed' : isActive ? ', current' : ''}`}
                 >
-                  <span className="mem-form-stepper__node-inner">
-                    {isDone && !isActive ? (
-                      <svg
-                        className="mem-form-stepper__check"
-                        viewBox="0 0 16 16"
-                        fill="none"
-                        aria-hidden="true"
-                      >
-                        <path
-                          d="M3.5 8.5L6.5 11.5L12.5 4.5"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    ) : (
-                      id
-                    )}
+                  <span className="mem-form-stepper__segment-label mem-form-stepper__segment-label--full">
+                    {label}
+                  </span>
+                  <span className="mem-form-stepper__segment-label mem-form-stepper__segment-label--short">
+                    {short}
                   </span>
                 </button>
-                <span
-                  className={[
-                    'mem-form-stepper__node-label',
-                    'mem-form-stepper__node-label--full',
-                    isActive || isDone ? 'is-highlighted' : '',
-                  ]
-                    .filter(Boolean)
-                    .join(' ')}
-                >
-                  {label}
-                </span>
-                <span
-                  className={[
-                    'mem-form-stepper__node-label',
-                    'mem-form-stepper__node-label--short',
-                    isActive || isDone ? 'is-highlighted' : '',
-                  ]
-                    .filter(Boolean)
-                    .join(' ')}
-                >
-                  {short}
-                </span>
               </li>
             )
           })}
         </ol>
-      </div>
+      </nav>
     </div>
   )
 }

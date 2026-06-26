@@ -63,7 +63,7 @@ export function HomePage() {
               style={{ fontWeight: 700, color: '#222', maxWidth: 540 }}
             >
               The African-Diaspora Nursing Alliance (A-DNA) is a non-profit organization dedicated
-              to linking and advancing African nurses and midwives globally — driving meaningful
+              to linking and advancing African nurses and midwives globally, driving meaningful
               progress in health outcomes worldwide.
             </p>
           </div>
@@ -181,7 +181,7 @@ export function HomePage() {
               {
                 img: '/Pictures/Homepage4.jpeg',
                 title: 'Advancement of Nurses and Midwives',
-                text: 'We champion the professional growth of African nurses and midwives — addressing a critical gap in the face of a global nursing shortage and the longstanding underrepresentation of African perspectives in healthcare leadership.',
+                text: 'We champion the professional growth of African nurses and midwives, addressing a critical gap in the face of a global nursing shortage and the longstanding underrepresentation of African perspectives in healthcare leadership.',
               },
               {
                 img: '/Pictures/Communtyimpact.jpeg',
@@ -322,7 +322,7 @@ export function HomePage() {
                   borderClass: 'border-pcna-red',
                   dayClass: 'text-pcna-red',
                   title: 'G-DNA Global Health Conference: Accra 2027',
-                  desc: 'Save the date for our transformative summit in Accra, Ghana — connecting nurses worldwide.',
+                  desc: 'Save the date for our transformative summit in Accra, Ghana, connecting nurses worldwide.',
                 },
               ].map((item) => (
                 <div

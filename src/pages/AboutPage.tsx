@@ -18,7 +18,7 @@ export function AboutPage() {
                 Mission
               </h3>
               <p className="text-base sm:text-lg md:text-xl font-normal leading-relaxed max-w-2xl text-black">
-                We exist to bridge the gap between African nurses at home and abroad — building
+                We exist to bridge the gap between African nurses at home and abroad, building
                 lasting partnerships that strengthen nursing education across Africa and deliver
                 better health outcomes for African people everywhere.
               </p>
@@ -42,7 +42,7 @@ export function AboutPage() {
                 Vision
               </h3>
               <p className="text-white opacity-95 text-base sm:text-lg md:text-xl font-normal leading-relaxed max-w-2xl">
-                We envision an Africa that shapes the future of global nursing — cultivating a
+                We envision an Africa that shapes the future of global nursing, cultivating a
                 world-class workforce of nurses whose expertise transforms health outcomes for
                 communities everywhere.
               </p>

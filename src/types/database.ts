@@ -99,6 +99,18 @@ export type Database = {
         Args: { p_token: string; p_password: string }
         Returns: Json
       }
+      register_member_credentials: {
+        Args: { p_email: string; p_password: string }
+        Returns: Json
+      }
+      create_membership_checkout: {
+        Args: { p_email: string }
+        Returns: Json
+      }
+      get_membership_checkout_status: {
+        Args: { p_token: string }
+        Returns: Json
+      }
     }
   }
 }

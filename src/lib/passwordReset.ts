@@ -55,4 +55,13 @@ export async function resetMemberPassword(token: string, password: string): Prom
   if (isRpcFailure(data)) {
     throw new Error(data.error)
   }
+
+  if (
+    typeof data !== 'object' ||
+    data === null ||
+    !('success' in data) ||
+    (data as { success?: boolean }).success !== true
+  ) {
+    throw new Error('Unable to reset password. Please try again.')
+  }
 }
