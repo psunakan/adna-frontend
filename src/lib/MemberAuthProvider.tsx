@@ -31,6 +31,17 @@ const MemberAuthContext = createContext<MemberAuthContextValue | null>(null)
 
 const PROFILE_FETCH_TIMEOUT_MS = 10_000
 
+function isSessionInvalidError(error: unknown): boolean {
+  const message = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase()
+  return (
+    message.includes('invalid') ||
+    message.includes('expired') ||
+    message.includes('session') ||
+    message.includes('unauthorized') ||
+    message.includes('not authenticated')
+  )
+}
+
 async function fetchProfileWithTimeout(token: string) {
   let timeoutId: ReturnType<typeof setTimeout> | undefined
   try {
@@ -65,10 +76,12 @@ export function MemberAuthProvider({ children }: { children: ReactNode }) {
       const nextProfile = await fetchProfileWithTimeout(current.token)
       setSession(current)
       setProfile(nextProfile)
-    } catch {
-      clearStoredSession()
-      setSession(null)
-      setProfile(null)
+    } catch (error) {
+      if (isSessionInvalidError(error)) {
+        clearStoredSession()
+        setSession(null)
+        setProfile(null)
+      }
     }
   }, [])
 
@@ -92,11 +105,13 @@ export function MemberAuthProvider({ children }: { children: ReactNode }) {
           setSession(current)
           setProfile(nextProfile)
         }
-      } catch {
-        clearStoredSession()
-        if (!cancelled) {
-          setSession(null)
-          setProfile(null)
+      } catch (error) {
+        if (isSessionInvalidError(error)) {
+          clearStoredSession()
+          if (!cancelled) {
+            setSession(null)
+            setProfile(null)
+          }
         }
       } finally {
         if (!cancelled) setIsLoading(false)

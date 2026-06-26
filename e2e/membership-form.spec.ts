@@ -26,6 +26,20 @@ test.describe('Membership form', () => {
     await expect(page.getByText('Professional Information')).toBeVisible()
   })
 
+  test('clears state validation error after selecting a state', async ({ page }) => {
+    const form = page.locator('#membership-form')
+    await form.getByRole('radio', { name: 'Ms' }).check()
+    await form.getByPlaceholder('First name').fill('Jane')
+    await form.getByPlaceholder('Last name').fill('Doe')
+    await form.locator('select').nth(0).selectOption({ label: 'United States' })
+    await form.getByRole('button', { name: /Next/i }).click()
+
+    await expect(form.getByText('State / province / region is required.')).toBeVisible()
+
+    await form.locator('select').nth(1).selectOption({ label: 'Maryland' })
+    await expect(form.getByText('State / province / region is required.')).not.toBeVisible()
+  })
+
   test('shows duplicate email message with login link', async ({ page }) => {
     await mockDuplicateMemberEmail(page)
     await fillAndSubmitMembershipForm(page, 'existing@example.com')

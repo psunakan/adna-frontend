@@ -40,7 +40,7 @@ export function MembershipFormStepper({ step, completed, onGoToStep }: Props) {
           {STEPS.map(({ id, label, short }) => {
             const isActive = step === id
             const isDone = id < step || completed.includes(id)
-            const isClickable = isDone || isActive
+            const isClickable = isActive || id < step
 
             return (
               <li key={id} className="mem-form-stepper__node-wrap">

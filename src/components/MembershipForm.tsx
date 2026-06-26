@@ -1,9 +1,9 @@
 import { useState, type CSSProperties } from 'react'
 import { Link } from '@tanstack/react-router'
-import { useForm, Controller, type FieldErrors } from 'react-hook-form'
+import { useForm, Controller, type FieldErrors, type UseFormRegister } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import toast from 'react-hot-toast'
-import { COUNTRIES, STATE_DATA } from '../data/countries'
+import { COUNTRIES, COUNTRY_PHONE_CODES, STATE_DATA } from '../data/countries'
 import {
   membershipFormDefaults,
   membershipFormSchema,
@@ -97,36 +97,53 @@ function DuplicateEmailAlert() {
 function StateField({
   country,
   value,
+  name,
   onChange,
+  onBlur,
   error,
 }: {
   country: string
   value: string
-  onChange: (v: string) => void
+  name: string
+  onChange: (value: string) => void
+  onBlur: () => void
   error?: string
 }) {
   const data = STATE_DATA[country]
   if (!country) return null
 
+  const handleChange = (nextValue: string) => {
+    onChange(nextValue)
+  }
+
   return (
     <div style={{ marginTop: '0.75rem' }}>
-      <label style={labelStyle}>{data?.label ?? 'State / Province / Region'}</label>
+      <label style={labelStyle}>
+        {data?.label ?? 'State / Province / Region'}
+        <RequiredMark />
+      </label>
       {data ? (
         <select
+          name={name}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onBlur={onBlur}
+          onChange={(e) => handleChange(e.target.value)}
           style={{ ...fieldStyle(!!error), background: '#fff' }}
         >
           <option value="">-- Select --</option>
           {data.options.map((opt) => (
-            <option key={opt}>{opt}</option>
+            <option key={opt} value={opt}>
+              {opt}
+            </option>
           ))}
         </select>
       ) : (
         <input
           type="text"
+          name={name}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onBlur={onBlur}
+          onChange={(e) => handleChange(e.target.value)}
           placeholder="State / Province / Region"
           style={fieldStyle(!!error)}
         />
@@ -152,13 +169,29 @@ export function MembershipForm() {
     setValue,
     getValues,
     trigger,
+    clearErrors,
     getFieldState,
     formState: { errors },
   } = useForm<MembershipFormValues>({
     resolver: zodResolver(membershipFormSchema),
     defaultValues: membershipFormDefaults,
     mode: 'onTouched',
+    reValidateMode: 'onChange',
   })
+
+  const registerField = (
+    name: keyof MembershipFormValues,
+    options?: Parameters<UseFormRegister<MembershipFormValues>>[1],
+  ) => {
+    const { onChange, ...rest } = register(name, options)
+    return {
+      ...rest,
+      onChange: (event: Parameters<NonNullable<typeof onChange>>[0]) => {
+        void onChange(event)
+        void trigger(name)
+      },
+    }
+  }
 
   const showSpeciality = watch('showSpeciality')
   const countryResidence = watch('countryResidence')
@@ -355,7 +388,7 @@ export function MembershipForm() {
                           cursor: 'pointer',
                         }}
                       >
-                        <input type="radio" value={t} {...register('title')} />{' '}
+                        <input type="radio" value={t} {...registerField('title')} />{' '}
                         {t === 'Dr' ? 'Dr.' : t}
                       </label>
                     ))}
@@ -411,8 +444,13 @@ export function MembershipForm() {
                   </label>
                   <select
                     style={{ ...fieldStyle(!!errors.countryResidence), background: '#fff' }}
-                    {...register('countryResidence', {
-                      onChange: () => setValue('stateResidence', '', { shouldValidate: true }),
+                    {...registerField('countryResidence', {
+                      onChange: (event) => {
+                        const country = event.target.value
+                        setValue('stateResidence', '', { shouldValidate: false, shouldDirty: true })
+                        const phoneCode = COUNTRY_PHONE_CODES[country as (typeof COUNTRIES)[number]]
+                        if (phoneCode) setValue('phoneCode', phoneCode)
+                      },
                     })}
                   >
                     <option value="">-- Select country --</option>
@@ -428,9 +466,15 @@ export function MembershipForm() {
                     control={control}
                     render={({ field }) => (
                       <StateField
+                        key={countryResidence}
                         country={countryResidence}
-                        value={field.value}
-                        onChange={field.onChange}
+                        name={field.name}
+                        value={field.value ?? ''}
+                        onBlur={field.onBlur}
+                        onChange={(value) => {
+                          field.onChange(value)
+                          void trigger('stateResidence')
+                        }}
                         error={errors.stateResidence?.message}
                       />
                     )}
@@ -527,7 +571,7 @@ export function MembershipForm() {
                         key={v}
                         style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}
                       >
-                        <input type="radio" value={v} {...register('isStudent')} />{' '}
+                        <input type="radio" value={v} {...registerField('isStudent')} />{' '}
                         {v === 'yes' ? 'Yes' : 'No'}
                       </label>
                     ))}
@@ -541,7 +585,7 @@ export function MembershipForm() {
                   </label>
                   <select
                     style={{ ...fieldStyle(!!errors.education), background: '#fff' }}
-                    {...register('education')}
+                    {...registerField('education')}
                   >
                     <option value="">-Select-</option>
                     {['Diploma', 'Bachelors', 'Masters', 'DNP', 'PhD', 'Other'].map((o) => (
@@ -579,8 +623,18 @@ export function MembershipForm() {
                     <label
                       style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}
                     >
-                      <input type="checkbox" {...register('showSpeciality')} /> Specify Speciality
-                      Nurse
+                      <input
+                        type="checkbox"
+                        {...registerField('showSpeciality', {
+                          onChange: (event) => {
+                            if (!event.target.checked) {
+                              setValue('licenceSpeciality', '', { shouldValidate: false })
+                              clearErrors('licenceSpeciality')
+                            }
+                          },
+                        })}
+                      />{' '}
+                      Specify Speciality Nurse
                     </label>
                   </div>
                   <FieldError message={errors.licences?.message} />
@@ -590,7 +644,7 @@ export function MembershipForm() {
                         type="text"
                         placeholder="Specify speciality"
                         style={{ ...fieldStyle(!!errors.licenceSpeciality), marginTop: '0.5rem' }}
-                        {...register('licenceSpeciality')}
+                        {...registerField('licenceSpeciality')}
                       />
                       <FieldError message={errors.licenceSpeciality?.message} />
                     </>
@@ -603,8 +657,9 @@ export function MembershipForm() {
                   </label>
                   <select
                     style={{ ...fieldStyle(!!errors.countryPractice), background: '#fff' }}
-                    {...register('countryPractice', {
-                      onChange: () => setValue('statePractice', '', { shouldValidate: true }),
+                    {...registerField('countryPractice', {
+                      onChange: () =>
+                        setValue('statePractice', '', { shouldValidate: false, shouldDirty: true }),
                     })}
                   >
                     <option value="">-- Select country --</option>
@@ -620,9 +675,15 @@ export function MembershipForm() {
                     control={control}
                     render={({ field }) => (
                       <StateField
+                        key={countryPractice}
                         country={countryPractice}
-                        value={field.value}
-                        onChange={field.onChange}
+                        name={field.name}
+                        value={field.value ?? ''}
+                        onBlur={field.onBlur}
+                        onChange={(value) => {
+                          field.onChange(value)
+                          void trigger('statePractice')
+                        }}
                         error={errors.statePractice?.message}
                       />
                     )}
@@ -635,7 +696,7 @@ export function MembershipForm() {
                   </label>
                   <select
                     style={{ ...fieldStyle(!!errors.licenceStatus), background: '#fff' }}
-                    {...register('licenceStatus')}
+                    {...registerField('licenceStatus')}
                   >
                     <option value="">-Select-</option>
                     {['Active', 'InActive', 'Not Applicable'].map((o) => (
@@ -723,7 +784,7 @@ export function MembershipForm() {
                         key={e}
                         style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}
                       >
-                        <input type="radio" value={e} {...register('employmentStatus')} /> {e}
+                        <input type="radio" value={e} {...registerField('employmentStatus')} /> {e}
                       </label>
                     ))}
                   </div>
@@ -783,7 +844,7 @@ export function MembershipForm() {
                   </label>
                   <select
                     style={{ ...fieldStyle(!!errors.positionTitle), background: '#fff' }}
-                    {...register('positionTitle')}
+                    {...registerField('positionTitle')}
                   >
                     <option value="">-Select-</option>
                     {[
@@ -812,7 +873,7 @@ export function MembershipForm() {
                   </label>
                   <select
                     style={{ ...fieldStyle(!!errors.practiceSetting), background: '#fff' }}
-                    {...register('practiceSetting')}
+                    {...registerField('practiceSetting')}
                   >
                     <option value="">-Select-</option>
                     {[
@@ -897,7 +958,7 @@ export function MembershipForm() {
                   </label>
                   <select
                     style={{ ...fieldStyle(!!errors.membershipType), background: '#fff' }}
-                    {...register('membershipType')}
+                    {...registerField('membershipType')}
                   >
                     <option value="">-Select-</option>
                     <option value="premium">Premium Membership ($150)</option>
