@@ -84,8 +84,7 @@ export async function mockMemberPortalApi(page: Page, options: MockPortalOptions
       { profileIndexKey: MOCK_PROFILE_INDEX_KEY, profilesKey: MOCK_PROFILES_KEY },
     )
 
-    const profile =
-      sequence[Math.min(index, sequence.length - 1)] ?? buildMockMember(initialTier)
+    const profile = sequence[Math.min(index, sequence.length - 1)] ?? buildMockMember(initialTier)
 
     await route.fulfill({
       status: 200,
