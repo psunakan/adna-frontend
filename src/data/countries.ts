@@ -194,6 +194,15 @@ export const COUNTRIES = [
   'Zimbabwe',
 ] as const
 
+/** Default phone codes when a residence country is selected. */
+export const COUNTRY_PHONE_CODES: Partial<Record<(typeof COUNTRIES)[number], string>> = {
+  'United States': '+1',
+  Canada: '+1',
+  'United Kingdom': '+44',
+  Ghana: '+233',
+  Nigeria: '+234',
+}
+
 export const STATE_DATA: Record<string, { label: string; options: string[] }> = {
   'United States': {
     label: 'State',

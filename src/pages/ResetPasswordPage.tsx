@@ -43,11 +43,25 @@ export function ResetPasswordPage() {
   const {
     register,
     handleSubmit,
+    trigger,
     formState: { errors },
   } = useForm<ResetPasswordFormValues>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: { password: '', confirmPassword: '' },
+    mode: 'onTouched',
+    reValidateMode: 'onChange',
   })
+
+  const registerField = (name: keyof ResetPasswordFormValues) => {
+    const { onChange, ...rest } = register(name)
+    return {
+      ...rest,
+      onChange: (event: Parameters<NonNullable<typeof onChange>>[0]) => {
+        void onChange(event)
+        void trigger(['password', 'confirmPassword'])
+      },
+    }
+  }
 
   const onSubmit = handleSubmit(async (data) => {
     if (!token) {
@@ -137,7 +151,7 @@ export function ResetPasswordPage() {
                 autoComplete="new-password"
                 placeholder="At least 8 characters"
                 style={fieldStyle(!!errors.password)}
-                {...register('password')}
+                {...registerField('password')}
               />
               {errors.password?.message && <p style={errorTextStyle}>{errors.password.message}</p>}
             </div>
@@ -152,7 +166,7 @@ export function ResetPasswordPage() {
                 autoComplete="new-password"
                 placeholder="Re-enter your password"
                 style={fieldStyle(!!errors.confirmPassword)}
-                {...register('confirmPassword')}
+                {...registerField('confirmPassword')}
               />
               {errors.confirmPassword?.message && (
                 <p style={errorTextStyle}>{errors.confirmPassword.message}</p>
