@@ -1,8 +1,8 @@
 @import 'tailwindcss';
 
 @theme {
-  --font-sans: 'Open Sans', sans-serif;
-  --font-heading: 'Montserrat', sans-serif;
+  --font-sans: 'Source Sans 3', ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'Plus Jakarta Sans', 'Source Sans 3', ui-sans-serif, sans-serif;
 
   --color-pcna-green: #116b53;
   --color-pcna-red: #cc0000;
@@ -27,9 +27,11 @@
 html {
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
-/* Page Frame inspired by PCNA */
+/* === TYPOGRAPHY === */
 body {
   border: 16px solid #116b53;
   border-bottom: none;
@@ -37,7 +39,56 @@ body {
   background-color: var(--color-pcna-light);
   color: var(--color-pcna-dark);
   font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  font-weight: 400;
+  line-height: 1.65;
+  letter-spacing: 0.01em;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-heading {
+  font-family: var(--font-heading);
+  font-feature-settings:
+    'liga' 1,
+    'kern' 1;
+  line-height: 1.2;
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: -0.02em;
+}
+
+.font-heading.uppercase,
+h1.uppercase,
+h2.uppercase,
+h3.uppercase {
+  letter-spacing: 0.06em;
+}
+
+p {
+  line-height: 1.7;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+strong,
+b {
+  font-weight: 600;
 }
 
 @media (min-width: 1024px) {
@@ -262,6 +313,414 @@ body {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
+/* === MEMBERSHIP FORM === */
+.mem-form-section {
+  padding-bottom: 7rem;
+}
+
+.mem-form-intro {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.mem-form-intro__title {
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #0a3d2e;
+  margin: 0;
+}
+
+.mem-form-intro__subtitle {
+  color: #334155;
+  font-size: 1.05rem;
+  font-weight: 400;
+  line-height: 1.65;
+  margin: 0.5rem 0 0;
+}
+
+.mem-form-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(13, 61, 43, 0.08);
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.mem-form-body {
+  margin-top: 1.5rem;
+}
+
+.mem-form-required {
+  color: #cc0000;
+  white-space: nowrap;
+}
+
+.mem-form-optional {
+  color: #6b7280;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.mem-form-name-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.mem-form-phone-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.mem-form-stepper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.mem-form-stepper__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.mem-form-stepper__eyebrow {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.mem-form-stepper__title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0d3d2b;
+}
+
+.mem-form-stepper__rail {
+  position: relative;
+  padding: 0 0.25rem;
+}
+
+.mem-form-stepper__rail-line {
+  position: absolute;
+  top: 1.125rem;
+  left: 12.5%;
+  right: 12.5%;
+  height: 4px;
+  border-radius: 999px;
+  background: #e8ecef;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.mem-form-stepper__rail-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #0d3d2b 0%, #116b53 45%, #5dcaa5 100%);
+  box-shadow: 0 0 12px rgba(93, 202, 165, 0.45);
+  transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mem-form-stepper__nodes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.mem-form-stepper__node-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.mem-form-stepper__node {
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 3px solid #e8ecef;
+  border-radius: 999px;
+  background: #fff;
+  cursor: default;
+  font-family: inherit;
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+.mem-form-stepper__node-inner {
+  width: 100%;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #94a3b8;
+  line-height: 1;
+}
+
+.mem-form-stepper__check {
+  width: 0.95rem;
+  height: 0.95rem;
+  color: #fff;
+}
+
+.mem-form-stepper__node.is-active {
+  border-color: #0d3d2b;
+  background: #0d3d2b;
+  box-shadow:
+    0 0 0 4px rgba(13, 61, 43, 0.12),
+    0 4px 14px rgba(13, 61, 43, 0.22);
+  transform: scale(1.06);
+  animation: mem-stepper-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes mem-stepper-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 4px rgba(13, 61, 43, 0.12),
+      0 4px 14px rgba(13, 61, 43, 0.22);
+  }
+  50% {
+    box-shadow:
+      0 0 0 6px rgba(93, 202, 165, 0.2),
+      0 4px 18px rgba(13, 61, 43, 0.28);
+  }
+}
+
+.mem-form-stepper__node:focus-visible {
+  outline: 2px solid #5dcaa5;
+  outline-offset: 3px;
+}
+
+.mem-form-stepper__node.is-active .mem-form-stepper__node-inner {
+  color: #fff;
+}
+
+.mem-form-stepper__node.is-done:not(.is-active) {
+  border-color: #5dcaa5;
+  background: #5dcaa5;
+  cursor: pointer;
+}
+
+.mem-form-stepper__node.is-done:not(.is-active):hover {
+  border-color: #0d3d2b;
+  background: #0d3d2b;
+  box-shadow: 0 4px 12px rgba(13, 61, 43, 0.18);
+}
+
+.mem-form-stepper__node:disabled:not(.is-active):not(.is-done) {
+  opacity: 0.85;
+}
+
+.mem-form-stepper__node-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #94a3b8;
+  text-align: center;
+  padding: 0 0.15rem;
+  transition: color 0.25s ease;
+}
+
+.mem-form-stepper__node-label.is-highlighted {
+  color: #0d3d2b;
+}
+
+.mem-form-stepper__node-label--short {
+  display: none;
+}
+
+/* === MEMBER PORTAL — membership upgrade === */
+.portal-membership-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.5rem 1.75rem;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e8ecef;
+}
+
+.portal-membership-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.portal-membership-card__eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.portal-membership-card__refresh {
+  border: 1.5px solid #0d3d2b;
+  background: #fff;
+  color: #0d3d2b;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.portal-membership-card__refresh:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.portal-membership-card__lead {
+  margin: 0 0 1.25rem;
+  color: #475569;
+  line-height: 1.65;
+  font-size: 1rem;
+}
+
+.portal-membership-card__options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.portal-membership-card__option {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.15rem 1.25rem;
+  background: #f8fafc;
+}
+
+.portal-membership-card__option-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.65rem;
+}
+
+.portal-membership-card__option-head h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0d3d2b;
+}
+
+.portal-membership-card__price {
+  margin: 0.2rem 0 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.portal-membership-card__option-copy {
+  margin: 0 0 1rem;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: #475569;
+}
+
+.portal-membership-card__pay-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1.15rem;
+  border-radius: 8px;
+  background: #0d3d2b;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.portal-membership-card__pay-btn:hover {
+  opacity: 0.88;
+}
+
+.portal-membership-card__footnote {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #64748b;
+  line-height: 1.55;
+}
+
+.mem-hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.mem-hero-media {
+  width: 100%;
+}
+
+.mem-hero-image {
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+  display: block;
+  border-radius: 12px;
+}
+
+@media (min-width: 640px) {
+  .mem-form-name-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mem-form-phone-grid {
+    grid-template-columns: 160px minmax(0, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .mem-form-name-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .mem-form-stepper__rail-line {
+    left: 14%;
+    right: 14%;
+    top: 1rem;
+  }
+
+  .mem-form-stepper__node {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .mem-form-stepper__node-label--full {
+    display: none;
+  }
+
+  .mem-form-stepper__node-label--short {
+    display: block;
+    font-size: 0.62rem;
+  }
+}
+
 /* === MEMBERSHIP === */
 .mem-pad {
   padding: 5rem 3rem;
@@ -344,22 +803,30 @@ body {
 }
 
 .mem-hero-btn {
-  display: inline-block;
-  padding: 0.9rem 2.5rem;
-  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: fit-content;
+  max-width: 100%;
+  padding: 0.65rem 1.5rem;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   text-decoration: none;
   background: #5dcaa5;
   color: #0d3d2b;
   border-radius: 0.375rem;
-  transition: opacity 0.15s;
-  width: fit-content;
-  height: auto;
+  transition:
+    opacity 0.15s,
+    transform 0.15s;
   align-self: flex-start;
   cursor: pointer;
   border: none;
+  line-height: 1.2;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .mem-hero-btn:hover {
   opacity: 0.85;
@@ -504,17 +971,15 @@ body {
   #membership-form select {
     font-size: 16px !important;
   }
-  #form-steps {
-    overflow-x: auto !important;
-    white-space: nowrap !important;
-    padding-bottom: 4px !important;
-  }
 
   .mem-hero-btn {
-    display: inline-block !important;
+    display: inline-flex !important;
     width: fit-content !important;
+    max-width: 100% !important;
     height: auto !important;
-    padding: 12px 24px !important;
+    min-height: 0 !important;
+    padding: 0.55rem 1.15rem !important;
+    font-size: 10px !important;
     align-self: flex-start !important;
   }
 }

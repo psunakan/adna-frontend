@@ -53,7 +53,7 @@ export function PillarsSection() {
                       borderRadius: '50%',
                       background: active === p.id ? '#116b53' : '#e2e8f0',
                       color: active === p.id ? '#fff' : '#64748b',
-                      fontFamily: 'Montserrat, sans-serif',
+                      fontFamily: 'var(--font-heading)',
                       fontWeight: 900,
                       fontSize: '1.2rem',
                       display: 'flex',
@@ -66,7 +66,7 @@ export function PillarsSection() {
                   <span
                     className="ptab-title"
                     style={{
-                      fontFamily: 'Montserrat, sans-serif',
+                      fontFamily: 'var(--font-heading)',
                       fontWeight: 700,
                       fontSize: '1.125rem',
                       color: active === p.id ? '#116b53' : '#64748b',

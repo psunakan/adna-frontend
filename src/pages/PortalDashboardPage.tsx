@@ -1,8 +1,11 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import toast from 'react-hot-toast'
+import { MembershipUpgradeSection } from '../components/MembershipUpgradeSection'
+import { MemberNameWithBadge } from '../components/MembershipBadge'
 import { useMemberAuth } from '../lib/MemberAuthProvider'
 import { PORTAL_LOGIN_PATH } from '../lib/memberAuth'
+import { normalizeMembershipTier } from '../lib/membershipTier'
 
 function formatDate(value: string | null) {
   if (!value) return '—'
@@ -14,13 +17,22 @@ function formatDate(value: string | null) {
 
 export function PortalDashboardPage() {
   const navigate = useNavigate()
-  const { profile, logout, isLoading, isAuthenticated } = useMemberAuth()
+  const { profile, logout, isLoading, isAuthenticated, refreshProfile } = useMemberAuth()
+  const [isRefreshing, setIsRefreshing] = useState(false)
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       navigate({ to: PORTAL_LOGIN_PATH, replace: true })
     }
   }, [isAuthenticated, isLoading, navigate])
+
+  useEffect(() => {
+    const onFocus = () => {
+      if (isAuthenticated) void refreshProfile()
+    }
+    window.addEventListener('focus', onFocus)
+    return () => window.removeEventListener('focus', onFocus)
+  }, [isAuthenticated, refreshProfile])
 
   if (isLoading) {
     return (
@@ -52,6 +64,20 @@ export function PortalDashboardPage() {
     }
   }
 
+  const handleRefresh = async () => {
+    setIsRefreshing(true)
+    try {
+      await refreshProfile()
+      toast.success('Membership status updated.')
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Could not refresh profile.')
+    } finally {
+      setIsRefreshing(false)
+    }
+  }
+
+  const membershipTier = normalizeMembershipTier(profile.membership_tier)
+
   return (
     <section
       className="animate-fade-in"
@@ -78,7 +104,13 @@ export function PortalDashboardPage() {
                 marginBottom: '0.35rem',
               }}
             >
-              Welcome, {profile.first_name}
+              Welcome,{' '}
+              <MemberNameWithBadge
+                name={profile.first_name}
+                tier={membershipTier}
+                badgeSize={24}
+                nameStyle={{ fontWeight: 900 }}
+              />
             </h1>
             <p style={{ color: '#64748b', fontSize: '1.05rem' }}>Your A-DNA member account</p>
           </div>
@@ -117,6 +149,15 @@ export function PortalDashboardPage() {
             when that option becomes available.
           </div>
         )}
+
+        <div style={{ marginBottom: '1.5rem' }}>
+          <MembershipUpgradeSection
+            tier={membershipTier}
+            email={profile.email}
+            onRefresh={handleRefresh}
+            isRefreshing={isRefreshing}
+          />
+        </div>
 
         <div
           style={{

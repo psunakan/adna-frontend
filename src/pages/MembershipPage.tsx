@@ -36,20 +36,21 @@ export function MembershipPage() {
       <div className="mem-pad" style={{ background: '#0D3D2B' }}>
         <div className="mem-inner">
           <div className="mem-hero-cols">
-            <div>
+            <div className="mem-hero-content">
               <h2
+                className="font-heading"
                 style={{
                   fontSize: 'clamp(2.4rem,5vw,4rem)',
-                  fontWeight: 900,
+                  fontWeight: 800,
                   textTransform: 'uppercase',
-                  letterSpacing: '-0.02em',
+                  letterSpacing: '-0.01em',
                   color: '#fff',
                   lineHeight: 1.05,
                   margin: '0 0 1.5rem',
                 }}
               >
                 Become a<br />
-                <em style={{ fontWeight: 900, fontStyle: 'italic', color: '#9FE1CB' }}>Member</em>
+                <em style={{ fontWeight: 800, fontStyle: 'italic', color: '#9FE1CB' }}>Member</em>
                 <br />
                 Today
               </h2>
@@ -60,7 +61,7 @@ export function MembershipPage() {
                   fontSize: '1.05rem',
                   lineHeight: 1.75,
                   maxWidth: 540,
-                  margin: '0 0 2.5rem',
+                  margin: '0 0 1.75rem',
                 }}
               >
                 Join a vibrant community of professionals and changemakers committed to growth,
@@ -68,14 +69,14 @@ export function MembershipPage() {
                 supports your personal and collective development.
               </p>
               <button type="button" className="mem-hero-btn" onClick={scrollToForm}>
-                Click to Register
+                Register Now
               </button>
             </div>
-            <div>
+            <div className="mem-hero-media">
               <img
-                src="https://g-dna.org/images/banner/banner-image4.jpg"
-                alt="A-DNA Membership"
-                style={{ width: '100%', maxHeight: 420, objectFit: 'cover', display: 'block' }}
+                src="/Pictures/JointheAlliance.jpeg"
+                alt="A-DNA members and community"
+                className="mem-hero-image"
               />
             </div>
           </div>
