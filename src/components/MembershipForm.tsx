@@ -56,6 +56,15 @@ function getFirstErrorMessage(
   }
 }
 
+function findFirstStepWithError(
+  fieldErrors: FieldErrors<MembershipFormValues>,
+): keyof typeof STEP_FIELDS | null {
+  for (const stepNumber of [1, 2, 3, 4] as const) {
+    if (getFirstErrorMessage(fieldErrors, STEP_FIELDS[stepNumber])) return stepNumber
+  }
+  return null
+}
+
 function fieldStyle(hasError: boolean): CSSProperties {
   return hasError ? { ...inputStyle, borderColor: '#cc0000' } : inputStyle
 }
@@ -204,7 +213,7 @@ export function MembershipForm() {
   }
 
   const goToStep = (target: number) => {
-    if (completed.includes(target) || target === step) setStep(target)
+    if (target === step || target < step) setStep(target)
   }
 
   const scrollToForm = () => {
@@ -254,9 +263,17 @@ export function MembershipForm() {
   }
 
   const onInvalid = (fieldErrors: FieldErrors<MembershipFormValues>) => {
-    toast.error(
-      getFirstErrorMessage(fieldErrors, STEP_FIELDS[4]) ?? 'Please complete all required fields.',
-    )
+    const invalidStep = findFirstStepWithError(fieldErrors)
+    if (invalidStep) {
+      setStep(invalidStep)
+      scrollToForm()
+      toast.error(
+        getFirstErrorMessage(fieldErrors, STEP_FIELDS[invalidStep]) ??
+          'Please complete all required fields.',
+      )
+      return
+    }
+    toast.error('Please complete all required fields.')
   }
 
   const onSubmit = async (data: MembershipFormValues) => {
@@ -296,7 +313,11 @@ export function MembershipForm() {
         setDuplicateEmail(true)
         setStep(1)
         setCompleted((prev) => prev.filter((n) => n !== 1))
+        scrollToForm()
         toast.error('An account with this email already exists.')
+        window.setTimeout(() => {
+          document.getElementById('membership-email')?.focus()
+        }, 150)
         return
       }
       const message =
@@ -515,6 +536,7 @@ export function MembershipForm() {
                     <RequiredMark />
                   </label>
                   <input
+                    id="membership-email"
                     type="email"
                     placeholder="your@email.com"
                     style={fieldStyle(!!errors.email || duplicateEmail)}
