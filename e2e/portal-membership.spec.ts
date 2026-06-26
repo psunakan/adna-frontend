@@ -120,7 +120,7 @@ test.describe('Member portal membership upgrades', () => {
     await page.goto('/portal/login')
 
     await page.getByLabel('Email').fill('demo@adna.org')
-    await page.getByLabel('Password').fill('DemoPassword123!')
+    await page.getByTestId('portal-login-password').fill('DemoPassword123!')
     await page.getByRole('button', { name: 'Sign In' }).click()
 
     await expect(page).toHaveURL(/\/portal$/)

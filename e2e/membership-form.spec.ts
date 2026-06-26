@@ -139,7 +139,7 @@ test.describe('Membership form', () => {
     await fillMembershipFormStep3(form)
     await fillMembershipFormStep4(form)
 
-    await expect(form.getByRole('heading', { name: 'Review & Submit' })).toBeVisible()
+    await expect(form.getByTestId('membership-form-review')).toBeVisible()
     await expect(form.getByText('Ms Jane Doe')).toBeVisible()
     await expect(form.getByText('Diaspora Membership ($75)')).toBeVisible()
 
@@ -148,7 +148,7 @@ test.describe('Membership form', () => {
     await form.getByPlaceholder('First name').fill('Janet')
     await form.getByTestId('edit-section-done').click()
 
-    await expect(form.getByRole('heading', { name: 'Review & Submit' })).toBeVisible()
+    await expect(form.getByTestId('membership-form-review')).toBeVisible()
     await expect(form.getByText('Ms Janet Doe')).toBeVisible()
   })
 

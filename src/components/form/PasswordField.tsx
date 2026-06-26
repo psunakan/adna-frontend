@@ -25,7 +25,7 @@ export const PasswordField = forwardRef<HTMLInputElement, Props>(function Passwo
         type="button"
         className="password-field__toggle"
         data-testid={testId ? `${testId}-toggle` : undefined}
-        aria-label={visible ? 'Hide password' : 'Show password'}
+        aria-label={visible ? 'Hide characters' : 'Show characters'}
         aria-pressed={visible}
         onClick={() => setVisible((current) => !current)}
       >

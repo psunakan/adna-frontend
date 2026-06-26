@@ -8,7 +8,7 @@ test.describe('Member portal login', () => {
   test('renders login form', async ({ page }) => {
     await expect(page.getByRole('heading', { name: 'Member Portal' })).toBeVisible()
     await expect(page.getByLabel('Email')).toBeVisible()
-    await expect(page.getByLabel('Password')).toBeVisible()
+    await expect(page.getByTestId('portal-login-password')).toBeVisible()
     await expect(page.getByRole('button', { name: 'Sign In' })).toBeVisible()
   })
 
@@ -20,7 +20,7 @@ test.describe('Member portal login', () => {
 
   test('validates invalid email format', async ({ page }) => {
     await page.getByLabel('Email').fill('not-an-email')
-    await page.getByLabel('Password').fill('secret')
+    await page.getByTestId('portal-login-password').fill('secret')
     await page.getByRole('button', { name: 'Sign In' }).click()
     await expect(page.getByText('Please enter a valid email address.')).toBeVisible()
   })
