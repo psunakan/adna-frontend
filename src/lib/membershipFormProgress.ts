@@ -1,16 +1,10 @@
-import {
-  membershipFormDefaults,
-  type MembershipFormValues,
-} from './membershipFormSchema'
+import { membershipFormDefaults, type MembershipFormValues } from './membershipFormSchema'
 
 const STORAGE_KEY = 'adna_membership_form_draft'
 const DRAFT_VERSION = 1
 const MAX_AGE_MS = 14 * 24 * 60 * 60 * 1000
 
-export type SavedMembershipFormValues = Omit<
-  MembershipFormValues,
-  'password' | 'confirmPassword'
->
+export type SavedMembershipFormValues = Omit<MembershipFormValues, 'password' | 'confirmPassword'>
 
 export type MembershipFormDraft = {
   version: number
@@ -24,9 +18,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
 }
 
-export function stripSensitiveFormValues(
-  values: MembershipFormValues,
-): SavedMembershipFormValues {
+export function stripSensitiveFormValues(values: MembershipFormValues): SavedMembershipFormValues {
   const rest = { ...values }
   delete rest.password
   delete rest.confirmPassword

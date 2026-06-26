@@ -58,9 +58,8 @@ export function formatMemberPhoneE164(
   const defaultCountry = resolveDefaultCountry(phoneCountryIso, countryResidence)
 
   const parsed =
-    (defaultCountry
-      ? parsePhoneNumberFromString(internationalNumber, defaultCountry)
-      : null) ?? parsePhoneNumberFromString(internationalNumber)
+    (defaultCountry ? parsePhoneNumberFromString(internationalNumber, defaultCountry) : null) ??
+    parsePhoneNumberFromString(internationalNumber)
 
   if (!parsed?.isValid()) return null
   return parsed.format('E.164')

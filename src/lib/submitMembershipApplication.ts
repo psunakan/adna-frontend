@@ -108,10 +108,13 @@ export async function submitMembershipApplication(
     throw new Error(error.message)
   }
 
-  const { data: credsResult, error: credsError } = await supabase.rpc('register_member_credentials', {
-    p_email: email,
-    p_password: data.password,
-  })
+  const { data: credsResult, error: credsError } = await supabase.rpc(
+    'register_member_credentials',
+    {
+      p_email: email,
+      p_password: data.password,
+    },
+  )
 
   if (credsError) {
     throw new Error(credsError.message)

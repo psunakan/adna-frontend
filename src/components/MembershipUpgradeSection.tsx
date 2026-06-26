@@ -65,8 +65,7 @@ export function MembershipUpgradeSection({ tier, email, onRefresh, isRefreshing 
             {current === 'regular'
               ? 'You registered as a free member. Upgrade anytime through our secure Zeffy checkout.'
               : 'Upgrade to Premium anytime through our secure Zeffy checkout.'}{' '}
-            Use <strong>{email}</strong> when you pay so we can match your payment to your
-            account.
+            Use <strong>{email}</strong> when you pay so we can match your payment to your account.
           </p>
           <div className="portal-membership-card__options">
             {availableUpgrades.map((option) => (

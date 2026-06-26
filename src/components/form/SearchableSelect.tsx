@@ -1,12 +1,4 @@
-import {
-  useCallback,
-  useEffect,
-  useId,
-  useMemo,
-  useRef,
-  useState,
-  type CSSProperties,
-} from 'react'
+import { useCallback, useEffect, useId, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 
 export type SearchableSelectOption = {
@@ -51,17 +43,13 @@ function getFooterInset() {
   return Math.max(VIEWPORT_PADDING, window.innerHeight - rect.top + 8)
 }
 
-function measurePanelLayout(
-  trigger: HTMLElement,
-  searchable: boolean,
-): PanelLayout {
+function measurePanelLayout(trigger: HTMLElement, searchable: boolean): PanelLayout {
   const rect = trigger.getBoundingClientRect()
   const footerInset = getFooterInset()
   const searchHeight = searchable ? 49 : 0
   const spaceBelow = window.innerHeight - rect.bottom - footerInset - PANEL_GAP
   const spaceAbove = rect.top - VIEWPORT_PADDING - PANEL_GAP
-  const placement =
-    spaceBelow < MIN_PANEL_HEIGHT && spaceAbove > spaceBelow ? 'above' : 'below'
+  const placement = spaceBelow < MIN_PANEL_HEIGHT && spaceAbove > spaceBelow ? 'above' : 'below'
   const availableSpace = placement === 'below' ? spaceBelow : spaceAbove
   const listMaxHeight = Math.max(120, availableSpace - searchHeight - 12)
 
@@ -211,10 +199,7 @@ export function SearchableSelect({
         ) : null}
         <ul
           id={listboxId}
-          className={[
-            'searchable-select__list',
-            searchable ? '' : 'searchable-select__list--plain',
-          ]
+          className={['searchable-select__list', searchable ? '' : 'searchable-select__list--plain']
             .filter(Boolean)
             .join(' ')}
           role="listbox"

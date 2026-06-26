@@ -34,7 +34,9 @@ export const membershipFormSchema = z
     countryPractice: z.string().min(1, 'Country of practice is required.'),
     statePractice: z.string().trim().min(1, 'Practice state / province / region is required.'),
     licenceStatus: z.string().min(1, 'License status is required.'),
-    nursingEducation: z.string().min(1, 'Please select the country of entry-level nursing education.'),
+    nursingEducation: z
+      .string()
+      .min(1, 'Please select the country of entry-level nursing education.'),
     employmentStatus: z.string().min(1, 'Employment status is required.'),
     specialties: z.array(z.string()).min(1, 'Please select at least one specialty.'),
     positionTitle: z.string().min(1, 'Position title is required.'),

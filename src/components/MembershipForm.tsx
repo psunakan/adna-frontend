@@ -1,6 +1,13 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { Link } from '@tanstack/react-router'
-import { useForm, Controller, type Control, type FieldErrors, type UseFormRegister, type UseFormTrigger } from 'react-hook-form'
+import {
+  useForm,
+  Controller,
+  type Control,
+  type FieldErrors,
+  type UseFormRegister,
+  type UseFormTrigger,
+} from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import toast from 'react-hot-toast'
 import { COUNTRIES, STATE_DATA } from '../data/countries'
