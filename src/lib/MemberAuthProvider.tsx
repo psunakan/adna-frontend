@@ -24,7 +24,7 @@ type MemberAuthContextValue = {
   isLoading: boolean
   login: (email: string, password: string) => Promise<void>
   logout: () => Promise<void>
-  refreshProfile: () => Promise<void>
+  refreshProfile: () => Promise<MemberProfile | null>
 }
 
 const MemberAuthContext = createContext<MemberAuthContextValue | null>(null)
@@ -64,24 +64,31 @@ export function MemberAuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<MemberProfile | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  const refreshProfile = useCallback(async () => {
+  const refreshProfile = useCallback(async (): Promise<MemberProfile | null> => {
     const current = getStoredSession()
     if (!current) {
       setSession(null)
       setProfile(null)
-      return
+      return null
     }
 
     try {
       const nextProfile = await fetchProfileWithTimeout(current.token)
-      setSession(current)
+      const nextSession: MemberSession = {
+        token: current.token,
+        member: { ...current.member, ...nextProfile },
+      }
+      storeSession(nextSession)
+      setSession(nextSession)
       setProfile(nextProfile)
+      return nextProfile
     } catch (error) {
       if (isSessionInvalidError(error)) {
         clearStoredSession()
         setSession(null)
         setProfile(null)
       }
+      throw error
     }
   }, [])
 

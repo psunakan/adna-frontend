@@ -67,8 +67,15 @@ export function PortalDashboardPage() {
   const handleRefresh = async () => {
     setIsRefreshing(true)
     try {
-      await refreshProfile()
-      toast.success('Membership status updated.')
+      const nextProfile = await refreshProfile()
+      if (nextProfile?.is_active) {
+        toast.success('Membership activated. Thank you for your payment!')
+      } else {
+        toast.error(
+          'No completed payment found yet. Pay on Zeffy using the same email as your account, then refresh again.',
+          { duration: 6000 },
+        )
+      }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Could not refresh profile.')
     } finally {
@@ -163,8 +170,8 @@ export function PortalDashboardPage() {
               lineHeight: 1.6,
             }}
           >
-            Your membership payment is still pending. Complete payment on Zeffy to activate full
-            access, then return here and click <strong>Refresh status</strong> below.
+            Your membership payment is still pending. Complete payment on Zeffy using{' '}
+            <strong>{profile.email}</strong>, then click <strong>Refresh status</strong> below.
           </div>
         )}
 
