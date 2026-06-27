@@ -14,6 +14,7 @@
     "secrets:github": "node --env-file=.env scripts/github-secrets-set.mjs",
     "zeffy:webhook-url": "node --env-file=.env scripts/zeffy-webhook-test.mjs",
     "zeffy:sync-test": "node --env-file=.env scripts/zeffy-sync-test.mjs",
+    "zeffy:apply-payment": "node --env-file=.env scripts/apply-zeffy-payment.mjs",
     "connect:supabase": "bash scripts/connect-supabase.sh",
     "import:membership": "python3 scripts/import-legacy-membership.py",
     "test:e2e": "playwright test",
