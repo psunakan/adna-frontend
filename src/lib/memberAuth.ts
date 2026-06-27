@@ -139,18 +139,11 @@ export async function refreshMemberMembershipStatus(
     throw new Error('Member portal is not configured. Contact the site administrator.')
   }
 
-  const zeffySyncEnabled = import.meta.env.VITE_ENABLE_ZEFFY_MEMBERSHIP_SYNC === 'true'
-
-  if (!zeffySyncEnabled) {
-    return refreshMemberMembershipStatusRpc(token)
-  }
-
   const { data, error } = await supabase.functions.invoke('zeffy-membership-sync', {
     body: { token },
   })
 
   if (error) {
-    // Edge function unavailable or errored — fall back to DB-only refresh.
     return refreshMemberMembershipStatusRpc(token)
   }
 

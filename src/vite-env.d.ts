@@ -4,8 +4,6 @@ interface ImportMetaEnv {
   readonly VITE_SUPABASE_URL: string
   readonly VITE_SUPABASE_PUBLISHABLE_KEY: string
   readonly VITE_ZEFFY_MEMBERSHIP_URL?: string
-  /** Set to "true" after deploying zeffy-membership-sync to Supabase. */
-  readonly VITE_ENABLE_ZEFFY_MEMBERSHIP_SYNC?: string
   /** @deprecated Use VITE_SUPABASE_PUBLISHABLE_KEY */
   readonly VITE_SUPABASE_ANON_KEY?: string
 }
