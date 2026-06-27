@@ -74,18 +74,18 @@ const tierKey = positional[1]?.trim().toLowerCase()
 
 if (!email || !tierKey || !TIERS[tierKey]) {
   console.error('Usage: npm run zeffy:apply-payment -- <email> <diaspora|premium> [flags]')
-  console.error('Flags: --payment-id --first-name --last-name --amount-cents --currency --description')
+  console.error(
+    'Flags: --payment-id --first-name --last-name --amount-cents --currency --description',
+  )
   process.exit(1)
 }
 
 const tier = TIERS[tierKey]
 const paymentId =
-  flags.paymentId?.trim() ||
-  `manual-${email.replace(/[^a-z0-9]+/g, '-')}-${Date.now()}`
+  flags.paymentId?.trim() || `manual-${email.replace(/[^a-z0-9]+/g, '-')}-${Date.now()}`
 const amountCents = Number.isFinite(flags.amountCents) ? flags.amountCents : tier.amountCents
 const currency = (flags.currency ?? tier.currency).toUpperCase()
-const description =
-  flags.description?.trim() || `Manual admin replay — ${tier.label} membership`
+const description = flags.description?.trim() || `Manual admin replay — ${tier.label} membership`
 
 const supabase = createClient(supabaseUrl, serviceRoleKey)
 

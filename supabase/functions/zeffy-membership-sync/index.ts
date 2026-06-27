@@ -75,8 +75,7 @@ Deno.serve(async (req) => {
       })
     }
 
-    const alreadyPaid =
-      refresh.payment_status === 'paid' || refresh.member?.is_active === true
+    const alreadyPaid = refresh.payment_status === 'paid' || refresh.member?.is_active === true
 
     let zeffySync = { synced: 0, skipped: 0, errors: [] as string[] }
 

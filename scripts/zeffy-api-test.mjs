@@ -48,7 +48,11 @@ if (!contacts.ok) {
 const contactList = parseList(contacts.body)
 console.log('Found:', contactList.length)
 for (const c of contactList.slice(0, 3)) {
-  console.log(' -', { id: c.id, email: c.email, name: `${c.first_name ?? ''} ${c.last_name ?? ''}`.trim() })
+  console.log(' -', {
+    id: c.id,
+    email: c.email,
+    name: `${c.first_name ?? ''} ${c.last_name ?? ''}`.trim(),
+  })
 }
 
 const contactId = contactList[0]?.id

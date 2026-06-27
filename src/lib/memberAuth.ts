@@ -118,6 +118,7 @@ export async function refreshMemberMembershipStatus(
   })
 
   if (error) {
+    // Edge function unavailable or errored — fall back to DB-only refresh.
     const { data: rpcData, error: rpcError } = await supabase.rpc(
       'refresh_member_membership_status',
       { p_token: token },

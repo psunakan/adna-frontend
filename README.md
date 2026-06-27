@@ -171,7 +171,7 @@ cp env.example .env
 | `SUPABASE_POOLER_HOST`          | Optional               | Deploy scripts       | Pooler hostname if direct DB host fails (IPv6). From Dashboard → Connect → Session pooler, e.g. `aws-0-us-east-1.pooler.supabase.com` |
 | `SUPABASE_SERVICE_ROLE_KEY`     | Admin scripts only     | Local CLI            | Service role key — **never** commit or prefix with `VITE_`. Used by `zeffy:apply-payment`, `zeffy:sync-test`, and `zeffy:api-test`.   |
 | `RESEND_API_KEY`                | Edge functions         | `secrets:set`        | Resend API key for registration and password-reset emails (Supabase secret, not browser)                                              |
-| `RESEND_FROM_EMAIL`             | Edge functions         | `secrets:set`        | From address for transactional email, e.g. `A-DNA <noreply@yourdomain.com>`                                                         |
+| `RESEND_FROM_EMAIL`             | Edge functions         | `secrets:set`        | From address for transactional email, e.g. `A-DNA <noreply@yourdomain.com>`                                                           |
 | `SITE_URL`                      | Edge functions         | `secrets:set`        | Public site URL used in email links and branding (e.g. `https://a-dna.org`)                                                           |
 | `ZEFFY_WEBHOOK_SECRET`          | Optional               | Edge function        | Shared secret for Zeffy webhook auth (set via `npm run secrets:set`)                                                                  |
 | `ZEFFY_API_KEY`                 | Optional               | Edge function        | Zeffy API key for portal **Refresh status** backfill when webhook missed a payment (Supabase secret only)                             |
@@ -262,12 +262,12 @@ npm run secrets:set       # push secrets to Supabase (RESEND_*, SITE_URL, ZEFFY_
 npm run functions:deploy  # deploy all edge functions
 ```
 
-| Edge function                    | Purpose                                                                 |
-| -------------------------------- | ----------------------------------------------------------------------- |
-| `password-reset-request`         | Sends password reset email via Resend                                   |
-| `membership-registration-email`  | Sends welcome email after registration                                  |
-| `zeffy-membership-webhook`       | Receives Zeffy payment webhooks → writes `member_dues`, activates member |
-| `zeffy-membership-sync`          | Portal **Refresh status** — DB check + optional Zeffy API backfill      |
+| Edge function                   | Purpose                                                                  |
+| ------------------------------- | ------------------------------------------------------------------------ |
+| `password-reset-request`        | Sends password reset email via Resend                                    |
+| `membership-registration-email` | Sends welcome email after registration                                   |
+| `zeffy-membership-webhook`      | Receives Zeffy payment webhooks → writes `member_dues`, activates member |
+| `zeffy-membership-sync`         | Portal **Refresh status** — DB check + optional Zeffy API backfill       |
 
 ### Troubleshooting database connection
 
@@ -299,13 +299,13 @@ If the webhook is missed, a member can click **Refresh status** in the portal. T
 
 ### Where Zeffy is involved
 
-| Step | Calls Zeffy API? | What happens |
-| ---- | ---------------- | ------------ |
-| Registration submit | No | Browser redirects to a Zeffy checkout URL (`buildZeffyCheckoutUrl` in `src/lib/zeffyCheckout.ts`) |
-| Portal “Pay with Zeffy” | No | Link opens `zeffy.com` in a new tab |
-| **Payment completes** | **Zeffy → us** | Zeffy POSTs to `zeffy-membership-webhook`; edge function writes `member_dues` |
-| **Refresh status** | **Server-side only** | `zeffy-membership-sync` reads DB; if still pending, imports from Zeffy API by email |
-| **`zeffy:apply-payment`** | **No** | Admin writes to DB via `process_zeffy_membership_payment` — does **not** verify with Zeffy |
+| Step                      | Calls Zeffy API?     | What happens                                                                                      |
+| ------------------------- | -------------------- | ------------------------------------------------------------------------------------------------- |
+| Registration submit       | No                   | Browser redirects to a Zeffy checkout URL (`buildZeffyCheckoutUrl` in `src/lib/zeffyCheckout.ts`) |
+| Portal “Pay with Zeffy”   | No                   | Link opens `zeffy.com` in a new tab                                                               |
+| **Payment completes**     | **Zeffy → us**       | Zeffy POSTs to `zeffy-membership-webhook`; edge function writes `member_dues`                     |
+| **Refresh status**        | **Server-side only** | `zeffy-membership-sync` reads DB; if still pending, imports from Zeffy API by email               |
+| **`zeffy:apply-payment`** | **No**               | Admin writes to DB via `process_zeffy_membership_payment` — does **not** verify with Zeffy        |
 
 There is **no outbound Zeffy API call** from the browser. Registration and checkout are plain redirects/links.
 
@@ -317,10 +317,10 @@ When a webhook or API sync imports a payment, tier is determined in this order:
 
 1. **Payment amount** (primary) — amounts in minor units (cents / pesewas):
 
-   | Amount (USD) | Amount (GHS) | Tier          |
-   | ------------ | ------------ | ------------- |
-   | $75 (7500)   | 300 (30000)  | Professional  |
-   | $150 (15000) | 600 (60000)  | Premium       |
+   | Amount (USD) | Amount (GHS) | Tier         |
+   | ------------ | ------------ | ------------ |
+   | $75 (7500)   | 300 (30000)  | Professional |
+   | $150 (15000) | 600 (60000)  | Premium      |
 
 2. **`rate_id`** on line items — only when amount does not match a known tier
 3. **`campaign_id`** — if mapped via `ZEFFY_CAMPAIGN_*` secrets
@@ -370,10 +370,10 @@ All Zeffy-related Supabase secrets are listed in `env.example`. At minimum for p
 
 **Do not re-run the admin apply script to “re-evaluate”.**
 
-| Action | Who | What it does |
-| ------ | --- | ------------ |
+| Action                             | Who              | What it does                                                                                                 |
+| ---------------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------ |
 | **Refresh status** (member portal) | Logged-in member | Calls `zeffy-membership-sync` — reads `member_dues`, then optionally imports from Zeffy API if still pending |
-| Sign out / sign in | Member | Loads profile; same dues sync on profile fetch. |
+| Sign out / sign in                 | Member           | Loads profile; same dues sync on profile fetch.                                                              |
 
 If payment was completed on Zeffy but the portal still shows “pending”:
 
@@ -528,18 +528,18 @@ No `.env` is required in CI — current tests cover UI/navigation only.
 
 ## Routes
 
-| Path                         | Description                                       |
-| ---------------------------- | ------------------------------------------------- |
-| `/`                          | Home                                              |
-| `/about`                     | Mission, vision, team                             |
-| `/events`                    | Events and registration modal                     |
-| `/membership`                | Membership tiers and multi-step registration form |
-| `/membership/confirmation`   | Post-checkout confirmation page                   |
-| `/donate`                    | Donation page                                     |
-| `/portal/login`              | Member portal sign-in                             |
-| `/portal/forgot-password`    | Request password reset email                      |
-| `/portal/reset-password`     | Set new password from email link                  |
-| `/portal`                    | Member dashboard (requires login)                 |
+| Path                       | Description                                       |
+| -------------------------- | ------------------------------------------------- |
+| `/`                        | Home                                              |
+| `/about`                   | Mission, vision, team                             |
+| `/events`                  | Events and registration modal                     |
+| `/membership`              | Membership tiers and multi-step registration form |
+| `/membership/confirmation` | Post-checkout confirmation page                   |
+| `/donate`                  | Donation page                                     |
+| `/portal/login`            | Member portal sign-in                             |
+| `/portal/forgot-password`  | Request password reset email                      |
+| `/portal/reset-password`   | Set new password from email link                  |
+| `/portal`                  | Member dashboard (requires login)                 |
 
 ---
 

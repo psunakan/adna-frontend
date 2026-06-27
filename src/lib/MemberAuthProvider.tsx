@@ -44,10 +44,7 @@ function isSessionInvalidError(error: unknown): boolean {
   )
 }
 
-function applyProfileToSession(
-  current: MemberSession,
-  nextProfile: MemberProfile,
-): MemberSession {
+function applyProfileToSession(current: MemberSession, nextProfile: MemberProfile): MemberSession {
   return {
     token: current.token,
     member: {

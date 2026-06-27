@@ -105,7 +105,12 @@ export type ZeffySyncResult = {
 
 /** Import succeeded Zeffy membership payments for an email into member_dues. */
 export async function syncZeffyPaymentsForEmail(
-  supabase: { rpc: (name: string, args: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }> },
+  supabase: {
+    rpc: (
+      name: string,
+      args: Record<string, unknown>,
+    ) => Promise<{ data: unknown; error: { message: string } | null }>
+  },
   email: string,
   env: ZeffySyncEnv,
 ): Promise<ZeffySyncResult> {
@@ -140,6 +145,10 @@ export async function syncZeffyPaymentsForEmail(
         result.skipped += 1
         continue
       }
+      if (payment.campaign_category && payment.campaign_category.toLowerCase() !== 'membership') {
+        result.skipped += 1
+        continue
+      }
       if (!paymentIsInCurrentYear(payment, year)) {
         result.skipped += 1
         continue
@@ -159,7 +168,9 @@ export async function syncZeffyPaymentsForEmail(
 
       const amountCents = resolvePaymentAmountCents(payment)
       const buyer =
-        typeof payment.buyer === 'object' && payment.buyer ? payment.buyer : { email: buyerEmail ?? email }
+        typeof payment.buyer === 'object' && payment.buyer
+          ? payment.buyer
+          : { email: buyerEmail ?? email }
 
       const { data, error } = await supabase.rpc('process_zeffy_membership_payment', {
         p_zeffy_payment_id: paymentId,

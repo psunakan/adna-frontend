@@ -95,7 +95,9 @@ export async function mockMemberPortalApi(page: Page, options: MockPortalOptions
     })
   })
 
-  const fulfillRefresh = async (route: Parameters<Page['route']>[1] extends (r: infer R) => unknown ? R : never) => {
+  const fulfillRefresh = async (
+    route: Parameters<Page['route']>[1] extends (r: infer R) => unknown ? R : never,
+  ) => {
     const { index, sequence } = await page.evaluate(
       ({ profileIndexKey, profilesKey }) => ({
         index: window[profileIndexKey] ?? 0,
@@ -157,7 +159,9 @@ export async function refreshMembershipStatus(page: Page) {
   }, MOCK_PROFILE_INDEX_KEY)
 
   await page.getByRole('button', { name: 'Refresh status' }).click()
-  await expect(page.getByText(/completed membership payment|No completed payment found/i)).toBeVisible()
+  await expect(
+    page.getByText(/completed membership payment|No completed payment found/i),
+  ).toBeVisible()
 }
 
 export async function openPortalDashboard(

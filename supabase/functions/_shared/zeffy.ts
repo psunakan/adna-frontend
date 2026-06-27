@@ -25,7 +25,8 @@ export type ZeffyPayment = {
   campaign_id?: string
   campaign_type?: string
   campaign_category?: string
-  buyer?: ZeffyBuyer
+  created?: number
+  buyer?: ZeffyBuyer | string
   items?: ZeffyPaymentItem[]
   metadata?: Record<string, unknown>
 }
