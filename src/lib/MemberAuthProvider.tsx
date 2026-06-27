@@ -13,7 +13,10 @@ import {
   getStoredSession,
   loginMember,
   logoutMember,
+  refreshMemberMembershipStatus,
+  storeSession,
   type MemberProfile,
+  type MembershipRefreshResult,
   type MemberSession,
 } from './memberAuth'
 
@@ -25,6 +28,7 @@ type MemberAuthContextValue = {
   login: (email: string, password: string) => Promise<void>
   logout: () => Promise<void>
   refreshProfile: () => Promise<MemberProfile | null>
+  refreshMembershipStatus: () => Promise<MembershipRefreshResult | null>
 }
 
 const MemberAuthContext = createContext<MemberAuthContextValue | null>(null)
@@ -32,14 +36,29 @@ const MemberAuthContext = createContext<MemberAuthContextValue | null>(null)
 const PROFILE_FETCH_TIMEOUT_MS = 10_000
 
 function isSessionInvalidError(error: unknown): boolean {
-  const message = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase()
+  const message = error instanceof Error ? error.message : String(error)
   return (
-    message.includes('invalid') ||
-    message.includes('expired') ||
-    message.includes('session') ||
-    message.includes('unauthorized') ||
-    message.includes('not authenticated')
+    message === 'Session expired. Please log in again.' ||
+    message === 'Member account not found.' ||
+    message.includes('Session expired. Please log in again.')
   )
+}
+
+function applyProfileToSession(
+  current: MemberSession,
+  nextProfile: MemberProfile,
+): MemberSession {
+  return {
+    token: current.token,
+    member: {
+      id: nextProfile.id,
+      email: nextProfile.email,
+      first_name: nextProfile.first_name,
+      last_name: nextProfile.last_name,
+      is_first_login: nextProfile.is_first_login,
+      is_active: nextProfile.is_active,
+    },
+  }
 }
 
 async function fetchProfileWithTimeout(token: string) {
@@ -74,14 +93,36 @@ export function MemberAuthProvider({ children }: { children: ReactNode }) {
 
     try {
       const nextProfile = await fetchProfileWithTimeout(current.token)
-      const nextSession: MemberSession = {
-        token: current.token,
-        member: { ...current.member, ...nextProfile },
-      }
+      const nextSession = applyProfileToSession(current, nextProfile)
       storeSession(nextSession)
       setSession(nextSession)
       setProfile(nextProfile)
       return nextProfile
+    } catch (error) {
+      if (isSessionInvalidError(error)) {
+        clearStoredSession()
+        setSession(null)
+        setProfile(null)
+      }
+      throw error
+    }
+  }, [])
+
+  const refreshMembershipStatus = useCallback(async (): Promise<MembershipRefreshResult | null> => {
+    const current = getStoredSession()
+    if (!current) {
+      setSession(null)
+      setProfile(null)
+      return null
+    }
+
+    try {
+      const result = await refreshMemberMembershipStatus(current.token)
+      const nextSession = applyProfileToSession(current, result.member)
+      storeSession(nextSession)
+      setSession(nextSession)
+      setProfile(result.member)
+      return result
     } catch (error) {
       if (isSessionInvalidError(error)) {
         clearStoredSession()
@@ -159,8 +200,9 @@ export function MemberAuthProvider({ children }: { children: ReactNode }) {
       login,
       logout,
       refreshProfile,
+      refreshMembershipStatus,
     }),
-    [session, profile, isLoading, login, logout, refreshProfile],
+    [session, profile, isLoading, login, logout, refreshProfile, refreshMembershipStatus],
   )
 
   return <MemberAuthContext.Provider value={value}>{children}</MemberAuthContext.Provider>

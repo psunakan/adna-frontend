@@ -17,7 +17,7 @@ function formatDate(value: string | null) {
 
 export function PortalDashboardPage() {
   const navigate = useNavigate()
-  const { profile, logout, isLoading, isAuthenticated, refreshProfile } = useMemberAuth()
+  const { profile, logout, isLoading, isAuthenticated, refreshMembershipStatus } = useMemberAuth()
   const [isRefreshing, setIsRefreshing] = useState(false)
 
   useEffect(() => {
@@ -28,11 +28,11 @@ export function PortalDashboardPage() {
 
   useEffect(() => {
     const onFocus = () => {
-      if (isAuthenticated) void refreshProfile()
+      if (isAuthenticated) void refreshMembershipStatus().catch(() => undefined)
     }
     window.addEventListener('focus', onFocus)
     return () => window.removeEventListener('focus', onFocus)
-  }, [isAuthenticated, refreshProfile])
+  }, [isAuthenticated, refreshMembershipStatus])
 
   if (isLoading) {
     return (
@@ -67,17 +67,29 @@ export function PortalDashboardPage() {
   const handleRefresh = async () => {
     setIsRefreshing(true)
     try {
-      const nextProfile = await refreshProfile()
-      if (nextProfile?.is_active) {
-        toast.success('Membership activated. Thank you for your payment!')
+      const result = await refreshMembershipStatus()
+      if (!result) {
+        toast.error('Your session has expired. Please sign in again.')
+        navigate({ to: PORTAL_LOGIN_PATH, replace: true })
+        return
+      }
+
+      if (result.paymentStatus === 'paid' || result.member.is_active) {
+        toast.success(result.paymentMessage)
       } else {
-        toast.error(
-          'No completed payment found yet. Pay on Zeffy using the same email as your account, then refresh again.',
-          { duration: 6000 },
-        )
+        toast.error(result.paymentMessage, { duration: 6000 })
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not refresh profile.')
+      if (
+        error instanceof Error &&
+        (error.message === 'Session expired. Please log in again.' ||
+          error.message === 'Member account not found.')
+      ) {
+        toast.error('Your session has expired. Please sign in again.')
+        navigate({ to: PORTAL_LOGIN_PATH, replace: true })
+        return
+      }
+      toast.error(error instanceof Error ? error.message : 'Could not refresh membership status.')
     } finally {
       setIsRefreshing(false)
     }

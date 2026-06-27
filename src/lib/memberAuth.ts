@@ -27,6 +27,12 @@ export type MemberProfile = MemberSession['member'] & {
   last_login_at: string | null
 }
 
+export type MembershipRefreshResult = {
+  paymentStatus: 'paid' | 'pending'
+  paymentMessage: string
+  member: MemberProfile
+}
+
 type RpcSuccess<T> = { success: true } & T
 type RpcFailure = { success: false; error: string }
 
@@ -98,6 +104,38 @@ export async function fetchMemberProfile(token: string): Promise<MemberProfile> 
 
   const result = data as RpcSuccess<{ member: MemberProfile }>
   return result.member
+}
+
+export async function refreshMemberMembershipStatus(
+  token: string,
+): Promise<MembershipRefreshResult> {
+  if (!isSupabaseConfigured) {
+    throw new Error('Member portal is not configured. Contact the site administrator.')
+  }
+
+  const { data, error } = await supabase.rpc('refresh_member_membership_status', {
+    p_token: token,
+  })
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  if (isRpcFailure(data)) {
+    throw new Error(data.error)
+  }
+
+  const result = data as RpcSuccess<{
+    payment_status: 'paid' | 'pending'
+    payment_message: string
+    member: MemberProfile
+  }>
+
+  return {
+    paymentStatus: result.payment_status,
+    paymentMessage: result.payment_message,
+    member: result.member,
+  }
 }
 
 export async function logoutMember(token: string) {
