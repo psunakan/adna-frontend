@@ -14,7 +14,7 @@ const MEMBERSHIP_LABELS: Record<MockMemberTier, string> = {
   premium: 'Premium Membership ($150)',
 }
 
-export function buildMockMember(tier: MockMemberTier) {
+export function buildMockMember(tier: MockMemberTier, isActive = true) {
   return {
     id: 'a1111111-1111-1111-1111-111111111111',
     email: 'demo@adna.org',
@@ -27,6 +27,7 @@ export function buildMockMember(tier: MockMemberTier) {
     membership_tier: tier,
     last_login_at: '2026-06-23T12:00:00.000Z',
     is_first_login: false,
+    is_active: isActive,
   }
 }
 
@@ -40,6 +41,7 @@ export function buildMockSession(tier: MockMemberTier = 'regular') {
       first_name: member.first_name,
       last_name: member.last_name,
       is_first_login: member.is_first_login,
+      is_active: member.is_active,
     },
   }
 }
@@ -93,6 +95,38 @@ export async function mockMemberPortalApi(page: Page, options: MockPortalOptions
     })
   })
 
+  const fulfillRefresh = async (
+    route: Parameters<Page['route']>[1] extends (r: infer R) => unknown ? R : never,
+  ) => {
+    const { index, sequence } = await page.evaluate(
+      ({ profileIndexKey, profilesKey }) => ({
+        index: window[profileIndexKey] ?? 0,
+        sequence: window[profilesKey] ?? [],
+      }),
+      { profileIndexKey: MOCK_PROFILE_INDEX_KEY, profilesKey: MOCK_PROFILES_KEY },
+    )
+
+    const profile = sequence[Math.min(index, sequence.length - 1)] ?? buildMockMember(initialTier)
+    const paid = profile.is_active || profile.membership_tier !== 'regular'
+
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        success: true,
+        payment_status: paid ? 'paid' : 'pending',
+        payment_message: paid
+          ? 'We found a completed membership payment for your account.'
+          : 'No completed payment found for this year. Pay on Zeffy using the same email as your account, then refresh again.',
+        member: profile,
+      }),
+    })
+  }
+
+  await page.route('**/functions/v1/zeffy-membership-sync', fulfillRefresh)
+
+  await page.route('**/rest/v1/rpc/refresh_member_membership_status', fulfillRefresh)
+
   await page.route('**/rest/v1/rpc/login_member', async (route) => {
     const session = buildMockSession(initialTier)
     await route.fulfill({
@@ -107,6 +141,50 @@ export async function mockMemberPortalApi(page: Page, options: MockPortalOptions
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify({ success: true }),
+    })
+  })
+
+  await page.route('**/rest/v1/rpc/issue_membership_verification', async (route) => {
+    const { index, sequence } = await page.evaluate(
+      ({ profileIndexKey, profilesKey }) => ({
+        index: window[profileIndexKey] ?? 0,
+        sequence: window[profilesKey] ?? [],
+      }),
+      { profileIndexKey: MOCK_PROFILE_INDEX_KEY, profilesKey: MOCK_PROFILES_KEY },
+    )
+
+    const profile = sequence[Math.min(index, sequence.length - 1)] ?? buildMockMember(initialTier)
+    const tier = profile.membership_tier
+    const eligible = profile.is_active && (tier === 'diaspora' || tier === 'premium')
+
+    if (!eligible) {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          success: false,
+          error:
+            'Complete your membership payment for the current year before requesting a letter.',
+        }),
+      })
+      return
+    }
+
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        success: true,
+        verification: {
+          verification_code: 'ADNA-TEST-1234-5678-9ABC',
+          member_display_name: [profile.first_name, profile.last_name].filter(Boolean).join(' '),
+          membership_tier: tier,
+          membership_label: profile.membership_label,
+          membership_year: new Date().getUTCFullYear(),
+          issued_at: new Date().toISOString(),
+          member_id: profile.id,
+        },
+      }),
     })
   })
 }
@@ -125,7 +203,9 @@ export async function refreshMembershipStatus(page: Page) {
   }, MOCK_PROFILE_INDEX_KEY)
 
   await page.getByRole('button', { name: 'Refresh status' }).click()
-  await expect(page.getByText('Membership status updated.')).toBeVisible()
+  await expect(
+    page.getByText(/completed membership payment|No completed payment found/i),
+  ).toBeVisible()
 }
 
 export async function openPortalDashboard(

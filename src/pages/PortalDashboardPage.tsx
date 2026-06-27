@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import toast from 'react-hot-toast'
 import { MembershipUpgradeSection } from '../components/MembershipUpgradeSection'
+import { MembershipLetterCard } from '../components/MembershipLetterCard'
 import { MemberNameWithBadge } from '../components/MembershipBadge'
 import { useMemberAuth } from '../lib/MemberAuthProvider'
 import { PORTAL_LOGIN_PATH } from '../lib/memberAuth'
@@ -17,7 +18,7 @@ function formatDate(value: string | null) {
 
 export function PortalDashboardPage() {
   const navigate = useNavigate()
-  const { profile, logout, isLoading, isAuthenticated, refreshProfile } = useMemberAuth()
+  const { profile, logout, isLoading, isAuthenticated, refreshMembershipStatus } = useMemberAuth()
   const [isRefreshing, setIsRefreshing] = useState(false)
 
   useEffect(() => {
@@ -28,11 +29,11 @@ export function PortalDashboardPage() {
 
   useEffect(() => {
     const onFocus = () => {
-      if (isAuthenticated) void refreshProfile()
+      if (isAuthenticated) void refreshMembershipStatus().catch(() => undefined)
     }
     window.addEventListener('focus', onFocus)
     return () => window.removeEventListener('focus', onFocus)
-  }, [isAuthenticated, refreshProfile])
+  }, [isAuthenticated, refreshMembershipStatus])
 
   if (isLoading) {
     return (
@@ -67,10 +68,29 @@ export function PortalDashboardPage() {
   const handleRefresh = async () => {
     setIsRefreshing(true)
     try {
-      await refreshProfile()
-      toast.success('Membership status updated.')
+      const result = await refreshMembershipStatus()
+      if (!result) {
+        toast.error('Your session has expired. Please sign in again.')
+        navigate({ to: PORTAL_LOGIN_PATH, replace: true })
+        return
+      }
+
+      if (result.paymentStatus === 'paid' || result.member.is_active) {
+        toast.success(result.paymentMessage)
+      } else {
+        toast.error(result.paymentMessage, { duration: 6000 })
+      }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not refresh profile.')
+      if (
+        error instanceof Error &&
+        (error.message === 'Session expired. Please log in again.' ||
+          error.message === 'Member account not found.')
+      ) {
+        toast.error('Your session has expired. Please sign in again.')
+        navigate({ to: PORTAL_LOGIN_PATH, replace: true })
+        return
+      }
+      toast.error(error instanceof Error ? error.message : 'Could not refresh membership status.')
     } finally {
       setIsRefreshing(false)
     }
@@ -163,8 +183,8 @@ export function PortalDashboardPage() {
               lineHeight: 1.6,
             }}
           >
-            Your membership payment is still pending. Complete payment on Zeffy to activate full
-            access, then return here and click <strong>Refresh status</strong> below.
+            Your membership payment is still pending. Complete payment on Zeffy using{' '}
+            <strong>{profile.email}</strong>, then click <strong>Refresh status</strong> below.
           </div>
         )}
 
@@ -172,9 +192,15 @@ export function PortalDashboardPage() {
           <MembershipUpgradeSection
             tier={membershipTier}
             email={profile.email}
+            first_name={profile.first_name}
+            last_name={profile.last_name}
             onRefresh={handleRefresh}
             isRefreshing={isRefreshing}
           />
+        </div>
+
+        <div style={{ marginBottom: '1.5rem' }}>
+          <MembershipLetterCard profile={profile} />
         </div>
 
         <div

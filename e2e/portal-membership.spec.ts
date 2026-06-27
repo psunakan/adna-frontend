@@ -49,6 +49,9 @@ test.describe('Member portal membership upgrades', () => {
     const payLinks = membershipCard(page).getByRole('link', { name: 'Pay with Zeffy' })
     await expect(payLinks.first()).toHaveAttribute('target', '_blank')
     await expect(payLinks.first()).toHaveAttribute('rel', /noopener/)
+    await expect(payLinks.first()).toHaveAttribute('href', /email=demo%40adna\.org/)
+    await expect(payLinks.first()).toHaveAttribute('href', /firstname=Demo/)
+    await expect(payLinks.first()).toHaveAttribute('href', /lastname=User/)
   })
 
   test('refresh status upgrades free member to Professional', async ({ page }) => {
@@ -94,6 +97,18 @@ test.describe('Member portal membership upgrades', () => {
     await expect(card.getByText('Premium Member', { exact: true })).toBeVisible()
     await expect(card.getByText('highest membership tier')).toBeVisible()
     await expect(card.getByRole('link', { name: 'Pay with Zeffy' })).toHaveCount(0)
+  })
+
+  test('paid member can request a membership letter', async ({ page }) => {
+    await openPortalDashboard(page, 'diaspora')
+    await expect(page.getByRole('heading', { name: 'Membership letter' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Print membership letter' })).toBeVisible()
+  })
+
+  test('free member sees letter unavailable message', async ({ page }) => {
+    await openPortalDashboard(page, 'regular')
+    await expect(page.getByText(/Membership letters are available after your paid/)).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Print membership letter' })).toHaveCount(0)
   })
 
   test('shows tier verification badges on the dashboard', async ({ page }) => {
