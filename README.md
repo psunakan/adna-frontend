@@ -356,6 +356,8 @@ npm run secrets:set          # push RESEND_*, SITE_URL, ZEFFY_* secrets to Supab
 npm run functions:deploy     # deploy webhook, sync, and email edge functions
 ```
 
+After deploying **`zeffy-membership-sync`**, set `VITE_ENABLE_ZEFFY_MEMBERSHIP_SYNC=true` in Vercel (or `.env` locally). Until then, **Refresh status** uses the database RPC only and will not call the missing edge function.
+
 Configure Zeffy to redirect buyers after payment to:
 
 `https://your-site.com/membership/confirmation`

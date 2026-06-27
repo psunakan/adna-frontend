@@ -106,11 +106,43 @@ export async function fetchMemberProfile(token: string): Promise<MemberProfile> 
   return result.member
 }
 
+async function refreshMemberMembershipStatusRpc(token: string): Promise<MembershipRefreshResult> {
+  const { data, error } = await supabase.rpc('refresh_member_membership_status', {
+    p_token: token,
+  })
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  if (isRpcFailure(data)) {
+    throw new Error(data.error)
+  }
+
+  const result = data as RpcSuccess<{
+    payment_status: 'paid' | 'pending'
+    payment_message: string
+    member: MemberProfile
+  }>
+
+  return {
+    paymentStatus: result.payment_status,
+    paymentMessage: result.payment_message,
+    member: result.member,
+  }
+}
+
 export async function refreshMemberMembershipStatus(
   token: string,
 ): Promise<MembershipRefreshResult> {
   if (!isSupabaseConfigured) {
     throw new Error('Member portal is not configured. Contact the site administrator.')
+  }
+
+  const zeffySyncEnabled = import.meta.env.VITE_ENABLE_ZEFFY_MEMBERSHIP_SYNC === 'true'
+
+  if (!zeffySyncEnabled) {
+    return refreshMemberMembershipStatusRpc(token)
   }
 
   const { data, error } = await supabase.functions.invoke('zeffy-membership-sync', {
@@ -119,26 +151,7 @@ export async function refreshMemberMembershipStatus(
 
   if (error) {
     // Edge function unavailable or errored — fall back to DB-only refresh.
-    const { data: rpcData, error: rpcError } = await supabase.rpc(
-      'refresh_member_membership_status',
-      { p_token: token },
-    )
-    if (rpcError) {
-      throw new Error(rpcError.message)
-    }
-    if (isRpcFailure(rpcData)) {
-      throw new Error(rpcData.error)
-    }
-    const rpcResult = rpcData as RpcSuccess<{
-      payment_status: 'paid' | 'pending'
-      payment_message: string
-      member: MemberProfile
-    }>
-    return {
-      paymentStatus: rpcResult.payment_status,
-      paymentMessage: rpcResult.payment_message,
-      member: rpcResult.member,
-    }
+    return refreshMemberMembershipStatusRpc(token)
   }
 
   if (isRpcFailure(data)) {
@@ -152,7 +165,7 @@ export async function refreshMemberMembershipStatus(
   }>
 
   if (!result?.payment_status || !result.member) {
-    throw new Error('Unable to refresh membership status.')
+    return refreshMemberMembershipStatusRpc(token)
   }
 
   return {
