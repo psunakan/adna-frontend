@@ -169,8 +169,8 @@ test.describe('Membership form', () => {
 
     await expect.poll(() => zeffyUrl).toContain('zeffy.com')
     expect(zeffyUrl).toContain('email=jane.doe%40example.com')
-    expect(zeffyUrl).toContain('firstname=Jane')
-    expect(zeffyUrl).toContain('lastname=Doe')
+    expect(zeffyUrl).not.toContain('firstname=')
+    expect(zeffyUrl).not.toContain('lastname=')
   })
 })
 
