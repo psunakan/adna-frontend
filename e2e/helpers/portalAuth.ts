@@ -143,6 +143,50 @@ export async function mockMemberPortalApi(page: Page, options: MockPortalOptions
       body: JSON.stringify({ success: true }),
     })
   })
+
+  await page.route('**/rest/v1/rpc/issue_membership_verification', async (route) => {
+    const { index, sequence } = await page.evaluate(
+      ({ profileIndexKey, profilesKey }) => ({
+        index: window[profileIndexKey] ?? 0,
+        sequence: window[profilesKey] ?? [],
+      }),
+      { profileIndexKey: MOCK_PROFILE_INDEX_KEY, profilesKey: MOCK_PROFILES_KEY },
+    )
+
+    const profile = sequence[Math.min(index, sequence.length - 1)] ?? buildMockMember(initialTier)
+    const tier = profile.membership_tier
+    const eligible = profile.is_active && (tier === 'diaspora' || tier === 'premium')
+
+    if (!eligible) {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          success: false,
+          error:
+            'Complete your membership payment for the current year before requesting a letter.',
+        }),
+      })
+      return
+    }
+
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        success: true,
+        verification: {
+          verification_code: 'ADNA-TEST-1234-5678-9ABC',
+          member_display_name: [profile.first_name, profile.last_name].filter(Boolean).join(' '),
+          membership_tier: tier,
+          membership_label: profile.membership_label,
+          membership_year: new Date().getUTCFullYear(),
+          issued_at: new Date().toISOString(),
+          member_id: profile.id,
+        },
+      }),
+    })
+  })
 }
 
 export async function seedPortalSession(page: Page, tier: MockMemberTier = 'regular') {

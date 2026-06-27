@@ -1,0 +1,87 @@
+import { useState } from 'react'
+import toast from 'react-hot-toast'
+import { getStoredSession } from '../lib/memberAuth'
+import { openMembershipLetterPrint } from '../lib/membershipLetterPrint'
+import { issueMembershipVerification } from '../lib/membershipVerification'
+import type { MemberProfile } from '../lib/memberAuth'
+import { normalizeMembershipTier } from '../lib/membershipTier'
+
+type Props = {
+  profile: MemberProfile
+}
+
+export function MembershipLetterCard({ profile }: Props) {
+  const [isIssuing, setIsIssuing] = useState(false)
+  const tier = normalizeMembershipTier(profile.membership_tier)
+  const eligible = profile.is_active && (tier === 'diaspora' || tier === 'premium')
+
+  const handleDownloadLetter = async () => {
+    const session = getStoredSession()
+    if (!session) {
+      toast.error('Your session has expired. Please sign in again.')
+      return
+    }
+
+    setIsIssuing(true)
+    try {
+      const verification = await issueMembershipVerification(session.token)
+      const opened = openMembershipLetterPrint(verification)
+      if (!opened) {
+        toast.error('Allow pop-ups to print your membership letter.')
+        return
+      }
+      toast.success('Verification letter ready to print.')
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Could not issue membership letter.')
+    } finally {
+      setIsIssuing(false)
+    }
+  }
+
+  return (
+    <div className="portal-membership-card">
+      <div className="portal-membership-card__header">
+        <div>
+          <p className="portal-membership-card__eyebrow">Verification</p>
+          <h2 style={{ margin: 0, fontSize: '1.35rem', fontWeight: 800, color: '#0D3D2B' }}>
+            Membership letter
+          </h2>
+        </div>
+      </div>
+
+      {eligible ? (
+        <>
+          <p className="portal-membership-card__lead">
+            Download an official verification letter for employers, credentialing, or other
+            third-party requests. Each letter includes a unique code registered in A-DNA&apos;s
+            system. Anyone can confirm authenticity at{' '}
+            <a href="/membership/verify" style={{ color: '#116b53', fontWeight: 700 }}>
+              a-dna.org/membership/verify
+            </a>
+            .
+          </p>
+          <button
+            type="button"
+            className="portal-membership-card__pay-btn"
+            onClick={() => void handleDownloadLetter()}
+            disabled={isIssuing}
+            style={{ border: 'none', cursor: isIssuing ? 'wait' : 'pointer' }}
+          >
+            {isIssuing ? 'Preparing letter…' : 'Print membership letter'}
+          </button>
+        </>
+      ) : (
+        <p className="portal-membership-card__lead">
+          Membership letters are available after your paid Professional or Premium membership is
+          active for the current year. Complete payment on Zeffy, then click{' '}
+          <strong>Refresh status</strong> above.
+        </p>
+      )}
+
+      <p className="portal-membership-card__footnote">
+        Letters cannot be forged without a valid code in A-DNA&apos;s verification database. Codes
+        are checked live against current membership status.
+      </p>
+    </div>
+  )
+}

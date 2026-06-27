@@ -381,6 +381,14 @@ If payment was completed on Zeffy but the portal still shows “pending”:
 2. Confirm the webhook URL and secrets are configured in Zeffy and Supabase
 3. Use **Manual replay** below if the payment still does not appear
 
+### Membership verification letters
+
+Paid Professional and Premium members can print an official letter from the member portal (**Print membership letter**). Each letter includes a unique code (format `ADNA-XXXX-XXXX-XXXX-XXXX`) registered in Supabase when the member requests it.
+
+Third parties verify codes at **`/membership/verify`**. Verification checks live membership and payment records — a copied letter cannot be validated without a code issued by the system, and codes show as invalid if membership lapses.
+
+Apply migration `202606281200_membership_verification.sql` via `npm run db:push` before using this feature in production.
+
 ### Manual replay (admin only)
 
 Use this **once** after an admin has **confirmed payment in Zeffy** (receipt/dashboard) and the payment is **missing from `member_dues`**. The script does not validate the transaction with Zeffy. It creates a `member_dues` row via `process_zeffy_membership_payment` — it is **not** for routine re-checks.
@@ -535,6 +543,7 @@ No `.env` is required in CI — current tests cover UI/navigation only.
 | `/events`                  | Events and registration modal                     |
 | `/membership`              | Membership tiers and multi-step registration form |
 | `/membership/confirmation` | Post-checkout confirmation page                   |
+| `/membership/verify`       | Public membership letter verification             |
 | `/donate`                  | Donation page                                     |
 | `/portal/login`            | Member portal sign-in                             |
 | `/portal/forgot-password`  | Request password reset email                      |

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import toast from 'react-hot-toast'
 import { MembershipUpgradeSection } from '../components/MembershipUpgradeSection'
+import { MembershipLetterCard } from '../components/MembershipLetterCard'
 import { MemberNameWithBadge } from '../components/MembershipBadge'
 import { useMemberAuth } from '../lib/MemberAuthProvider'
 import { PORTAL_LOGIN_PATH } from '../lib/memberAuth'
@@ -196,6 +197,10 @@ export function PortalDashboardPage() {
             onRefresh={handleRefresh}
             isRefreshing={isRefreshing}
           />
+        </div>
+
+        <div style={{ marginBottom: '1.5rem' }}>
+          <MembershipLetterCard profile={profile} />
         </div>
 
         <div

@@ -99,6 +99,18 @@ test.describe('Member portal membership upgrades', () => {
     await expect(card.getByRole('link', { name: 'Pay with Zeffy' })).toHaveCount(0)
   })
 
+  test('paid member can request a membership letter', async ({ page }) => {
+    await openPortalDashboard(page, 'diaspora')
+    await expect(page.getByRole('heading', { name: 'Membership letter' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Print membership letter' })).toBeVisible()
+  })
+
+  test('free member sees letter unavailable message', async ({ page }) => {
+    await openPortalDashboard(page, 'regular')
+    await expect(page.getByText(/Membership letters are available after your paid/)).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Print membership letter' })).toHaveCount(0)
+  })
+
   test('shows tier verification badges on the dashboard', async ({ page }) => {
     await openPortalDashboard(page, 'regular')
     await expect(

@@ -19,6 +19,7 @@ import { Route as MembershipIndexRouteImport } from './routes/membership/index'
 import { Route as PortalResetPasswordRouteImport } from './routes/portal/reset-password'
 import { Route as PortalLoginRouteImport } from './routes/portal/login'
 import { Route as PortalForgotPasswordRouteImport } from './routes/portal/forgot-password'
+import { Route as MembershipVerifyRouteImport } from './routes/membership/verify'
 import { Route as MembershipConfirmationRouteImport } from './routes/membership/confirmation'
 
 const EventsRoute = EventsRouteImport.update({
@@ -71,6 +72,11 @@ const PortalForgotPasswordRoute = PortalForgotPasswordRouteImport.update({
   path: '/portal/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MembershipVerifyRoute = MembershipVerifyRouteImport.update({
+  id: '/verify',
+  path: '/verify',
+  getParentRoute: () => MembershipRouteRoute,
+} as any)
 const MembershipConfirmationRoute = MembershipConfirmationRouteImport.update({
   id: '/confirmation',
   path: '/confirmation',
@@ -84,6 +90,7 @@ export interface FileRoutesByFullPath {
   '/donate': typeof DonateRoute
   '/events': typeof EventsRoute
   '/membership/confirmation': typeof MembershipConfirmationRoute
+  '/membership/verify': typeof MembershipVerifyRoute
   '/portal/forgot-password': typeof PortalForgotPasswordRoute
   '/portal/login': typeof PortalLoginRoute
   '/portal/reset-password': typeof PortalResetPasswordRoute
@@ -96,6 +103,7 @@ export interface FileRoutesByTo {
   '/donate': typeof DonateRoute
   '/events': typeof EventsRoute
   '/membership/confirmation': typeof MembershipConfirmationRoute
+  '/membership/verify': typeof MembershipVerifyRoute
   '/portal/forgot-password': typeof PortalForgotPasswordRoute
   '/portal/login': typeof PortalLoginRoute
   '/portal/reset-password': typeof PortalResetPasswordRoute
@@ -110,6 +118,7 @@ export interface FileRoutesById {
   '/donate': typeof DonateRoute
   '/events': typeof EventsRoute
   '/membership/confirmation': typeof MembershipConfirmationRoute
+  '/membership/verify': typeof MembershipVerifyRoute
   '/portal/forgot-password': typeof PortalForgotPasswordRoute
   '/portal/login': typeof PortalLoginRoute
   '/portal/reset-password': typeof PortalResetPasswordRoute
@@ -125,6 +134,7 @@ export interface FileRouteTypes {
     | '/donate'
     | '/events'
     | '/membership/confirmation'
+    | '/membership/verify'
     | '/portal/forgot-password'
     | '/portal/login'
     | '/portal/reset-password'
@@ -137,6 +147,7 @@ export interface FileRouteTypes {
     | '/donate'
     | '/events'
     | '/membership/confirmation'
+    | '/membership/verify'
     | '/portal/forgot-password'
     | '/portal/login'
     | '/portal/reset-password'
@@ -150,6 +161,7 @@ export interface FileRouteTypes {
     | '/donate'
     | '/events'
     | '/membership/confirmation'
+    | '/membership/verify'
     | '/portal/forgot-password'
     | '/portal/login'
     | '/portal/reset-password'
@@ -241,6 +253,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/membership/verify': {
+      id: '/membership/verify'
+      path: '/verify'
+      fullPath: '/membership/verify'
+      preLoaderRoute: typeof MembershipVerifyRouteImport
+      parentRoute: typeof MembershipRouteRoute
+    }
     '/membership/confirmation': {
       id: '/membership/confirmation'
       path: '/confirmation'
@@ -253,11 +272,13 @@ declare module '@tanstack/react-router' {
 
 interface MembershipRouteRouteChildren {
   MembershipConfirmationRoute: typeof MembershipConfirmationRoute
+  MembershipVerifyRoute: typeof MembershipVerifyRoute
   MembershipIndexRoute: typeof MembershipIndexRoute
 }
 
 const MembershipRouteRouteChildren: MembershipRouteRouteChildren = {
   MembershipConfirmationRoute: MembershipConfirmationRoute,
+  MembershipVerifyRoute: MembershipVerifyRoute,
   MembershipIndexRoute: MembershipIndexRoute,
 }
 
