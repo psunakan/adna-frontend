@@ -110,8 +110,16 @@ export function resolveMembershipTier(
 
   for (const item of payment.items ?? []) {
     const rateId = item.rate_id?.toLowerCase()
-    if (rateId && options.premiumRateIds.has(rateId)) return 'premium'
-    if (rateId && options.professionalRateIds.has(rateId)) return 'diaspora'
+    if (!rateId) continue
+
+    const inPremium = options.premiumRateIds.has(rateId)
+    const inProfessional = options.professionalRateIds.has(rateId)
+
+    // Zeffy may use one rate_id for multiple tiers — amount (checked above) disambiguates.
+    if (inPremium && inProfessional) continue
+
+    if (inPremium) return 'premium'
+    if (inProfessional) return 'diaspora'
   }
 
   const campaignId = payment.campaign_id?.toLowerCase()

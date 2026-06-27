@@ -191,6 +191,8 @@ export function PortalDashboardPage() {
           <MembershipUpgradeSection
             tier={membershipTier}
             email={profile.email}
+            first_name={profile.first_name}
+            last_name={profile.last_name}
             onRefresh={handleRefresh}
             isRefreshing={isRefreshing}
           />

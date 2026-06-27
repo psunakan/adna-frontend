@@ -49,6 +49,9 @@ test.describe('Member portal membership upgrades', () => {
     const payLinks = membershipCard(page).getByRole('link', { name: 'Pay with Zeffy' })
     await expect(payLinks.first()).toHaveAttribute('target', '_blank')
     await expect(payLinks.first()).toHaveAttribute('rel', /noopener/)
+    await expect(payLinks.first()).toHaveAttribute('href', /email=demo%40adna\.org/)
+    await expect(payLinks.first()).toHaveAttribute('href', /firstname=Demo/)
+    await expect(payLinks.first()).toHaveAttribute('href', /lastname=User/)
   })
 
   test('refresh status upgrades free member to Professional', async ({ page }) => {

@@ -336,6 +336,9 @@ verify_jwt = true
 [functions.zeffy-membership-webhook]
 verify_jwt = false
 
+[functions.zeffy-membership-sync]
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 54327

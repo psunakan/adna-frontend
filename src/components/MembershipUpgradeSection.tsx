@@ -2,14 +2,16 @@ import {
   canUpgradeTo,
   MEMBERSHIP_TIER_META,
   normalizeMembershipTier,
-  ZEFFY_MEMBERSHIP_URL,
   type MembershipTierAlias,
 } from '../lib/membershipTier'
+import { buildZeffyCheckoutUrl } from '../lib/zeffyCheckout'
 import { MembershipBadge, MemberNameWithBadge } from './MembershipBadge'
 
 type Props = {
   tier: MembershipTierAlias
   email: string
+  first_name: string
+  last_name: string
   onRefresh?: () => void
   isRefreshing?: boolean
 }
@@ -30,7 +32,14 @@ const UPGRADE_OPTIONS = [
   },
 ]
 
-export function MembershipUpgradeSection({ tier, email, onRefresh, isRefreshing }: Props) {
+export function MembershipUpgradeSection({
+  tier,
+  email,
+  first_name,
+  last_name,
+  onRefresh,
+  isRefreshing,
+}: Props) {
   const current = normalizeMembershipTier(tier)
   const meta = MEMBERSHIP_TIER_META[current]
   const availableUpgrades = UPGRADE_OPTIONS.filter((option) => canUpgradeTo(current, option.tier))
@@ -79,7 +88,12 @@ export function MembershipUpgradeSection({ tier, email, onRefresh, isRefreshing 
                 </div>
                 <p className="portal-membership-card__option-copy">{option.description}</p>
                 <a
-                  href={ZEFFY_MEMBERSHIP_URL}
+                  href={buildZeffyCheckoutUrl({
+                    tier: option.tier,
+                    email,
+                    first_name,
+                    last_name,
+                  })}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="portal-membership-card__pay-btn"

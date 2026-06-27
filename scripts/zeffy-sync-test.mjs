@@ -34,16 +34,18 @@ console.log('Zeffy sync integration test')
 console.log('Test email:', testEmail)
 console.log('---')
 
-console.log('1. Checkout URL (email only, no name params)')
+console.log('1. Checkout URL (email + name params)')
 const checkoutUrl = new URL(
   process.env.VITE_ZEFFY_MEMBERSHIP_URL ??
     'https://www.zeffy.com/en-US/ticketing/ghanaian-diaspora-nursing-alliances-memberships-2',
 )
 checkoutUrl.searchParams.set('email', testEmail)
+checkoutUrl.searchParams.set('firstname', 'RegFirst')
+checkoutUrl.searchParams.set('lastname', 'RegLast')
 const urlStr = checkoutUrl.toString()
 assert(urlStr.includes(`email=${encodeURIComponent(testEmail)}`), 'checkout URL includes email')
-assert(!urlStr.includes('firstname='), 'checkout URL must not include firstname')
-assert(!urlStr.includes('lastname='), 'checkout URL must not include lastname')
+assert(urlStr.includes('firstname=RegFirst'), 'checkout URL includes firstname')
+assert(urlStr.includes('lastname=RegLast'), 'checkout URL includes lastname')
 console.log('   OK:', urlStr.slice(0, 80) + '…')
 
 console.log('2. Register pending member (is_active=false)')

@@ -169,6 +169,16 @@ cp env.example .env
 | `VITE_SUPABASE_PUBLISHABLE_KEY` | Yes (for forms/portal) | Browser app          | Publishable/anon key from Supabase Dashboard                                                                                          |
 | `SUPABASE_DB_PASSWORD`          | Yes (for migrations)   | `db:link`, `db:push` | Database password from Dashboard → Settings → Database                                                                                |
 | `SUPABASE_POOLER_HOST`          | Optional               | Deploy scripts       | Pooler hostname if direct DB host fails (IPv6). From Dashboard → Connect → Session pooler, e.g. `aws-0-us-east-1.pooler.supabase.com` |
+| `SUPABASE_SERVICE_ROLE_KEY`     | Admin scripts only     | Local CLI            | Service role key — **never** commit or prefix with `VITE_`. Used by `zeffy:apply-payment`, `zeffy:sync-test`, and `zeffy:api-test`.   |
+| `RESEND_API_KEY`                | Edge functions         | `secrets:set`        | Resend API key for registration and password-reset emails (Supabase secret, not browser)                                              |
+| `RESEND_FROM_EMAIL`             | Edge functions         | `secrets:set`        | From address for transactional email, e.g. `A-DNA <noreply@yourdomain.com>`                                                         |
+| `SITE_URL`                      | Edge functions         | `secrets:set`        | Public site URL used in email links and branding (e.g. `https://a-dna.org`)                                                           |
+| `ZEFFY_WEBHOOK_SECRET`          | Optional               | Edge function        | Shared secret for Zeffy webhook auth (set via `npm run secrets:set`)                                                                  |
+| `ZEFFY_API_KEY`                 | Optional               | Edge function        | Zeffy API key for portal **Refresh status** backfill when webhook missed a payment (Supabase secret only)                             |
+| `ZEFFY_RATE_PROFESSIONAL`       | Optional               | Edge function        | Zeffy `rate_id` for Professional tier — may be the same UUID as Premium (see [Zeffy](#zeffy-membership-payments))                     |
+| `ZEFFY_RATE_PREMIUM`            | Optional               | Edge function        | Zeffy `rate_id` for Premium tier — tier is resolved from payment amount when both rates share the same ID                             |
+| `ZEFFY_CAMPAIGN_PROFESSIONAL`   | Optional               | Edge function        | Comma-separated Zeffy campaign UUIDs for Professional ($75 / 300 GHS)                                                                 |
+| `ZEFFY_CAMPAIGN_PREMIUM`        | Optional               | Edge function        | Comma-separated Zeffy campaign UUIDs for Premium ($150 / 600 GHS)                                                                     |
 
 **Where to find values:**
 
@@ -229,12 +239,7 @@ npm run db:link -- --project-ref <project-ref>
 npm run db:push
 ```
 
-This applies migrations in `supabase/migrations/`:
-
-| Migration                             | Purpose                                                            |
-| ------------------------------------- | ------------------------------------------------------------------ |
-| `202604280001_membership_schema.sql`  | `members`, `member_credentials`, `membership_types`, `member_dues` |
-| `202604291200_member_portal_auth.sql` | Member sessions, login/logout/profile RPC functions                |
+This applies all SQL migrations in `supabase/migrations/` — membership tables, member portal, password reset, and Zeffy payment handling.
 
 ### 3. Import legacy membership data (optional)
 
@@ -246,6 +251,24 @@ npm run import:membership
 
 Then run the generated `supabase/seed/legacy_membership_data.sql` in the Supabase SQL Editor. The seed directory is gitignored (contains member PII).
 
+### 4. Deploy edge functions and secrets
+
+Email, Zeffy webhook, and portal refresh sync run as Supabase Edge Functions. Requires project **Owner** or **Developer** access on the Supabase CLI account.
+
+Add Resend, Zeffy, and site URL values to `.env` (see `env.example`), then:
+
+```bash
+npm run secrets:set       # push secrets to Supabase (RESEND_*, SITE_URL, ZEFFY_*)
+npm run functions:deploy  # deploy all edge functions
+```
+
+| Edge function                    | Purpose                                                                 |
+| -------------------------------- | ----------------------------------------------------------------------- |
+| `password-reset-request`         | Sends password reset email via Resend                                   |
+| `membership-registration-email`  | Sends welcome email after registration                                  |
+| `zeffy-membership-webhook`       | Receives Zeffy payment webhooks → writes `member_dues`, activates member |
+| `zeffy-membership-sync`          | Portal **Refresh status** — DB check + optional Zeffy API backfill      |
+
 ### Troubleshooting database connection
 
 | Error                                        | Fix                                                                                               |
@@ -253,6 +276,143 @@ Then run the generated `supabase/seed/legacy_membership_data.sql` in the Supabas
 | `ENOTFOUND db.<ref>.supabase.co`             | Direct DB host is IPv6-only. Set `SUPABASE_POOLER_HOST` in `.env`.                                |
 | `password authentication failed`             | Reset database password in Dashboard, update `SUPABASE_DB_PASSWORD` in `.env`.                    |
 | `Invalid URL` with special chars in password | Do not paste a full connection URI. Use separate `SUPABASE_DB_PASSWORD` + `SUPABASE_POOLER_HOST`. |
+
+---
+
+## Zeffy membership payments
+
+Paid memberships are collected on **Zeffy**. When a payment succeeds, Zeffy should POST to the Supabase edge function **`zeffy-membership-webhook`**, which records **`member_dues`** and activates the member (`is_active = true`). Matching is by **email only** — the payer must use the same email they registered with.
+
+### Payment flow
+
+```
+Register on site → redirect to Zeffy checkout (email prefilled)
+       ↓
+Pay on Zeffy (same email as registration)
+       ↓
+Zeffy POSTs webhook → zeffy-membership-webhook → member_dues + is_active
+       ↓
+Member signs in → portal shows paid status
+```
+
+If the webhook is missed, a member can click **Refresh status** in the portal. That calls **`zeffy-membership-sync`**, which checks the database first and — when `ZEFFY_API_KEY` is configured — queries the Zeffy API for succeeded payments matching their email.
+
+### Where Zeffy is involved
+
+| Step | Calls Zeffy API? | What happens |
+| ---- | ---------------- | ------------ |
+| Registration submit | No | Browser redirects to a Zeffy checkout URL (`buildZeffyCheckoutUrl` in `src/lib/zeffyCheckout.ts`) |
+| Portal “Pay with Zeffy” | No | Link opens `zeffy.com` in a new tab |
+| **Payment completes** | **Zeffy → us** | Zeffy POSTs to `zeffy-membership-webhook`; edge function writes `member_dues` |
+| **Refresh status** | **Server-side only** | `zeffy-membership-sync` reads DB; if still pending, imports from Zeffy API by email |
+| **`zeffy:apply-payment`** | **No** | Admin writes to DB via `process_zeffy_membership_payment` — does **not** verify with Zeffy |
+
+There is **no outbound Zeffy API call** from the browser. Registration and checkout are plain redirects/links.
+
+The app treats a payment as verified when a **`member_dues`** row exists with `status = COMPLETED` for the current year and matching email.
+
+### Tier resolution
+
+When a webhook or API sync imports a payment, tier is determined in this order:
+
+1. **Payment amount** (primary) — amounts in minor units (cents / pesewas):
+
+   | Amount (USD) | Amount (GHS) | Tier          |
+   | ------------ | ------------ | ------------- |
+   | $75 (7500)   | 300 (30000)  | Professional  |
+   | $150 (15000) | 600 (60000)  | Premium       |
+
+2. **`rate_id`** on line items — only when amount does not match a known tier
+3. **`campaign_id`** — if mapped via `ZEFFY_CAMPAIGN_*` secrets
+4. **Metadata** — `membership_tier` / `tier` fields on the payment
+
+**Shared rate ID:** A-DNA uses the same Zeffy `rate_id` for both Professional and Premium. Set both secrets to the same UUID:
+
+```bash
+ZEFFY_RATE_PROFESSIONAL=0f769222-6e47-4cdf-b38e-3919c78004ca
+ZEFFY_RATE_PREMIUM=0f769222-6e47-4cdf-b38e-3919c78004ca
+```
+
+When the rate is shared, tier always comes from the payment amount. Non-standard test amounts (e.g. $1) will not auto-sync — use full tier amounts or manual replay.
+
+### How manual replay “verification” works
+
+`npm run zeffy:apply-payment` does **not** contact Zeffy. An **admin** verifies payment offline (Zeffy dashboard, receipt email, transaction ID), then the script **creates** the database record the app expects.
+
+- `--payment-id` is stored as `order_id` in `member_dues` for **audit trail** and **duplicate prevention** (same ID → ignored).
+- After apply-payment, **Refresh status** reads that DB row — no Zeffy API call needed.
+
+**Preferred order when a payment is missing:**
+
+1. Member clicks **Refresh status** (triggers API backfill if configured)
+2. Fix the webhook so future payments arrive automatically
+3. Admin runs **`zeffy:apply-payment`** as a last resort
+
+### Webhook setup
+
+```bash
+npm run zeffy:webhook-url    # print the URL to paste in Zeffy → Settings → Integrations → Webhook
+npm run secrets:set          # push RESEND_*, SITE_URL, ZEFFY_* secrets to Supabase
+npm run functions:deploy     # deploy webhook, sync, and email edge functions
+```
+
+Configure Zeffy to redirect buyers after payment to:
+
+`https://your-site.com/membership/confirmation`
+
+All Zeffy-related Supabase secrets are listed in `env.example`. At minimum for production payments:
+
+- `ZEFFY_WEBHOOK_SECRET` — verify webhook authenticity
+- `ZEFFY_RATE_PROFESSIONAL` / `ZEFFY_RATE_PREMIUM` — same shared rate ID (see [Tier resolution](#tier-resolution))
+- `ZEFFY_API_KEY` — enables portal Refresh backfill when webhook is missed
+
+### Checking payment status (members & support)
+
+**Do not re-run the admin apply script to “re-evaluate”.**
+
+| Action | Who | What it does |
+| ------ | --- | ------------ |
+| **Refresh status** (member portal) | Logged-in member | Calls `zeffy-membership-sync` — reads `member_dues`, then optionally imports from Zeffy API if still pending |
+| Sign out / sign in | Member | Loads profile; same dues sync on profile fetch. |
+
+If payment was completed on Zeffy but the portal still shows “pending”:
+
+1. Ask the member to click **Refresh status** (requires `ZEFFY_API_KEY` deployed for API backfill)
+2. Confirm the webhook URL and secrets are configured in Zeffy and Supabase
+3. Use **Manual replay** below if the payment still does not appear
+
+### Manual replay (admin only)
+
+Use this **once** after an admin has **confirmed payment in Zeffy** (receipt/dashboard) and the payment is **missing from `member_dues`**. The script does not validate the transaction with Zeffy. It creates a `member_dues` row via `process_zeffy_membership_payment` — it is **not** for routine re-checks.
+
+**CLI** (requires `SUPABASE_SERVICE_ROLE_KEY` in `.env` — local only, never commit):
+
+```bash
+# Professional ($75) — run once per missing payment
+npm run zeffy:apply-payment -- user@example.com diaspora
+
+# Premium ($150) — prefer the Zeffy transaction id when you have it
+npm run zeffy:apply-payment -- user@example.com premium --payment-id zeffy_abc123
+```
+
+**Supabase SQL Editor** (project admins): adapt and run `scripts/sql/apply-manual-payment.example.sql`.
+
+Re-running with a **new** payment id can duplicate dues records. Re-running with the **same** `--payment-id` is ignored as a duplicate.
+
+### Developer scripts
+
+```bash
+npm run zeffy:webhook-url     # print webhook URL for Zeffy dashboard
+npm run zeffy:api-test        # list Zeffy contacts/payments for an email (requires ZEFFY_API_KEY in .env)
+npm run zeffy:sync-test       # integration test: register → mock webhook → verify activation
+npm run zeffy:apply-payment   # admin manual replay (see above)
+```
+
+Example — inspect payments for a member email:
+
+```bash
+npm run zeffy:api-test -- user@example.com
+```
 
 ---
 
@@ -347,6 +507,8 @@ Tests live in `e2e/`:
 - `navigation.spec.ts` — routes and nav links
 - `membership-form.spec.ts` — registration form validation
 - `portal-login.spec.ts` — member portal login form
+- `portal-membership.spec.ts` — portal dashboard, refresh status, Zeffy pay link
+- `forgot-password.spec.ts` — password reset request flow
 
 ---
 
@@ -366,15 +528,18 @@ No `.env` is required in CI — current tests cover UI/navigation only.
 
 ## Routes
 
-| Path            | Description                                       |
-| --------------- | ------------------------------------------------- |
-| `/`             | Home                                              |
-| `/about`        | Mission, vision, team                             |
-| `/events`       | Events and registration modal                     |
-| `/membership`   | Membership tiers and multi-step registration form |
-| `/donate`       | Donation page                                     |
-| `/portal/login` | Member portal sign-in                             |
-| `/portal`       | Member dashboard (requires login)                 |
+| Path                         | Description                                       |
+| ---------------------------- | ------------------------------------------------- |
+| `/`                          | Home                                              |
+| `/about`                     | Mission, vision, team                             |
+| `/events`                    | Events and registration modal                     |
+| `/membership`                | Membership tiers and multi-step registration form |
+| `/membership/confirmation`   | Post-checkout confirmation page                   |
+| `/donate`                    | Donation page                                     |
+| `/portal/login`              | Member portal sign-in                             |
+| `/portal/forgot-password`    | Request password reset email                      |
+| `/portal/reset-password`     | Set new password from email link                  |
+| `/portal`                    | Member dashboard (requires login)                 |
 
 ---
 
@@ -388,6 +553,8 @@ No `.env` is required in CI — current tests cover UI/navigation only.
 | `npm run db:link`                     | Link local project to remote Supabase (reads `.env`) |
 | `npm run db:push`                     | Push migrations to remote Supabase                   |
 | `npm run connect:supabase`            | Link + push migrations in one step                   |
+| `npm run secrets:set`                 | Push edge function secrets to Supabase               |
+| `npm run functions:deploy`            | Deploy all Supabase edge functions                   |
 | `npm run import:membership`           | Generate legacy seed SQL from local backup           |
 | `npm run test:e2e`                    | Run Playwright tests                                 |
 | `npm run test:e2e:ui`                 | Playwright interactive UI                            |
@@ -397,6 +564,10 @@ No `.env` is required in CI — current tests cover UI/navigation only.
 | `npm run lint:fix`                    | Run ESLint with auto-fix                             |
 | `npm run format`                      | Format all files with Prettier                       |
 | `npm run format:check`                | Check formatting without writing                     |
+| `npm run zeffy:webhook-url`           | Print Zeffy webhook URL for Supabase edge function   |
+| `npm run zeffy:api-test`              | List Zeffy contacts/payments for an email            |
+| `npm run zeffy:sync-test`             | Integration test: checkout + webhook + activation    |
+| `npm run zeffy:apply-payment`         | **Admin:** manually record a missed Zeffy payment    |
 | `docker compose up --build web`       | Production container (nginx, port 8080)              |
 | `docker compose --profile dev up dev` | Dev container (Vite, port 5173)                      |
 
@@ -418,8 +589,9 @@ adna-frontend/
 │   └── main.tsx            # App entry
 ├── supabase/
 │   ├── migrations/         # SQL migrations (applied via db:push)
+│   ├── functions/          # Edge functions (webhook, sync, email)
 │   └── seed/               # Generated legacy data (gitignored)
-├── scripts/                # Supabase connect, legacy import
+├── scripts/                # Supabase connect, Zeffy tools, legacy import
 ├── legacy/                 # Original static HTML (reference)
 ├── env.example             # Environment template (copy to .env)
 ├── Dockerfile              # Production multi-stage build (Node → nginx)

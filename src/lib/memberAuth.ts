@@ -113,12 +113,31 @@ export async function refreshMemberMembershipStatus(
     throw new Error('Member portal is not configured. Contact the site administrator.')
   }
 
-  const { data, error } = await supabase.rpc('refresh_member_membership_status', {
-    p_token: token,
+  const { data, error } = await supabase.functions.invoke('zeffy-membership-sync', {
+    body: { token },
   })
 
   if (error) {
-    throw new Error(error.message)
+    const { data: rpcData, error: rpcError } = await supabase.rpc(
+      'refresh_member_membership_status',
+      { p_token: token },
+    )
+    if (rpcError) {
+      throw new Error(rpcError.message)
+    }
+    if (isRpcFailure(rpcData)) {
+      throw new Error(rpcData.error)
+    }
+    const rpcResult = rpcData as RpcSuccess<{
+      payment_status: 'paid' | 'pending'
+      payment_message: string
+      member: MemberProfile
+    }>
+    return {
+      paymentStatus: rpcResult.payment_status,
+      paymentMessage: rpcResult.payment_message,
+      member: rpcResult.member,
+    }
   }
 
   if (isRpcFailure(data)) {
@@ -130,6 +149,10 @@ export async function refreshMemberMembershipStatus(
     payment_message: string
     member: MemberProfile
   }>
+
+  if (!result?.payment_status || !result.member) {
+    throw new Error('Unable to refresh membership status.')
+  }
 
   return {
     paymentStatus: result.payment_status,

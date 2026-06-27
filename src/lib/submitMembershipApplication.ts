@@ -138,6 +138,8 @@ export async function submitMembershipApplication(
     zeffyUrl: buildZeffyCheckoutUrl({
       tier: membershipType,
       email,
+      first_name: data.first_name,
+      last_name: data.last_name,
     }),
   }
 }

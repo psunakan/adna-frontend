@@ -95,7 +95,7 @@ export async function mockMemberPortalApi(page: Page, options: MockPortalOptions
     })
   })
 
-  await page.route('**/rest/v1/rpc/refresh_member_membership_status', async (route) => {
+  const fulfillRefresh = async (route: Parameters<Page['route']>[1] extends (r: infer R) => unknown ? R : never) => {
     const { index, sequence } = await page.evaluate(
       ({ profileIndexKey, profilesKey }) => ({
         index: window[profileIndexKey] ?? 0,
@@ -119,7 +119,11 @@ export async function mockMemberPortalApi(page: Page, options: MockPortalOptions
         member: profile,
       }),
     })
-  })
+  }
+
+  await page.route('**/functions/v1/zeffy-membership-sync', fulfillRefresh)
+
+  await page.route('**/rest/v1/rpc/refresh_member_membership_status', fulfillRefresh)
 
   await page.route('**/rest/v1/rpc/login_member', async (route) => {
     const session = buildMockSession(initialTier)

@@ -12,8 +12,16 @@ export function zeffyCheckoutBaseUrl(tier: Exclude<MembershipType, 'regular'>): 
 export function buildZeffyCheckoutUrl(params: {
   tier: Exclude<MembershipType, 'regular'>
   email: string
+  first_name?: string
+  last_name?: string
 }): string {
   const url = new URL(zeffyCheckoutBaseUrl(params.tier))
   url.searchParams.set('email', params.email.trim().toLowerCase())
+
+  const firstName = params.first_name?.trim()
+  const lastName = params.last_name?.trim()
+  if (firstName) url.searchParams.set('firstname', firstName)
+  if (lastName) url.searchParams.set('lastname', lastName)
+
   return url.toString()
 }
