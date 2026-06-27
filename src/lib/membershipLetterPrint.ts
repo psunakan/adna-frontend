@@ -12,7 +12,11 @@ function escapeHtml(value: string): string {
     .replaceAll('"', '&quot;')
 }
 
-function buildLetterHtml(verification: MembershipVerification, verifyUrl: string): string {
+function buildLetterHtml(
+  verification: MembershipVerification,
+  verifyUrl: string,
+  origin: string,
+): string {
   const issuedDate = formatVerificationDate(verification.issued_at)
   const code = escapeHtml(verification.verification_code)
   const name = escapeHtml(verification.member_display_name)
@@ -106,15 +110,12 @@ function buildLetterHtml(verification: MembershipVerification, verifyUrl: string
       font-weight: 700;
       color: #0D3D2B;
     }
-    @media print {
-      .no-print { display: none; }
-    }
   </style>
 </head>
 <body>
   <div class="page">
     <div class="header">
-      <img src="${escapeHtml(new URL('/logo.png', window.location.origin).href)}" alt="A-DNA logo" />
+      <img src="${escapeHtml(new URL('/logo.png', origin).href)}" alt="A-DNA logo" />
       <div>
         <p class="org-name">African-Diaspora Nursing Alliance</p>
         <p class="org-sub">Membership Verification Letter</p>
@@ -158,23 +159,47 @@ function buildLetterHtml(verification: MembershipVerification, verifyUrl: string
 </html>`
 }
 
-export function openMembershipLetterPrint(verification: MembershipVerification): boolean {
-  const verifyUrl = buildVerificationUrl(verification.verification_code)
-  const html = buildLetterHtml(verification, verifyUrl)
-  const printWindow = window.open('', '_blank', 'noopener,noreferrer,width=900,height=1100')
+const LOADING_HTML = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8" /><title>Preparing letter…</title></head>
+<body style="font-family: Arial, sans-serif; padding: 2rem; color: #0D3D2B;">
+  <p>Preparing your membership letter…</p>
+</body>
+</html>`
 
-  if (!printWindow) {
-    return false
-  }
+/** Open synchronously from a click handler — must not await before this call. */
+export function openMembershipLetterPrintWindow(): Window | null {
+  return window.open('about:blank', '_blank', 'width=900,height=1100')
+}
+
+export function showMembershipLetterLoading(printWindow: Window): void {
+  printWindow.document.open()
+  printWindow.document.write(LOADING_HTML)
+  printWindow.document.close()
+}
+
+export function writeMembershipLetterPrint(
+  printWindow: Window,
+  verification: MembershipVerification,
+  origin = window.location.origin,
+): void {
+  const verifyUrl = buildVerificationUrl(verification.verification_code)
+  const html = buildLetterHtml(verification, verifyUrl, origin)
 
   printWindow.document.open()
   printWindow.document.write(html)
   printWindow.document.close()
+  printWindow.focus()
 
-  printWindow.onload = () => {
-    printWindow.focus()
+  window.setTimeout(() => {
     printWindow.print()
-  }
+  }, 300)
+}
 
+/** @deprecated Prefer openMembershipLetterPrintWindow + writeMembershipLetterPrint */
+export function openMembershipLetterPrint(verification: MembershipVerification): boolean {
+  const printWindow = openMembershipLetterPrintWindow()
+  if (!printWindow) return false
+  writeMembershipLetterPrint(printWindow, verification)
   return true
 }

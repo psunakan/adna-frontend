@@ -1,7 +1,11 @@
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { getStoredSession } from '../lib/memberAuth'
-import { openMembershipLetterPrint } from '../lib/membershipLetterPrint'
+import {
+  openMembershipLetterPrintWindow,
+  showMembershipLetterLoading,
+  writeMembershipLetterPrint,
+} from '../lib/membershipLetterPrint'
 import { issueMembershipVerification } from '../lib/membershipVerification'
 import type { MemberProfile } from '../lib/memberAuth'
 import { normalizeMembershipTier } from '../lib/membershipTier'
@@ -22,16 +26,21 @@ export function MembershipLetterCard({ profile }: Props) {
       return
     }
 
+    // Must open before await — browsers block window.open after async work.
+    const printWindow = openMembershipLetterPrintWindow()
+    if (!printWindow) {
+      toast.error('Allow pop-ups to print your membership letter.')
+      return
+    }
+    showMembershipLetterLoading(printWindow)
+
     setIsIssuing(true)
     try {
       const verification = await issueMembershipVerification(session.token)
-      const opened = openMembershipLetterPrint(verification)
-      if (!opened) {
-        toast.error('Allow pop-ups to print your membership letter.')
-        return
-      }
+      writeMembershipLetterPrint(printWindow, verification)
       toast.success('Verification letter ready to print.')
     } catch (error) {
+      printWindow.close()
       toast.error(error instanceof Error ? error.message : 'Could not issue membership letter.')
     } finally {
       setIsIssuing(false)
