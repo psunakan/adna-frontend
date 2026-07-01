@@ -117,13 +117,6 @@ export function mockSuccessfulMembershipRegistration(page: Page, token = 'test-c
         body: JSON.stringify({ success: true }),
       })
     }),
-    page.route('**/functions/v1/membership-registration-email**', async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({ success: true }),
-      })
-    }),
   ])
 }
 

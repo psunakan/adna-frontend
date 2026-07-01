@@ -8,6 +8,10 @@ import {
   resolvePaymentAmountCents,
   type ZeffyWebhookPayload,
 } from '../_shared/zeffy.ts'
+import {
+  trySendWelcomeEmailAfterPayment,
+  type PaymentProcessResult,
+} from '../_shared/sendWelcomeEmail.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -222,9 +226,8 @@ Deno.serve(async (req) => {
       })
     }
 
-    const result = data as {
+    const result = data as PaymentProcessResult & {
       success?: boolean
-      duplicate?: boolean
       member_found?: boolean
       membership_updated?: boolean
     }
@@ -233,6 +236,8 @@ Deno.serve(async (req) => {
       console.warn(`Zeffy payment recorded but no member matched email: ${email}`)
     }
 
+    const welcomeEmailSent = await trySendWelcomeEmailAfterPayment(supabase, result)
+
     return new Response(
       JSON.stringify({
         success: true,
@@ -240,6 +245,7 @@ Deno.serve(async (req) => {
         duplicate: result.duplicate ?? false,
         member_found: result.member_found ?? false,
         membership_updated: result.membership_updated ?? false,
+        welcome_email_sent: welcomeEmailSent,
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     )

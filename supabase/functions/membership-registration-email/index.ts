@@ -1,9 +1,4 @@
-import { Resend } from 'npm:resend@4'
-import {
-  buildRegistrationEmailHtml,
-  buildRegistrationEmailText,
-  REGISTRATION_EMAIL_SUBJECT,
-} from '../_shared/email/registrationEmailTemplate.ts'
+import { sendWelcomeEmail } from '../_shared/sendWelcomeEmail.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -28,6 +23,7 @@ Deno.serve(async (req) => {
     const firstName = typeof body?.first_name === 'string' ? body.first_name.trim() : ''
     const membershipLabel =
       typeof body?.membership_label === 'string' ? body.membership_label.trim() : 'Membership'
+    const memberId = typeof body?.member_id === 'string' ? body.member_id.trim() : ''
 
     if (!email || !firstName) {
       return new Response(
@@ -41,7 +37,6 @@ Deno.serve(async (req) => {
 
     const resendApiKey = Deno.env.get('RESEND_API_KEY')
     const fromEmail = Deno.env.get('RESEND_FROM_EMAIL')
-    const siteUrl = (Deno.env.get('SITE_URL') ?? 'http://localhost:5173').replace(/\/$/, '')
 
     if (!resendApiKey || !fromEmail) {
       console.error('Resend is not configured (RESEND_API_KEY / RESEND_FROM_EMAIL).')
@@ -54,22 +49,22 @@ Deno.serve(async (req) => {
       )
     }
 
-    const emailData = { firstName, membershipLabel, siteUrl }
-    const resend = new Resend(resendApiKey)
-    const { error: sendError } = await resend.emails.send({
-      from: fromEmail,
-      to: email,
-      subject: REGISTRATION_EMAIL_SUBJECT,
-      html: buildRegistrationEmailHtml(emailData),
-      text: buildRegistrationEmailText(emailData),
-    })
-
-    if (sendError) {
-      console.error('Resend send failed:', sendError)
+    const sent = await sendWelcomeEmail({ email, firstName, membershipLabel })
+    if (!sent) {
       return new Response(JSON.stringify({ success: false, error: 'Failed to send email.' }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
+    }
+
+    if (memberId) {
+      const supabaseUrl = Deno.env.get('SUPABASE_URL')
+      const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+      if (supabaseUrl && serviceRoleKey) {
+        const { createClient } = await import('npm:@supabase/supabase-js@2')
+        const supabase = createClient(supabaseUrl, serviceRoleKey)
+        await supabase.rpc('mark_member_welcome_email_sent', { p_member_id: memberId })
+      }
     }
 
     return new Response(JSON.stringify({ success: true }), {

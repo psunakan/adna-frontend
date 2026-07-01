@@ -170,7 +170,7 @@ cp env.example .env
 | `SUPABASE_DB_PASSWORD`          | Yes (for migrations)   | `db:link`, `db:push` | Database password from Dashboard → Settings → Database                                                                                |
 | `SUPABASE_POOLER_HOST`          | Optional               | Deploy scripts       | Pooler hostname if direct DB host fails (IPv6). From Dashboard → Connect → Session pooler, e.g. `aws-0-us-east-1.pooler.supabase.com` |
 | `SUPABASE_SERVICE_ROLE_KEY`     | Admin scripts only     | Local CLI            | Service role key — **never** commit or prefix with `VITE_`. Used by `zeffy:apply-payment`, `zeffy:sync-test`, and `zeffy:api-test`.   |
-| `RESEND_API_KEY`                | Edge functions         | `secrets:set`        | Resend API key for registration and password-reset emails (Supabase secret, not browser)                                              |
+| `RESEND_API_KEY`                | Edge functions         | `secrets:set`        | Resend API key for welcome and password-reset emails (Supabase secret, not browser)                                                 |
 | `RESEND_FROM_EMAIL`             | Edge functions         | `secrets:set`        | From address for transactional email, e.g. `A-DNA <noreply@yourdomain.com>`                                                           |
 | `SITE_URL`                      | Edge functions         | `secrets:set`        | Public site URL used in email links and branding (e.g. `https://a-dna.org`)                                                           |
 | `ZEFFY_WEBHOOK_SECRET`          | Optional               | Edge function        | Shared secret for Zeffy webhook auth (set via `npm run secrets:set`)                                                                  |
@@ -265,7 +265,7 @@ npm run functions:deploy  # deploy all edge functions
 | Edge function                   | Purpose                                                                  |
 | ------------------------------- | ------------------------------------------------------------------------ |
 | `password-reset-request`        | Sends password reset email via Resend                                    |
-| `membership-registration-email` | Sends welcome email after registration                                   |
+| `membership-registration-email` | Sends welcome email after payment (also used by admin replay)            |
 | `zeffy-membership-webhook`      | Receives Zeffy payment webhooks → writes `member_dues`, activates member |
 | `zeffy-membership-sync`         | Portal **Refresh status** — DB check + optional Zeffy API backfill       |
 
@@ -281,7 +281,7 @@ npm run functions:deploy  # deploy all edge functions
 
 ## Zeffy membership payments
 
-Paid memberships are collected on **Zeffy**. When a payment succeeds, Zeffy should POST to the Supabase edge function **`zeffy-membership-webhook`**, which records **`member_dues`** and activates the member (`is_active = true`). Matching is by **email only** — the payer must use the same email they registered with.
+Paid memberships are collected on **Zeffy**. When a payment succeeds, Zeffy should POST to the Supabase edge function **`zeffy-membership-webhook`**, which records **`member_dues`**, activates the member (`is_active = true`), and sends a **welcome email** (once per member). Matching is by **email only** — the payer must use the same email they registered with.
 
 ### Payment flow
 
@@ -290,7 +290,7 @@ Register on site → redirect to Zeffy checkout (email prefilled)
        ↓
 Pay on Zeffy (same email as registration)
        ↓
-Zeffy POSTs webhook → zeffy-membership-webhook → member_dues + is_active
+Zeffy POSTs webhook → zeffy-membership-webhook → member_dues + is_active + welcome email
        ↓
 Member signs in → portal shows paid status
 ```
@@ -303,7 +303,7 @@ If the webhook is missed, a member can click **Refresh status** in the portal. T
 | ------------------------- | -------------------- | ------------------------------------------------------------------------------------------------- |
 | Registration submit       | No                   | Browser redirects to a Zeffy checkout URL (`buildZeffyCheckoutUrl` in `src/lib/zeffyCheckout.ts`) |
 | Portal “Pay with Zeffy”   | No                   | Link opens `zeffy.com` in a new tab                                                               |
-| **Payment completes**     | **Zeffy → us**       | Zeffy POSTs to `zeffy-membership-webhook`; edge function writes `member_dues`                     |
+| **Payment completes**     | **Zeffy → us**       | Zeffy POSTs to `zeffy-membership-webhook`; edge function writes `member_dues` and sends welcome email |
 | **Refresh status**        | **Server-side only** | `zeffy-membership-sync` reads DB; if still pending, imports from Zeffy API by email               |
 | **`zeffy:apply-payment`** | **No**               | Admin writes to DB via `process_zeffy_membership_payment` — does **not** verify with Zeffy        |
 

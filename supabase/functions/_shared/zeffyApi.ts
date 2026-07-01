@@ -5,6 +5,10 @@ import {
   resolvePaymentAmountCents,
   type ZeffyPayment,
 } from './zeffy.ts'
+import {
+  trySendWelcomeEmailAfterPayment,
+  type PaymentProcessResult,
+} from './sendWelcomeEmail.ts'
 
 const ZEFFY_API_BASE = 'https://api.zeffy.com'
 
@@ -190,11 +194,12 @@ export async function syncZeffyPaymentsForEmail(
         continue
       }
 
-      const payload = data as { duplicate?: boolean; membership_updated?: boolean }
+      const payload = data as PaymentProcessResult & { duplicate?: boolean; membership_updated?: boolean }
       if (payload.duplicate) {
         result.skipped += 1
       } else {
         result.synced += 1
+        await trySendWelcomeEmailAfterPayment(supabase, payload)
       }
     } catch (err) {
       result.errors.push(`${paymentId}: ${err instanceof Error ? err.message : String(err)}`)
