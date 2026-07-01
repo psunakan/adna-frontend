@@ -170,7 +170,7 @@ cp env.example .env
 | `SUPABASE_DB_PASSWORD`          | Yes (for migrations)   | `db:link`, `db:push` | Database password from Dashboard → Settings → Database                                                                                |
 | `SUPABASE_POOLER_HOST`          | Optional               | Deploy scripts       | Pooler hostname if direct DB host fails (IPv6). From Dashboard → Connect → Session pooler, e.g. `aws-0-us-east-1.pooler.supabase.com` |
 | `SUPABASE_SERVICE_ROLE_KEY`     | Admin scripts only     | Local CLI            | Service role key — **never** commit or prefix with `VITE_`. Used by `zeffy:apply-payment`, `zeffy:sync-test`, and `zeffy:api-test`.   |
-| `RESEND_API_KEY`                | Edge functions         | `secrets:set`        | Resend API key for welcome and password-reset emails (Supabase secret, not browser)                                                 |
+| `RESEND_API_KEY`                | Edge functions         | `secrets:set`        | Resend API key for welcome and password-reset emails (Supabase secret, not browser)                                                   |
 | `RESEND_FROM_EMAIL`             | Edge functions         | `secrets:set`        | From address for transactional email, e.g. `A-DNA <noreply@yourdomain.com>`                                                           |
 | `SITE_URL`                      | Edge functions         | `secrets:set`        | Public site URL used in email links and branding (e.g. `https://a-dna.org`)                                                           |
 | `ZEFFY_WEBHOOK_SECRET`          | Optional               | Edge function        | Shared secret for Zeffy webhook auth (set via `npm run secrets:set`)                                                                  |
@@ -299,13 +299,13 @@ If the webhook is missed, a member can click **Refresh status** in the portal. T
 
 ### Where Zeffy is involved
 
-| Step                      | Calls Zeffy API?     | What happens                                                                                      |
-| ------------------------- | -------------------- | ------------------------------------------------------------------------------------------------- |
-| Registration submit       | No                   | Browser redirects to a Zeffy checkout URL (`buildZeffyCheckoutUrl` in `src/lib/zeffyCheckout.ts`) |
-| Portal “Pay with Zeffy”   | No                   | Link opens `zeffy.com` in a new tab                                                               |
+| Step                      | Calls Zeffy API?     | What happens                                                                                          |
+| ------------------------- | -------------------- | ----------------------------------------------------------------------------------------------------- |
+| Registration submit       | No                   | Browser redirects to a Zeffy checkout URL (`buildZeffyCheckoutUrl` in `src/lib/zeffyCheckout.ts`)     |
+| Portal “Pay with Zeffy”   | No                   | Link opens `zeffy.com` in a new tab                                                                   |
 | **Payment completes**     | **Zeffy → us**       | Zeffy POSTs to `zeffy-membership-webhook`; edge function writes `member_dues` and sends welcome email |
-| **Refresh status**        | **Server-side only** | `zeffy-membership-sync` reads DB; if still pending, imports from Zeffy API by email               |
-| **`zeffy:apply-payment`** | **No**               | Admin writes to DB via `process_zeffy_membership_payment` — does **not** verify with Zeffy        |
+| **Refresh status**        | **Server-side only** | `zeffy-membership-sync` reads DB; if still pending, imports from Zeffy API by email                   |
+| **`zeffy:apply-payment`** | **No**               | Admin writes to DB via `process_zeffy_membership_payment` — does **not** verify with Zeffy            |
 
 There is **no outbound Zeffy API call** from the browser. Registration and checkout are plain redirects/links.
 
