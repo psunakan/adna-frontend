@@ -7,8 +7,7 @@ export type RegistrationEmailData = {
   siteUrl: string
 }
 
-export const REGISTRATION_EMAIL_SUBJECT =
-  'Welcome to A-DNA: your membership application is received'
+export const REGISTRATION_EMAIL_SUBJECT = 'Welcome to A-DNA: your membership is confirmed'
 
 export function buildRegistrationEmailHtml(data: RegistrationEmailData) {
   const firstName = escapeHtml(data.firstName)
@@ -21,10 +20,10 @@ export function buildRegistrationEmailHtml(data: RegistrationEmailData) {
       Welcome, ${firstName}!
     </h1>
     <p style="margin:0 0 24px;font-size:16px;line-height:1.7;color:${BRAND.textMuted};">
-      Thank you for applying to join the African-Diaspora Nursing Alliance (A-DNA).
+      Thank you for joining the African-Diaspora Nursing Alliance (A-DNA). Your membership payment has been received.
     </p>
     <p style="margin:0 0 16px;font-size:16px;line-height:1.7;">
-      We have received your membership application for:
+      You are now an active member at:
     </p>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px;">
       <tr>
@@ -48,7 +47,7 @@ export function buildRegistrationEmailHtml(data: RegistrationEmailData) {
     </p>`
 
   return wrapEmailLayout({
-    preheader: `Thank you for registering with A-DNA. We received your ${data.membershipLabel} application.`,
+    preheader: `Your ${data.membershipLabel} payment was received. Welcome to A-DNA.`,
     title: REGISTRATION_EMAIL_SUBJECT,
     bodyHtml,
     siteUrl,
@@ -61,9 +60,9 @@ export function buildRegistrationEmailText(data: RegistrationEmailData) {
 
   return `Welcome, ${data.firstName}!
 
-Thank you for applying to join the African-Diaspora Nursing Alliance (A-DNA).
+Thank you for joining the African-Diaspora Nursing Alliance (A-DNA). Your membership payment has been received.
 
-We have received your membership application for:
+You are now an active member at:
 ${data.membershipLabel}
 
 Visit our website: ${siteUrl}

@@ -1,7 +1,6 @@
 import { callingCodeForIso } from '../data/phoneCodeOptions'
 import { formatMemberPhoneE164 } from './phoneNumber'
 import { isSupabaseConfigured, supabase } from './supabase'
-import { sendRegistrationConfirmationEmail } from './sendRegistrationEmail'
 import { createMembershipCheckout } from './membershipCheckout'
 import { buildZeffyCheckoutUrl } from './zeffyCheckout'
 import { MEMBERSHIP_TYPE_IDS, type MemberInsert, type MembershipType } from '../types/database'
@@ -126,12 +125,6 @@ export async function submitMembershipApplication(
   }
 
   const checkoutToken = await createMembershipCheckout(email)
-
-  await sendRegistrationConfirmationEmail({
-    email,
-    first_name: data.first_name,
-    membership_type: membershipType,
-  })
 
   return {
     checkoutToken,
