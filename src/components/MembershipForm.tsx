@@ -30,7 +30,7 @@ import {
   saveMembershipFormDraft,
   stripSensitiveFormValues,
 } from '../lib/membershipFormProgress'
-import { PORTAL_LOGIN_PATH } from '../lib/memberAuth'
+import { PORTAL_FORGOT_PASSWORD_PATH, PORTAL_LOGIN_PATH } from '../lib/memberAuth'
 import { MembershipFormStepper } from './MembershipFormStepper'
 import { MembershipFormReview } from './MembershipFormReview'
 import { PasswordField } from './form/PasswordField'
@@ -181,7 +181,9 @@ function FormDropdownField({
   )
 }
 
-function DuplicateEmailAlert() {
+function DuplicateEmailAlert({ email }: { email: string }) {
+  const forgotPasswordSearch = email.trim() ? { email: email.trim().toLowerCase() } : undefined
+
   return (
     <div
       role="alert"
@@ -203,8 +205,21 @@ function DuplicateEmailAlert() {
           style={{ color: '#0D3D2B', fontWeight: 700, textDecoration: 'underline' }}
         >
           sign in to the Member Portal
-        </Link>{' '}
-        instead, or use a different email address.
+        </Link>
+        {forgotPasswordSearch ? (
+          <>
+            {' '}
+            or{' '}
+            <Link
+              to={PORTAL_FORGOT_PASSWORD_PATH}
+              search={forgotPasswordSearch}
+              style={{ color: '#0D3D2B', fontWeight: 700, textDecoration: 'underline' }}
+            >
+              reset your password
+            </Link>
+          </>
+        ) : null}{' '}
+        if you forgot it, or use a different email address to register.
       </p>
     </div>
   )
@@ -324,6 +339,7 @@ export function MembershipForm() {
   const countryResidence = watch('countryResidence')
   const countryPractice = watch('countryPractice')
   const licences = watch('licences')
+  const duplicateEmailValue = watch('email')
   const specialties = watch('specialties')
   const formValues = watch()
 
@@ -762,7 +778,7 @@ export function MembershipForm() {
                     })}
                   />
                   <FieldError message={errors.email?.message} />
-                  {duplicateEmail && <DuplicateEmailAlert />}
+                  {duplicateEmail && <DuplicateEmailAlert email={duplicateEmailValue} />}
                 </div>
 
                 <div style={{ marginBottom: '1rem' }}>

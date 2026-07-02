@@ -27,6 +27,11 @@ test.describe('Forgot password', () => {
     await page.getByRole('link', { name: 'Back to sign in' }).click()
     await expect(page).toHaveURL(/\/portal\/login/)
   })
+
+  test('prefills email from query string', async ({ page }) => {
+    await page.goto('/portal/forgot-password?email=ycommodore%40g-dna.org')
+    await expect(page.getByLabel('Email')).toHaveValue('ycommodore@g-dna.org')
+  })
 })
 
 test.describe('Reset password', () => {
