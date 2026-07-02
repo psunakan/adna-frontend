@@ -22,7 +22,7 @@ export function buildPasswordResetEmailHtml({
       Hello ${safeName},
     </p>
     <p style="margin:0 0 24px;font-size:16px;line-height:1.7;color:#374151;">
-      We received a request to reset your A-DNA Member Portal password. Use the button below to choose a new password.
+      We received a request to set or reset your A-DNA Member Portal password. Use the button below to choose a password.
     </p>
     <p style="margin:0 0 24px;">
       ${emailButton(resetUrl, 'Reset password')}
@@ -54,7 +54,7 @@ export function buildPasswordResetEmailText({
   return [
     `Hello ${firstName},`,
     '',
-    'We received a request to reset your A-DNA Member Portal password.',
+    'We received a request to set or reset your A-DNA Member Portal password.',
     '',
     `Reset your password: ${resetUrl}`,
     '',
