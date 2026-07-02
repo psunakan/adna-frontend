@@ -109,7 +109,7 @@ test.describe('Membership form', () => {
     await expect(form.getByText('Passwords do not match.')).toBeVisible()
   })
 
-  test('shows duplicate email message with login link', async ({ page }) => {
+  test('shows duplicate email message with login and reset links', async ({ page }) => {
     await mockDuplicateMemberEmail(page)
     await fillAndSubmitMembershipForm(page, 'existing@example.com')
 
@@ -119,6 +119,10 @@ test.describe('Membership form', () => {
     await expect(form.getByRole('link', { name: 'sign in to the Member Portal' })).toHaveAttribute(
       'href',
       '/portal/login',
+    )
+    await expect(form.getByRole('link', { name: 'reset your password' })).toHaveAttribute(
+      'href',
+      '/portal/forgot-password?email=existing%40example.com',
     )
   })
 

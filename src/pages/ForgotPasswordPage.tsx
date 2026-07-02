@@ -1,5 +1,5 @@
 import { useState, type CSSProperties } from 'react'
-import { Link } from '@tanstack/react-router'
+import { Link, useSearch } from '@tanstack/react-router'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import toast from 'react-hot-toast'
@@ -36,6 +36,7 @@ function fieldStyle(hasError: boolean): CSSProperties {
 }
 
 export function ForgotPasswordPage() {
+  const { email: emailFromSearch } = useSearch({ from: '/portal/forgot-password' })
   const [submitting, setSubmitting] = useState(false)
   const [sent, setSent] = useState(false)
 
@@ -45,7 +46,7 @@ export function ForgotPasswordPage() {
     formState: { errors },
   } = useForm<ForgotPasswordFormValues>({
     resolver: zodResolver(forgotPasswordSchema),
-    defaultValues: { email: '' },
+    defaultValues: { email: emailFromSearch?.trim().toLowerCase() ?? '' },
   })
 
   const onSubmit = handleSubmit(async (data) => {
