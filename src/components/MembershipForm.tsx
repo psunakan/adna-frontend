@@ -182,9 +182,7 @@ function FormDropdownField({
 }
 
 function DuplicateEmailAlert({ email }: { email: string }) {
-  const forgotPasswordSearch = email.trim()
-    ? { email: email.trim().toLowerCase() }
-    : undefined
+  const forgotPasswordSearch = email.trim() ? { email: email.trim().toLowerCase() } : undefined
 
   return (
     <div
