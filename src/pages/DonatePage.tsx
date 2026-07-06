@@ -6,8 +6,9 @@ export function DonatePage() {
     script.src = 'https://www.zeffy.com/embed/v2/zeffy-embed.js'
     script.async = true
     script.onerror = () => {
-      document.querySelectorAll('[data-zeffy-embed-fallback]').forEach((el) => {
-        ;(el as HTMLElement).style.display = 'block'
+      document.querySelectorAll('[data-zeffy-embed-fallback]').forEach((node) => {
+        const element = node as HTMLElement
+        element.style.display = 'block'
       })
     }
     document.body.appendChild(script)

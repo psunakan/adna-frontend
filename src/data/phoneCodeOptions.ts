@@ -19,24 +19,24 @@ export type PhoneCodeOption = {
 }
 
 export const PHONE_CODE_OPTIONS: PhoneCodeOption[] = (() => {
-  const items: PhoneCodeOption[] = []
-
-  for (const country of COUNTRIES) {
+  const items = COUNTRIES.flatMap((country) => {
     const iso = getCountryIsoCode(country)
-    if (!iso) continue
+    if (!iso) return []
 
     try {
       const callingCode = `+${getCountryCallingCode(iso)}`
-      items.push({
-        value: iso,
-        label: `${country} (${callingCode})`,
-        searchText: `${country} ${callingCode} ${iso}`.toLowerCase(),
-        callingCode,
-      })
+      return [
+        {
+          value: iso,
+          label: `${country} (${callingCode})`,
+          searchText: `${country} ${callingCode} ${iso}`.toLowerCase(),
+          callingCode,
+        },
+      ]
     } catch {
-      // Some territories may not expose a calling code in metadata.
+      return []
     }
-  }
+  })
 
   items.sort((a, b) => {
     const aCountry = a.label.replace(/\s\([^)]+\)$/, '')

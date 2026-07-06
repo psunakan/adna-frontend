@@ -18,7 +18,7 @@ export function Reveal({
 
   useEffect(() => {
     const el = ref.current
-    if (!el) return
+    if (!el) return undefined
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -60,7 +60,7 @@ export function StatCounter({
 
   useEffect(() => {
     const el = ref.current
-    if (!el) return
+    if (!el) return undefined
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -70,7 +70,7 @@ export function StatCounter({
           const startTime = performance.now()
           const tick = (now: number) => {
             const progress = Math.min((now - startTime) / duration, 1)
-            const eased = 1 - Math.pow(1 - progress, 3)
+            const eased = 1 - (1 - progress) ** 3
             setText(Math.floor(eased * target) + (progress >= 1 ? suffix : ''))
             if (progress < 1) requestAnimationFrame(tick)
           }

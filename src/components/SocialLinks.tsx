@@ -49,7 +49,7 @@ export function SocialLinks({
           key={s.label}
           href={s.href}
           target="_blank"
-          rel="noopener"
+          rel="noopener noreferrer"
           aria-label={s.label}
           className={`transition-colors ${iconClassName}`.trim()}
         >

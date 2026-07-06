@@ -72,7 +72,9 @@ export function MembershipLetterCard({ profile }: Props) {
           <button
             type="button"
             className="portal-membership-card__pay-btn"
-            onClick={() => void handleDownloadLetter()}
+            onClick={() => {
+              handleDownloadLetter().catch(() => undefined)
+            }}
             disabled={isIssuing}
             style={{ border: 'none', cursor: isIssuing ? 'wait' : 'pointer' }}
           >
