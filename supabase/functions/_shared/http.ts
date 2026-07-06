@@ -1,3 +1,5 @@
+import { verifySharedSecret } from './secrets.ts'
+
 export const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers':
@@ -22,11 +24,9 @@ export function jsonResponse(body: unknown, init?: JsonResponseInit): Response {
 }
 
 export function verifyInternalFunctionSecret(req: Request): boolean {
-  const secret = Deno.env.get('INTERNAL_FUNCTION_SECRET')?.trim()
-  if (!secret) return false
-
-  const headerSecret = req.headers.get('x-internal-function-secret')?.trim() ?? ''
-  return headerSecret === secret
+  const secret = Deno.env.get('INTERNAL_FUNCTION_SECRET')
+  const headerSecret = req.headers.get('x-internal-function-secret') ?? ''
+  return verifySharedSecret(headerSecret, secret)
 }
 
 export function normalizeEmail(value: unknown): string {
@@ -52,4 +52,9 @@ export function resolveSiteUrl(): string | null {
   }
 
   return null
+}
+
+export function isProductionEnvironment(): boolean {
+  const env = Deno.env.get('ENVIRONMENT')?.trim().toLowerCase()
+  return env === 'production' || env === 'prod'
 }

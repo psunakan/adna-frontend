@@ -3,8 +3,14 @@
 
 create extension if not exists pg_net with schema extensions;
 
-grant usage on schema cron to postgres;
-grant all privileges on all tables in schema cron to postgres;
+do $grant$
+begin
+  if exists (select 1 from pg_namespace where nspname = 'cron') then
+    grant usage on schema cron to postgres;
+    grant all privileges on all tables in schema cron to postgres;
+  end if;
+end;
+$grant$;
 
 do $cron$
 begin

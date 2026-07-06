@@ -12,7 +12,8 @@ import {
   trySendWelcomeEmailAfterPayment,
   type PaymentProcessResult,
 } from '../_shared/sendWelcomeEmail.ts'
-import { corsHeaders, jsonResponse } from '../_shared/http.ts'
+import { corsHeaders, jsonResponse, isProductionEnvironment } from '../_shared/http.ts'
+import { verifySharedSecret } from '../_shared/secrets.ts'
 
 function unauthorized() {
   return jsonResponse({ success: false, error: 'Unauthorized.' }, { status: 401 })
@@ -20,20 +21,21 @@ function unauthorized() {
 
 function verifyWebhookAuth(req: Request): boolean {
   const secret = Deno.env.get('ZEFFY_WEBHOOK_SECRET')?.trim()
-  const allowMissingSecret = Deno.env.get('ALLOW_INSECURE_WEBHOOK_DEV') === 'true'
-
   if (!secret) {
-    return allowMissingSecret
+    console.error('ZEFFY_WEBHOOK_SECRET is not configured — rejecting webhook.')
+    return false
   }
 
   const auth = req.headers.get('authorization') ?? ''
-  const bearer = auth.startsWith('Bearer ') ? auth.slice(7).trim() : ''
-  const headerSecret = req.headers.get('x-zeffy-webhook-secret')?.trim() ?? ''
+  const bearer = auth.startsWith('Bearer ') ? auth.slice(7) : ''
+  const headerSecret = req.headers.get('x-zeffy-webhook-secret') ?? ''
 
-  return bearer === secret || headerSecret === secret
+  return verifySharedSecret(bearer, secret) || verifySharedSecret(headerSecret, secret)
 }
 
 function isDebugMode(): boolean {
+  if (isProductionEnvironment()) return false
+
   const value = Deno.env.get('ZEFFY_WEBHOOK_DEBUG')?.trim().toLowerCase()
   return value === '1' || value === 'true' || value === 'yes'
 }
