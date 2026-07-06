@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "db:link": "node --env-file=.env node_modules/.bin/supabase link --yes",
     "db:push": "node --env-file=.env node_modules/.bin/supabase db push --yes",
-    "functions:deploy": "node --env-file=.env node_modules/.bin/supabase functions deploy password-reset-request && node --env-file=.env node_modules/.bin/supabase functions deploy membership-registration-email && node --env-file=.env node_modules/.bin/supabase functions deploy zeffy-membership-webhook --no-verify-jwt && node --env-file=.env node_modules/.bin/supabase functions deploy zeffy-membership-sync --no-verify-jwt",
+    "functions:deploy": "node --env-file=.env node_modules/.bin/supabase functions deploy password-reset-request && node --env-file=.env node_modules/.bin/supabase functions deploy membership-registration-email && node --env-file=.env node_modules/.bin/supabase functions deploy zeffy-membership-webhook --no-verify-jwt && node --env-file=.env node_modules/.bin/supabase functions deploy zeffy-membership-sync --no-verify-jwt && node --env-file=.env node_modules/.bin/supabase functions deploy member-welcome-email-reconcile --no-verify-jwt",
     "secrets:set": "node --env-file=.env scripts/secrets-set.mjs",
     "secrets:github": "node --env-file=.env scripts/github-secrets-set.mjs",
     "zeffy:webhook-url": "node --env-file=.env scripts/zeffy-webhook-test.mjs",

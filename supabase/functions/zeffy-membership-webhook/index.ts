@@ -12,23 +12,19 @@ import {
   trySendWelcomeEmailAfterPayment,
   type PaymentProcessResult,
 } from '../_shared/sendWelcomeEmail.ts'
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers':
-    'authorization, x-client-info, apikey, content-type, x-zeffy-webhook-secret',
-}
+import { corsHeaders, jsonResponse } from '../_shared/http.ts'
 
 function unauthorized() {
-  return new Response(JSON.stringify({ success: false, error: 'Unauthorized.' }), {
-    status: 401,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-  })
+  return jsonResponse({ success: false, error: 'Unauthorized.' }, { status: 401 })
 }
 
 function verifyWebhookAuth(req: Request): boolean {
   const secret = Deno.env.get('ZEFFY_WEBHOOK_SECRET')?.trim()
-  if (!secret) return true
+  const allowMissingSecret = Deno.env.get('ALLOW_INSECURE_WEBHOOK_DEV') === 'true'
+
+  if (!secret) {
+    return allowMissingSecret
+  }
 
   const auth = req.headers.get('authorization') ?? ''
   const bearer = auth.startsWith('Bearer ') ? auth.slice(7).trim() : ''
@@ -45,7 +41,8 @@ function isDebugMode(): boolean {
 function redactHeaders(headers: Headers): Record<string, string> {
   const out: Record<string, string> = {}
   headers.forEach((value, key) => {
-    if (key.toLowerCase() === 'authorization') {
+    const lower = key.toLowerCase()
+    if (lower === 'authorization' || lower === 'x-zeffy-webhook-secret') {
       out[key] = '[redacted]'
       return
     }
@@ -54,16 +51,36 @@ function redactHeaders(headers: Headers): Record<string, string> {
   return out
 }
 
+function debugSummary(payload: ZeffyWebhookPayload) {
+  const payment = extractPayment(payload)
+  const tier = payment
+    ? resolveMembershipTier(
+        payment,
+        loadCampaignIdSets({
+          professional: Deno.env.get('ZEFFY_CAMPAIGN_PROFESSIONAL'),
+          premium: Deno.env.get('ZEFFY_CAMPAIGN_PREMIUM'),
+          professionalRates: Deno.env.get('ZEFFY_RATE_PROFESSIONAL'),
+          premiumRates: Deno.env.get('ZEFFY_RATE_PREMIUM'),
+        }),
+      )
+    : null
+
+  return {
+    event_type: payload.type ?? payload.event ?? null,
+    parsed_payment_id: payment?.id ?? null,
+    resolved_tier: tier,
+    amount_cents: payment ? resolvePaymentAmountCents(payment) : null,
+    campaign_id: payment?.campaign_id ?? null,
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
 
   if (req.method !== 'POST') {
-    return new Response(JSON.stringify({ success: false, error: 'Method not allowed.' }), {
-      status: 405,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    })
+    return jsonResponse({ success: false, error: 'Method not allowed.' }, { status: 405 })
   }
 
   if (!verifyWebhookAuth(req)) {
@@ -74,76 +91,38 @@ Deno.serve(async (req) => {
   const debug = isDebugMode()
 
   console.log('Zeffy webhook received')
-  console.log('Headers:', JSON.stringify(redactHeaders(req.headers)))
-  console.log('Body:', rawBody)
+  if (debug) {
+    console.log('Headers:', JSON.stringify(redactHeaders(req.headers)))
+    console.log('Body:', rawBody)
+  }
 
   try {
     let payload: ZeffyWebhookPayload
     try {
       payload = JSON.parse(rawBody) as ZeffyWebhookPayload
     } catch {
-      return new Response(JSON.stringify({ success: false, error: 'Invalid JSON body.' }), {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+      return jsonResponse({ success: false, error: 'Invalid JSON body.' }, { status: 400 })
     }
 
     if (debug) {
-      const payment = extractPayment(payload)
-      const tier = payment
-        ? resolveMembershipTier(
-            payment,
-            loadCampaignIdSets({
-              professional: Deno.env.get('ZEFFY_CAMPAIGN_PROFESSIONAL'),
-              premium: Deno.env.get('ZEFFY_CAMPAIGN_PREMIUM'),
-              professionalRates: Deno.env.get('ZEFFY_RATE_PROFESSIONAL'),
-              premiumRates: Deno.env.get('ZEFFY_RATE_PREMIUM'),
-            }),
-          )
-        : null
-
-      return new Response(
-        JSON.stringify(
-          {
-            success: true,
-            debug: true,
-            message: 'Payload captured. Check Supabase function logs for the full body.',
-            event_type: payload.type ?? payload.event ?? null,
-            parsed_payment: payment ?? null,
-            resolved_tier: tier,
-            payload,
-          },
-          null,
-          2,
-        ),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-      )
+      return jsonResponse({
+        success: true,
+        debug: true,
+        ...debugSummary(payload),
+      })
     }
 
     if (!isCompletedPaymentEvent(payload)) {
-      return new Response(
-        JSON.stringify({ success: true, ignored: true, reason: 'not_payment_completed' }),
-        {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        },
-      )
+      return jsonResponse({ success: true, ignored: true, reason: 'not_payment_completed' })
     }
 
     const payment = extractPayment(payload)
     if (!payment) {
-      return new Response(JSON.stringify({ success: false, error: 'Missing payment payload.' }), {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+      return jsonResponse({ success: false, error: 'Missing payment payload.' }, { status: 400 })
     }
 
     if (payment.status && payment.status !== 'succeeded') {
-      return new Response(
-        JSON.stringify({ success: true, ignored: true, reason: 'payment_not_succeeded' }),
-        {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        },
-      )
+      return jsonResponse({ success: true, ignored: true, reason: 'payment_not_succeeded' })
     }
 
     const campaignSets = loadCampaignIdSets({
@@ -162,44 +141,29 @@ Deno.serve(async (req) => {
         amountCents,
         payment.currency,
       )
-      return new Response(
-        JSON.stringify({
-          success: true,
-          ignored: true,
-          reason: 'unrecognized_membership_payment',
-          payment_id: payment.id ?? null,
-        }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-      )
+      return jsonResponse({
+        success: true,
+        ignored: true,
+        reason: 'unrecognized_membership_payment',
+        payment_id: payment.id ?? null,
+      })
     }
 
-    const email = payment.buyer?.email?.trim()
+    const email = payment.buyer?.email?.trim().toLowerCase()
     if (!email) {
-      return new Response(
-        JSON.stringify({ success: false, error: 'Payment is missing buyer email.' }),
-        {
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        },
-      )
+      return jsonResponse({ success: false, error: 'Payment is missing buyer email.' }, { status: 400 })
     }
 
     const paymentId = payment.id?.trim()
     if (!paymentId) {
-      return new Response(JSON.stringify({ success: false, error: 'Payment is missing id.' }), {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+      return jsonResponse({ success: false, error: 'Payment is missing id.' }, { status: 400 })
     }
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL')
     const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
     if (!supabaseUrl || !serviceRoleKey) {
       console.error('Missing Supabase service role configuration.')
-      return new Response(JSON.stringify({ success: false, error: 'Server misconfigured.' }), {
-        status: 503,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+      return jsonResponse({ success: false, error: 'Server misconfigured.' }, { status: 503 })
     }
 
     const supabase = createClient(supabaseUrl, serviceRoleKey)
@@ -220,10 +184,7 @@ Deno.serve(async (req) => {
 
     if (error) {
       console.error('process_zeffy_membership_payment failed:', error.message)
-      return new Response(JSON.stringify({ success: false, error: 'Failed to process payment.' }), {
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+      return jsonResponse({ success: false, error: 'Failed to process payment.' }, { status: 500 })
     }
 
     const result = data as PaymentProcessResult & {
@@ -233,27 +194,21 @@ Deno.serve(async (req) => {
     }
 
     if (!result.member_found) {
-      console.warn(`Zeffy payment recorded but no member matched email: ${email}`)
+      console.warn('Zeffy payment recorded but no member matched submitted email.')
     }
 
     const welcomeEmailSent = await trySendWelcomeEmailAfterPayment(supabase, result)
 
-    return new Response(
-      JSON.stringify({
-        success: true,
-        tier,
-        duplicate: result.duplicate ?? false,
-        member_found: result.member_found ?? false,
-        membership_updated: result.membership_updated ?? false,
-        welcome_email_sent: welcomeEmailSent,
-      }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-    )
+    return jsonResponse({
+      success: true,
+      tier,
+      duplicate: result.duplicate ?? false,
+      member_found: result.member_found ?? false,
+      membership_updated: result.membership_updated ?? false,
+      welcome_email_sent: welcomeEmailSent,
+    })
   } catch (err) {
     console.error('zeffy-membership-webhook error:', err)
-    return new Response(JSON.stringify({ success: false, error: 'Unexpected error.' }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    })
+    return jsonResponse({ success: false, error: 'Unexpected error.' }, { status: 500 })
   }
 })

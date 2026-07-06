@@ -21,10 +21,14 @@ begin
     return false;
   end if;
 
+  -- Link unclaimed dues rows to the member by exact normalized email.
+  -- Guard against null/blank emails so we do not match strange rows.
   update public.member_dues
   set member_id = v_member.id
   where member_id is null
-    and lower(member_email) = lower(v_member.email);
+    and nullif(btrim(member_email), '') is not null
+    and nullif(btrim(v_member.email), '') is not null
+    and lower(btrim(member_email)) = lower(btrim(v_member.email));
 
   select exists (
     select 1
@@ -37,10 +41,7 @@ begin
 
   if v_paid and not v_member.is_active then
     update public.members
-    set
-      is_active = true,
-      deactivated = false,
-      deactivated_at = null
+    set is_active = true
     where id = v_member.id;
   end if;
 
@@ -86,7 +87,8 @@ begin
   select *
   into v_member
   from public.members
-  where id = v_session.member_id;
+  where id = v_session.member_id
+    and deactivated = false;
 
   select *
   into v_type
@@ -98,13 +100,12 @@ begin
     true,
     'payment_status',
     case
-      when v_member.is_active then 'paid'
       when v_paid then 'paid'
       else 'pending'
     end,
     'payment_message',
     case
-      when v_member.is_active or v_paid then
+      when v_paid then
         'We found a completed membership payment for your account.'
       else
         'No completed payment found for this year. Pay on Zeffy using the same email as your account, then refresh again.'
@@ -134,7 +135,9 @@ begin
       'is_first_login',
       v_member.is_first_login,
       'is_active',
-      v_member.is_active
+      v_member.is_active,
+      'has_paid_current_year_dues',
+      v_paid
     )
   );
 end;
@@ -150,6 +153,7 @@ declare
   v_session public.member_sessions%rowtype;
   v_member public.members%rowtype;
   v_type public.membership_types%rowtype;
+  v_paid boolean := false;
 begin
   select *
   into v_session
@@ -172,12 +176,13 @@ begin
     return json_build_object('success', false, 'error', 'Member account not found.');
   end if;
 
-  perform public.sync_member_payment_from_dues(v_member.id);
+  v_paid := public.sync_member_payment_from_dues(v_member.id);
 
   select *
   into v_member
   from public.members
-  where id = v_session.member_id;
+  where id = v_session.member_id
+    and deactivated = false;
 
   select *
   into v_type
@@ -212,7 +217,9 @@ begin
       'is_first_login',
       v_member.is_first_login,
       'is_active',
-      v_member.is_active
+      v_member.is_active,
+      'has_paid_current_year_dues',
+      v_paid
     )
   );
 end;
@@ -220,6 +227,8 @@ $$;
 
 revoke all on function public.sync_member_payment_from_dues(uuid) from public;
 revoke all on function public.refresh_member_membership_status(uuid) from public;
+revoke all on function public.get_member_profile(uuid) from public;
 
 grant execute on function public.sync_member_payment_from_dues(uuid) to service_role;
 grant execute on function public.refresh_member_membership_status(uuid) to anon, authenticated, service_role;
+grant execute on function public.get_member_profile(uuid) to anon, authenticated, service_role;

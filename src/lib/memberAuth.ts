@@ -25,6 +25,7 @@ export type MemberProfile = MemberSession['member'] & {
   membership_label: string
   membership_tier: 'regular' | 'diaspora' | 'premium'
   last_login_at: string | null
+  has_paid_current_year_dues?: boolean
 }
 
 export type MembershipRefreshResult = {

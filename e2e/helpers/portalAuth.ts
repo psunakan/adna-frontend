@@ -14,7 +14,11 @@ const MEMBERSHIP_LABELS: Record<MockMemberTier, string> = {
   premium: 'Premium Membership ($150)',
 }
 
-export function buildMockMember(tier: MockMemberTier, isActive = true) {
+export function buildMockMember(
+  tier: MockMemberTier,
+  isActive = true,
+  hasPaidCurrentYearDues = tier !== 'regular',
+) {
   return {
     id: 'a1111111-1111-1111-1111-111111111111',
     email: 'demo@adna.org',
@@ -28,6 +32,7 @@ export function buildMockMember(tier: MockMemberTier, isActive = true) {
     last_login_at: '2026-06-23T12:00:00.000Z',
     is_first_login: false,
     is_active: isActive,
+    has_paid_current_year_dues: hasPaidCurrentYearDues,
   }
 }
 
@@ -107,7 +112,7 @@ export async function mockMemberPortalApi(page: Page, options: MockPortalOptions
     )
 
     const profile = sequence[Math.min(index, sequence.length - 1)] ?? buildMockMember(initialTier)
-    const paid = profile.is_active || profile.membership_tier !== 'regular'
+    const paid = profile.has_paid_current_year_dues === true
 
     await route.fulfill({
       status: 200,
