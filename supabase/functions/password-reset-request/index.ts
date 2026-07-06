@@ -5,7 +5,13 @@ import {
   buildPasswordResetEmailText,
   PASSWORD_RESET_EMAIL_SUBJECT,
 } from '../_shared/email/passwordResetEmailTemplate.ts'
-import { corsHeaders, jsonResponse, normalizeEmail, redactEmail, resolveSiteUrl } from '../_shared/http.ts'
+import {
+  corsHeaders,
+  jsonResponse,
+  normalizeEmail,
+  redactEmail,
+  resolveSiteUrl,
+} from '../_shared/http.ts'
 
 const GENERIC_MESSAGE =
   'If an account exists for that email, you will receive reset instructions shortly.'

@@ -151,7 +151,10 @@ Deno.serve(async (req) => {
 
     const email = payment.buyer?.email?.trim().toLowerCase()
     if (!email) {
-      return jsonResponse({ success: false, error: 'Payment is missing buyer email.' }, { status: 400 })
+      return jsonResponse(
+        { success: false, error: 'Payment is missing buyer email.' },
+        { status: 400 },
+      )
     }
 
     const paymentId = payment.id?.trim()

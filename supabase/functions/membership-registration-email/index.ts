@@ -1,5 +1,10 @@
 import { sendWelcomeEmail } from '../_shared/sendWelcomeEmail.ts'
-import { corsHeaders, jsonResponse, normalizeEmail, verifyInternalFunctionSecret } from '../_shared/http.ts'
+import {
+  corsHeaders,
+  jsonResponse,
+  normalizeEmail,
+  verifyInternalFunctionSecret,
+} from '../_shared/http.ts'
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -29,7 +34,10 @@ Deno.serve(async (req) => {
     const memberId = typeof body?.member_id === 'string' ? body.member_id.trim() : ''
 
     if (!email || !firstName) {
-      return jsonResponse({ success: false, error: 'Email and first name are required.' }, { status: 400 })
+      return jsonResponse(
+        { success: false, error: 'Email and first name are required.' },
+        { status: 400 },
+      )
     }
 
     const resendApiKey = Deno.env.get('RESEND_API_KEY')
@@ -37,7 +45,10 @@ Deno.serve(async (req) => {
 
     if (!resendApiKey || !fromEmail) {
       console.error('Resend is not configured (RESEND_API_KEY / RESEND_FROM_EMAIL).')
-      return jsonResponse({ success: false, error: 'Email service not configured.' }, { status: 503 })
+      return jsonResponse(
+        { success: false, error: 'Email service not configured.' },
+        { status: 503 },
+      )
     }
 
     const sent = await sendWelcomeEmail({ email, firstName, membershipLabel })

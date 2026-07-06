@@ -1,6 +1,11 @@
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { sendWelcomeEmail } from '../_shared/sendWelcomeEmail.ts'
-import { corsHeaders, jsonResponse, redactEmail, verifyInternalFunctionSecret } from '../_shared/http.ts'
+import {
+  corsHeaders,
+  jsonResponse,
+  redactEmail,
+  verifyInternalFunctionSecret,
+} from '../_shared/http.ts'
 
 type PendingWelcomeMember = {
   member_id: string
@@ -64,7 +69,10 @@ Deno.serve(async (req) => {
 
   if (error) {
     console.error('get_pending_member_welcome_emails failed:', error.message)
-    return jsonResponse({ success: false, error: 'Failed to load pending welcome emails.' }, { status: 500 })
+    return jsonResponse(
+      { success: false, error: 'Failed to load pending welcome emails.' },
+      { status: 500 },
+    )
   }
 
   const pending = (data ?? []) as PendingWelcomeMember[]
@@ -78,7 +86,10 @@ Deno.serve(async (req) => {
     const membershipLabel = member.membership_label?.trim() || 'Membership'
 
     if (!memberId || !email || !firstName) {
-      console.warn('Skipping pending welcome email: incomplete member row.', memberId ?? '[unknown]')
+      console.warn(
+        'Skipping pending welcome email: incomplete member row.',
+        memberId ?? '[unknown]',
+      )
       failed++
       continue
     }
@@ -89,9 +100,12 @@ Deno.serve(async (req) => {
       continue
     }
 
-    const { data: marked, error: markError } = await supabase.rpc('mark_member_welcome_email_sent', {
-      p_member_id: memberId,
-    })
+    const { data: marked, error: markError } = await supabase.rpc(
+      'mark_member_welcome_email_sent',
+      {
+        p_member_id: memberId,
+      },
+    )
 
     if (markError || marked !== true) {
       console.error(
