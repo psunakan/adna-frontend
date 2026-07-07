@@ -52,9 +52,7 @@ export function MembershipLetterCard({ profile }: Props) {
       <div className="portal-membership-card__header">
         <div>
           <p className="portal-membership-card__eyebrow">Verification</p>
-          <h2 style={{ margin: 0, fontSize: '1.35rem', fontWeight: 800, color: '#0D3D2B' }}>
-            Membership letter
-          </h2>
+          <h2 className="portal-membership-card__title font-heading">Membership letter</h2>
         </div>
       </div>
 
