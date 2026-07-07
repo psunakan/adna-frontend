@@ -2,8 +2,8 @@ import {
   buildVerificationUrl,
   formatVerificationDate,
   type MembershipVerification,
-} from '../lib/membershipVerification'
-import { adnaLogoUrl } from '../lib/branding'
+} from './membershipVerification'
+import { adnaLogoUrl } from './branding'
 
 function escapeHtml(value: string): string {
   return value

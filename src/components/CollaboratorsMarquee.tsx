@@ -1,7 +1,10 @@
 import { COLLABORATOR_LOGOS } from '../data/collaborators'
 
 export function CollaboratorsMarquee() {
-  const logos = [...COLLABORATOR_LOGOS, ...COLLABORATOR_LOGOS]
+  const logos = COLLABORATOR_LOGOS.flatMap((logo) => [
+    { ...logo, pass: 'a' as const },
+    { ...logo, pass: 'b' as const },
+  ])
 
   return (
     <div className="overflow-hidden">
@@ -15,9 +18,9 @@ export function CollaboratorsMarquee() {
         <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-white to-transparent z-10" />
         <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white to-transparent z-10" />
         <div className="marquee-track items-center gap-12 px-8">
-          {logos.map((logo, i) => (
+          {logos.map((logo) => (
             <div
-              key={`${logo.alt}-${i}`}
+              key={`${logo.src}-${logo.pass}`}
               className="flex items-center justify-center px-5"
               style={{ minWidth: logo.minW, minHeight: 80 }}
             >

@@ -17,7 +17,9 @@ export function RegistrationModal({ open, onClose }: Props) {
 
   return (
     <div
+      role="presentation"
       onClick={(e) => e.target === e.currentTarget && onClose()}
+      onKeyDown={(e) => e.key === 'Escape' && onClose()}
       style={{
         display: 'flex',
         position: 'fixed',
@@ -47,6 +49,7 @@ export function RegistrationModal({ open, onClose }: Props) {
         }}
       >
         <button
+          type="button"
           onClick={onClose}
           style={{
             position: 'fixed',

@@ -12,6 +12,7 @@ export function Footer() {
           <div className="flex items-center space-x-6">
             <MemberProfileButton variant="light" size="sm" />
             <button
+              type="button"
               onClick={openContactDrawer}
               className="text-sm font-extrabold uppercase tracking-widest hover:text-pcna-red transition-colors bg-transparent border-0 cursor-pointer text-white p-0"
             >

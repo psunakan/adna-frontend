@@ -128,7 +128,7 @@ export function SearchableSelect({
   }
 
   useEffect(() => {
-    if (!open) return
+    if (!open) return undefined
 
     updatePanelLayout()
 
