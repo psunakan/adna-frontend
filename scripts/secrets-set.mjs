@@ -14,7 +14,6 @@ const keys = [
 ]
 
 const optionalKeys = new Set([
-  'ZEFFY_WEBHOOK_SECRET',
   'ZEFFY_CAMPAIGN_PROFESSIONAL',
   'ZEFFY_CAMPAIGN_PREMIUM',
   'ZEFFY_API_KEY',

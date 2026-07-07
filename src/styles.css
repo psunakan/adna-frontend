@@ -618,33 +618,6 @@ b {
   color: #0d3d2b;
 }
 
-.mem-form-stepper__status {
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  padding: 0.45rem 0.75rem;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid #d7ebe3;
-}
-
-.mem-form-stepper__status-value {
-  font-size: 1.05rem;
-  font-weight: 800;
-  line-height: 1;
-  color: #0d3d2b;
-}
-
-.mem-form-stepper__status-label {
-  margin-top: 0.15rem;
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #64748b;
-}
-
 .mem-form-stepper__bar {
   height: 6px;
   border-radius: 999px;
@@ -908,10 +881,6 @@ b {
 
   .mem-form-stepper__head {
     align-items: flex-start;
-  }
-
-  .mem-form-stepper__status {
-    padding: 0.35rem 0.6rem;
   }
 
   .mem-form-stepper__segment-item {

@@ -23,10 +23,6 @@ export function MembershipFormStepper({ step, completed, onGoToStep }: Props) {
           <p className="mem-form-stepper__kicker">Membership application</p>
           <h3 className="mem-form-stepper__title">{current.label}</h3>
         </div>
-        <div className="mem-form-stepper__status" aria-hidden="true">
-          <span className="mem-form-stepper__status-value">{Math.round(progress)}%</span>
-          <span className="mem-form-stepper__status-label">complete</span>
-        </div>
       </div>
 
       <div
@@ -35,7 +31,7 @@ export function MembershipFormStepper({ step, completed, onGoToStep }: Props) {
         aria-valuenow={step}
         aria-valuemin={1}
         aria-valuemax={STEPS.length}
-        aria-label={`${current.label}, ${Math.round(progress)}% complete`}
+        aria-label={current.label}
       >
         <div className="mem-form-stepper__bar-fill" style={{ width: `${progress}%` }} />
       </div>

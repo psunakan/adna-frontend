@@ -1,4 +1,4 @@
-import { sendWelcomeEmail } from '../_shared/sendWelcomeEmail.ts'
+import { sendWelcomeEmail, deliverWelcomeEmailWithClaim } from '../_shared/sendWelcomeEmail.ts'
 import {
   corsHeaders,
   jsonResponse,
@@ -51,27 +51,47 @@ Deno.serve(async (req) => {
       )
     }
 
-    const sent = await sendWelcomeEmail({ email, firstName, membershipLabel })
-    if (!sent) {
-      return jsonResponse({ success: false, error: 'Failed to send email.' }, { status: 500 })
-    }
-
     if (memberId) {
       const supabaseUrl = Deno.env.get('SUPABASE_URL')
       const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
-      if (supabaseUrl && serviceRoleKey) {
-        const { createClient } = await import('npm:@supabase/supabase-js@2')
-        const supabase = createClient(supabaseUrl, serviceRoleKey)
-        const { data, error } = await supabase.rpc('mark_member_welcome_email_sent', {
-          p_member_id: memberId,
-        })
 
-        if (error) {
-          console.error('mark_member_welcome_email_sent failed:', error.message)
-        } else if (data !== true) {
-          console.warn('mark_member_welcome_email_sent returned unexpected result:', data)
-        }
+      if (!supabaseUrl || !serviceRoleKey) {
+        return jsonResponse({ success: false, error: 'Server misconfigured.' }, { status: 503 })
       }
+
+      const { createClient } = await import('npm:@supabase/supabase-js@2')
+      const supabase = createClient(supabaseUrl, serviceRoleKey)
+
+      const { data: member, error: memberError } = await supabase
+        .from('members')
+        .select('id, email')
+        .eq('id', memberId)
+        .maybeSingle()
+
+      if (memberError || !member || normalizeEmail(member.email) !== email) {
+        return jsonResponse(
+          { success: false, error: 'member_id does not match email.' },
+          { status: 400 },
+        )
+      }
+
+      const sent = await deliverWelcomeEmailWithClaim(supabase, {
+        memberId,
+        email,
+        firstName,
+        membershipLabel,
+      })
+
+      if (!sent) {
+        return jsonResponse({ success: false, error: 'Failed to send email.' }, { status: 500 })
+      }
+
+      return jsonResponse({ success: true })
+    }
+
+    const sent = await sendWelcomeEmail({ email, firstName, membershipLabel })
+    if (!sent) {
+      return jsonResponse({ success: false, error: 'Failed to send email.' }, { status: 500 })
     }
 
     return jsonResponse({ success: true })
