@@ -1,4 +1,4 @@
-import { BRAND, ORG_NAME, escapeHtml } from './branding.ts'
+import { BRAND, ORG_NAME, adnaLogoUrl, escapeHtml } from './branding.ts'
 
 export type EmailLayoutOptions = {
   preheader: string
@@ -11,7 +11,7 @@ export function wrapEmailLayout({ preheader, title, bodyHtml, siteUrl }: EmailLa
   const safeTitle = escapeHtml(title)
   const safeSite = escapeHtml(siteUrl)
   const siteLabel = escapeHtml(siteUrl.replace(/^https?:\/\//, ''))
-  const logoUrl = `${siteUrl}/${encodeURIComponent('New adna logo.jpeg')}`
+  const logoUrl = adnaLogoUrl(siteUrl)
   const year = new Date().getFullYear()
 
   return `<!DOCTYPE html>
