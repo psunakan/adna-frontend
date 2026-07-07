@@ -56,6 +56,12 @@ if (insertError) {
 console.log('   Member inserted successfully.')
 
 console.log('2. Sending registration confirmation email...')
+const internalSecret = process.env.INTERNAL_FUNCTION_SECRET?.trim()
+if (!internalSecret) {
+  console.error('INTERNAL_FUNCTION_SECRET is not set in .env')
+  process.exit(1)
+}
+
 const { data: emailData, error: emailError } = await supabase.functions.invoke(
   'membership-registration-email',
   {
@@ -64,6 +70,7 @@ const { data: emailData, error: emailError } = await supabase.functions.invoke(
       first_name: member.first_name,
       membership_label: 'Regular Membership (FREE)',
     },
+    headers: { 'x-internal-function-secret': internalSecret },
   },
 )
 

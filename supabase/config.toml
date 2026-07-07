@@ -339,6 +339,9 @@ verify_jwt = false
 [functions.zeffy-membership-sync]
 verify_jwt = false
 
+[functions.member-welcome-email-reconcile]
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 54327

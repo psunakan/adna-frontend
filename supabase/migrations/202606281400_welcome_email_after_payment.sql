@@ -3,6 +3,10 @@
 alter table public.members
   add column if not exists welcome_email_sent_at timestamptz;
 
+create unique index if not exists member_dues_order_id_unique
+  on public.member_dues (order_id)
+  where order_id is not null;
+
 create or replace function public.mark_member_welcome_email_sent(p_member_id uuid)
 returns boolean
 language plpgsql
@@ -71,10 +75,37 @@ begin
   limit 1;
 
   if v_existing_dues is not null then
+    select
+      md.member_id,
+      m.first_name,
+      coalesce(mt.label, 'Membership'),
+      (
+        upper(md.status) = 'COMPLETED'
+        and m.id is not null
+        and m.welcome_email_sent_at is null
+      )
+    into
+      v_member_id,
+      v_member_first_name,
+      v_membership_label,
+      v_send_welcome_email
+    from public.member_dues md
+    left join public.members m on m.id = md.member_id
+    left join public.membership_types mt on mt.id = m.membership_type_id
+    where md.id = v_existing_dues;
+
     return json_build_object(
       'success', true,
       'duplicate', true,
-      'member_dues_id', v_existing_dues
+      'member_dues_id', v_existing_dues,
+      'member_id', v_member_id,
+      'member_found', v_member_id is not null,
+      'membership_updated', false,
+      'send_welcome_email', coalesce(v_send_welcome_email, false),
+      'first_name', v_member_first_name,
+      'membership_label', v_membership_label,
+      'email', lower(trim(p_email)),
+      'campaign_id', p_campaign_id
     );
   end if;
 
@@ -121,8 +152,6 @@ begin
     set
       membership_type_id = p_membership_type_id,
       is_active = true,
-      deactivated = false,
-      deactivated_at = null,
       first_name = coalesce(v_first_name, first_name),
       last_name = coalesce(v_last_name, last_name)
     where id = v_member_id;
@@ -155,5 +184,28 @@ $$;
 revoke all on function public.mark_member_welcome_email_sent(uuid) from public;
 grant execute on function public.mark_member_welcome_email_sent(uuid) to service_role;
 
-revoke all on function public.process_zeffy_membership_payment from public;
-grant execute on function public.process_zeffy_membership_payment to service_role;
+revoke all on function public.process_zeffy_membership_payment(
+  text,
+  text,
+  integer,
+  text,
+  text,
+  uuid,
+  text,
+  text,
+  text,
+  text
+) from public;
+
+grant execute on function public.process_zeffy_membership_payment(
+  text,
+  text,
+  integer,
+  text,
+  text,
+  uuid,
+  text,
+  text,
+  text,
+  text
+) to service_role;

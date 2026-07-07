@@ -4,6 +4,7 @@ import {
   buildRegistrationEmailText,
   REGISTRATION_EMAIL_SUBJECT,
 } from './email/registrationEmailTemplate.ts'
+import { resolveSiteUrl } from './http.ts'
 
 export type WelcomeEmailPayload = {
   email: string
@@ -14,7 +15,7 @@ export type WelcomeEmailPayload = {
 export async function sendWelcomeEmail(payload: WelcomeEmailPayload): Promise<boolean> {
   const resendApiKey = Deno.env.get('RESEND_API_KEY')
   const fromEmail = Deno.env.get('RESEND_FROM_EMAIL')
-  const siteUrl = (Deno.env.get('SITE_URL') ?? 'http://localhost:5173').replace(/\/$/, '')
+  const siteUrl = resolveSiteUrl() ?? 'http://localhost:5173'
 
   if (!resendApiKey || !fromEmail) {
     console.warn('Welcome email skipped: RESEND_API_KEY / RESEND_FROM_EMAIL not configured.')
@@ -63,7 +64,7 @@ export async function trySendWelcomeEmailAfterPayment(
   },
   result: PaymentProcessResult,
 ): Promise<boolean> {
-  if (result.duplicate || !result.send_welcome_email) return false
+  if (!result.send_welcome_email) return false
 
   const email = result.email?.trim()
   const firstName = result.first_name?.trim()

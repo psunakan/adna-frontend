@@ -139,24 +139,30 @@ console.log('RPC result:', rpcData)
 if (rpcData?.duplicate) {
   console.log('Note: This payment ID was already recorded (duplicate). Checking current status…')
 } else if (rpcData?.send_welcome_email) {
-  const { data: emailResult, error: emailError } = await supabase.functions.invoke(
-    'membership-registration-email',
-    {
-      body: {
-        email: rpcData.email ?? email,
-        first_name: rpcData.first_name ?? memberBefore.first_name,
-        membership_label: rpcData.membership_label ?? tier.label,
-        member_id: rpcData.member_id ?? memberBefore.id,
-      },
-    },
-  )
-
-  if (emailError) {
-    console.warn('Welcome email failed:', emailError.message)
-  } else if (emailResult?.success) {
-    console.log('Welcome email sent.')
+  const internalSecret = process.env.INTERNAL_FUNCTION_SECRET?.trim()
+  if (!internalSecret) {
+    console.warn('Welcome email skipped: INTERNAL_FUNCTION_SECRET is not set.')
   } else {
-    console.warn('Welcome email not sent:', emailResult?.error ?? 'unknown error')
+    const { data: emailResult, error: emailError } = await supabase.functions.invoke(
+      'membership-registration-email',
+      {
+        body: {
+          email: rpcData.email ?? email,
+          first_name: rpcData.first_name ?? memberBefore.first_name,
+          membership_label: rpcData.membership_label ?? tier.label,
+          member_id: rpcData.member_id ?? memberBefore.id,
+        },
+        headers: { 'x-internal-function-secret': internalSecret },
+      },
+    )
+
+    if (emailError) {
+      console.warn('Welcome email failed:', emailError.message)
+    } else if (emailResult?.success) {
+      console.log('Welcome email sent.')
+    } else {
+      console.warn('Welcome email not sent:', emailResult?.error ?? 'unknown error')
+    }
   }
 }
 

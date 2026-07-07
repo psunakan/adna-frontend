@@ -5,14 +5,20 @@ import {
   buildPasswordResetEmailText,
   PASSWORD_RESET_EMAIL_SUBJECT,
 } from '../_shared/email/passwordResetEmailTemplate.ts'
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-}
+import {
+  corsHeaders,
+  jsonResponse,
+  normalizeEmail,
+  redactEmail,
+  resolveSiteUrl,
+} from '../_shared/http.ts'
 
 const GENERIC_MESSAGE =
   'If an account exists for that email, you will receive reset instructions shortly.'
+
+function genericResponse() {
+  return jsonResponse({ success: true, message: GENERIC_MESSAGE })
+}
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -20,41 +26,36 @@ Deno.serve(async (req) => {
   }
 
   if (req.method !== 'POST') {
-    return new Response(JSON.stringify({ success: false, error: 'Method not allowed.' }), {
-      status: 405,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    })
+    return jsonResponse({ success: false, error: 'Method not allowed.' }, { status: 405 })
   }
 
   try {
     const body = await req.json()
-    const email = typeof body?.email === 'string' ? body.email.trim() : ''
+    const email = normalizeEmail(body?.email)
 
     if (!email) {
-      return new Response(JSON.stringify({ success: false, error: 'Email is required.' }), {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+      return jsonResponse({ success: false, error: 'Email is required.' }, { status: 400 })
     }
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL')
     const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
     const resendApiKey = Deno.env.get('RESEND_API_KEY')
     const fromEmail = Deno.env.get('RESEND_FROM_EMAIL')
-    const siteUrl = (Deno.env.get('SITE_URL') ?? 'http://localhost:5173').replace(/\/$/, '')
+    const siteUrl = resolveSiteUrl()
 
     if (!supabaseUrl || !serviceRoleKey) {
       console.error('Missing Supabase environment variables.')
-      return new Response(JSON.stringify({ success: true, message: GENERIC_MESSAGE }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+      return genericResponse()
     }
 
     if (!resendApiKey || !fromEmail) {
       console.error('Resend is not configured (RESEND_API_KEY / RESEND_FROM_EMAIL).')
-      return new Response(JSON.stringify({ success: true, message: GENERIC_MESSAGE }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+      return genericResponse()
+    }
+
+    if (!siteUrl) {
+      console.error('SITE_URL is not configured.')
+      return genericResponse()
     }
 
     const supabase = createClient(supabaseUrl, serviceRoleKey)
@@ -64,21 +65,17 @@ Deno.serve(async (req) => {
 
     if (error) {
       console.error('create_member_password_reset failed:', error.message)
-      return new Response(JSON.stringify({ success: true, message: GENERIC_MESSAGE }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+      return genericResponse()
     }
 
     const resetData = data as { token: string; email: string; first_name: string } | null
 
     if (!resetData?.token) {
-      console.info('password-reset-request: no matching portal account for email.')
-      return new Response(JSON.stringify({ success: true, message: GENERIC_MESSAGE }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+      console.info('password-reset-request: no matching portal account for submitted email.')
+      return genericResponse()
     }
 
-    const resetUrl = `${siteUrl}/portal/reset-password?token=${resetData.token}`
+    const resetUrl = `${siteUrl}/portal/reset-password?token=${encodeURIComponent(resetData.token)}`
     const resend = new Resend(resendApiKey)
     const emailData = {
       firstName: resetData.first_name,
@@ -96,20 +93,16 @@ Deno.serve(async (req) => {
 
     if (sendError) {
       console.error('Resend send failed:', JSON.stringify(sendError))
-      return new Response(JSON.stringify({ success: true, message: GENERIC_MESSAGE }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+      return genericResponse()
     }
 
-    console.info('password-reset-request: reset email sent.', { email: resetData.email })
-
-    return new Response(JSON.stringify({ success: true, message: GENERIC_MESSAGE }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    console.info('password-reset-request: reset email sent.', {
+      email: redactEmail(resetData.email),
     })
+
+    return genericResponse()
   } catch (err) {
     console.error('password-reset-request error:', err)
-    return new Response(JSON.stringify({ success: true, message: GENERIC_MESSAGE }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    })
+    return genericResponse()
   }
 })
