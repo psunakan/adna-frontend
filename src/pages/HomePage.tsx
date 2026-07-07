@@ -299,7 +299,7 @@ export function HomePage() {
                 <a
                   href="https://www.linkedin.com/posts/healthcareishuman-capitolhill-healthcareadvocacy-ugcPost-7463433674257186817-qMkL"
                   target="_blank"
-                  rel="noopener"
+                  rel="noopener noreferrer"
                   className="text-pcna-red font-bold text-sm uppercase hover:underline mt-1"
                 >
                   Read on LinkedIn &rarr;

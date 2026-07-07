@@ -28,7 +28,10 @@ export function TopBar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-end items-center space-x-6">
         <MemberProfileButton variant="light" size="sm" />
         <div className="relative" onMouseEnter={show} onMouseLeave={scheduleHide}>
-          <button className="flex items-center gap-1 hover:underline bg-transparent border-0 text-white text-sm font-sans cursor-pointer p-0">
+          <button
+            type="button"
+            className="flex items-center gap-1 hover:underline bg-transparent border-0 text-white text-sm font-sans cursor-pointer p-0"
+          >
             Contact Us
             <svg className="w-3 h-3 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -166,6 +169,7 @@ export function MainNav() {
             <div className="lg:hidden flex items-center gap-2">
               <MemberProfileButton variant="dark" size="sm" />
               <button
+                type="button"
                 className="lg:hidden p-2 text-pcna-green hover:text-pcna-red transition-colors rounded-md focus:outline-none"
                 onClick={() => setMobileOpen(true)}
                 aria-label="Open menu"
@@ -186,9 +190,19 @@ export function MainNav() {
 
       {/* Mobile menu backdrop */}
       {mobileOpen && (
-        <div
+        <button
+          type="button"
+          aria-label="Close menu"
           onClick={() => setMobileOpen(false)}
-          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 999998 }}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.4)',
+            zIndex: 999998,
+            border: 'none',
+            padding: 0,
+            cursor: 'pointer',
+          }}
         />
       )}
 
@@ -214,6 +228,7 @@ export function MainNav() {
         <nav style={{ display: 'flex', flexDirection: 'column', paddingTop: 16 }}>
           <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '0 12px 12px' }}>
             <button
+              type="button"
               onClick={() => setMobileOpen(false)}
               style={{
                 background: 'none',
@@ -327,6 +342,7 @@ export function MainNav() {
               </Link>
             )}
             <button
+              type="button"
               onClick={closeAnd(openContactDrawer)}
               className="hover:text-[#c0392b]"
               style={{

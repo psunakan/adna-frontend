@@ -114,19 +114,17 @@ function getFirstErrorMessage(
   errors: FieldErrors<MembershipFormValues>,
   fields: readonly (keyof MembershipFormValues)[],
 ): string | undefined {
-  for (const field of fields) {
-    const message = errors[field]?.message
-    if (message) return String(message)
-  }
+  const field = fields.find((name) => errors[name]?.message)
+  return field ? String(errors[field]?.message) : undefined
 }
 
 function findFirstStepWithError(
   fieldErrors: FieldErrors<MembershipFormValues>,
 ): keyof typeof STEP_FIELDS | null {
-  for (const stepNumber of [1, 2, 3, 4] as const) {
-    if (getFirstErrorMessage(fieldErrors, STEP_FIELDS[stepNumber])) return stepNumber
-  }
-  return null
+  const stepNumber = ([1, 2, 3, 4] as const).find((step) =>
+    getFirstErrorMessage(fieldErrors, STEP_FIELDS[step]),
+  )
+  return stepNumber ?? null
 }
 
 type FormStep = keyof typeof STEP_FIELDS | 5
@@ -148,6 +146,7 @@ function FormDropdownField({
   placeholder,
   hasError,
   testId,
+  inputId,
 }: {
   name: keyof MembershipFormValues
   control: Control<MembershipFormValues>
@@ -156,6 +155,7 @@ function FormDropdownField({
   placeholder: string
   hasError: boolean
   testId: string
+  inputId: string
 }) {
   return (
     <Controller
@@ -163,6 +163,7 @@ function FormDropdownField({
       control={control}
       render={({ field }) => (
         <SearchableSelect
+          id={inputId}
           name={field.name}
           value={field.value ?? ''}
           onBlur={field.onBlur}
@@ -249,12 +250,13 @@ function StateField({
 
   return (
     <div style={{ marginTop: '0.75rem' }}>
-      <label style={labelStyle}>
+      <label htmlFor={testId} style={labelStyle}>
         {data?.label ?? 'State / Province / Region'}
         <RequiredMark />
       </label>
       {data ? (
         <SearchableSelect
+          id={testId}
           name={name}
           value={value}
           onBlur={onBlur}
@@ -267,6 +269,7 @@ function StateField({
         />
       ) : (
         <input
+          id={testId}
           type="text"
           name={name}
           value={value}
@@ -361,7 +364,7 @@ export function MembershipForm() {
   }, [reset])
 
   useEffect(() => {
-    if (!progressReadyRef.current) return
+    if (!progressReadyRef.current) return undefined
 
     const timeout = window.setTimeout(() => {
       saveMembershipFormDraft({
@@ -373,6 +376,12 @@ export function MembershipForm() {
 
     return () => window.clearTimeout(timeout)
   }, [formValues, step, completed, getValues])
+
+  const scrollToForm = () => {
+    document
+      .getElementById('membership-form')
+      ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   const startOver = () => {
     clearMembershipFormDraft()
@@ -411,20 +420,12 @@ export function MembershipForm() {
     scrollToForm()
   }
 
-  const scrollToForm = () => {
-    document
-      .getElementById('membership-form')
-      ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
-
   const showStepErrors = (stepNumber: keyof typeof STEP_FIELDS) => {
     const fields = STEP_FIELDS[stepNumber]
-    for (const field of fields) {
-      const { error } = getFieldState(field)
-      if (error?.message) {
-        toast.error(error.message)
-        return
-      }
+    const fieldWithError = fields.find((field) => getFieldState(field).error?.message)
+    if (fieldWithError) {
+      toast.error(String(getFieldState(fieldWithError).error?.message))
+      return
     }
     toast.error(getFirstErrorMessage(errors, fields) ?? 'Please complete all required fields.')
   }
@@ -493,7 +494,7 @@ export function MembershipForm() {
     setDuplicateEmail(false)
 
     try {
-      const membershipType = data.membershipType
+      const { membershipType } = data
       if (membershipType !== 'diaspora' && membershipType !== 'premium') {
         throw new Error('Please select a membership type.')
       }
@@ -539,7 +540,7 @@ export function MembershipForm() {
         setDuplicateEmail(true)
         setEditingFromReview(false)
         setStep(1)
-        setCompleted((prev) => prev.filter((n) => n !== 1))
+        setCompleted((completedSteps) => completedSteps.filter((n) => n !== 1))
         scrollToForm()
         toast.error('An account with this email already exists.')
         window.setTimeout(() => {
@@ -611,11 +612,13 @@ export function MembershipForm() {
                   Fields marked <span style={{ color: '#cc0000' }}>*</span> are required.
                 </p>
 
-                <div style={{ marginBottom: '1rem' }}>
-                  <label style={{ ...labelStyle, marginBottom: '0.5rem' }}>
+                <fieldset
+                  style={{ marginBottom: '1rem', border: 'none', padding: 0, margin: '0 0 1rem' }}
+                >
+                  <legend style={{ ...labelStyle, marginBottom: '0.5rem', padding: 0 }}>
                     Title
                     <RequiredMark />
-                  </label>
+                  </legend>
                   <div className="mem-form-choice-grid">
                     {['Ms', 'Mr', 'Dr', 'Mrs'].map((t) => (
                       <label key={t} className="mem-form-choice">
@@ -625,7 +628,7 @@ export function MembershipForm() {
                     ))}
                   </div>
                   <FieldError message={errors.title?.message} />
-                </div>
+                </fieldset>
 
                 <div className="mem-form-name-grid" style={{ marginBottom: '1rem' }}>
                   {[
@@ -649,7 +652,7 @@ export function MembershipForm() {
                     },
                   ].map((f) => (
                     <div key={f.name}>
-                      <label style={labelStyle}>
+                      <label htmlFor={`membership-${f.name}`} style={labelStyle}>
                         {f.label}
                         {f.required ? (
                           <RequiredMark />
@@ -658,6 +661,7 @@ export function MembershipForm() {
                         )}
                       </label>
                       <input
+                        id={`membership-${f.name}`}
                         type="text"
                         placeholder={f.placeholder}
                         style={fieldStyle(!!errors[f.name])}
@@ -669,7 +673,7 @@ export function MembershipForm() {
                 </div>
 
                 <div style={{ marginBottom: '1rem' }}>
-                  <label style={labelStyle}>
+                  <label htmlFor="membership-country-residence" style={labelStyle}>
                     Country of Residence
                     <RequiredMark />
                   </label>
@@ -678,6 +682,7 @@ export function MembershipForm() {
                     control={control}
                     render={({ field }) => (
                       <SearchableSelect
+                        id="membership-country-residence"
                         name={field.name}
                         value={field.value ?? ''}
                         onBlur={field.onBlur}
@@ -726,12 +731,15 @@ export function MembershipForm() {
 
                 <div className="mem-form-phone-grid" style={{ marginBottom: '1rem' }}>
                   <div>
-                    <label style={labelStyle}>Country Code</label>
+                    <label htmlFor="membership-phone-code" style={labelStyle}>
+                      Country Code
+                    </label>
                     <Controller
                       name="phoneCode"
                       control={control}
                       render={({ field }) => (
                         <SearchableSelect
+                          id="membership-phone-code"
                           name={field.name}
                           value={field.value ?? ''}
                           onBlur={field.onBlur}
@@ -749,11 +757,12 @@ export function MembershipForm() {
                     />
                   </div>
                   <div>
-                    <label style={labelStyle}>
+                    <label htmlFor="membership-phone" style={labelStyle}>
                       Phone / Mobile
                       <RequiredMark />
                     </label>
                     <input
+                      id="membership-phone"
                       type="tel"
                       placeholder="Phone number"
                       style={fieldStyle(!!errors.phone)}
@@ -764,18 +773,18 @@ export function MembershipForm() {
                 </div>
 
                 <div style={{ marginBottom: '1rem' }}>
-                  <label style={labelStyle}>
+                  <label htmlFor="membership-email" style={labelStyle}>
                     Email
                     <RequiredMark />
                   </label>
                   <input
-                    id="membership-email"
                     type="email"
                     placeholder="your@email.com"
                     style={fieldStyle(!!errors.email || duplicateEmail)}
                     {...register('email', {
                       onChange: () => setDuplicateEmail(false),
                     })}
+                    id="membership-email"
                   />
                   <FieldError message={errors.email?.message} />
                   {duplicateEmail && <DuplicateEmailAlert email={duplicateEmailValue} />}
@@ -849,10 +858,12 @@ export function MembershipForm() {
                   Professional Information
                 </h3>
 
-                <div style={{ marginBottom: '1rem' }}>
-                  <label style={{ ...labelStyle, marginBottom: '0.5rem' }}>
+                <fieldset
+                  style={{ marginBottom: '1rem', border: 'none', padding: 0, margin: '0 0 1rem' }}
+                >
+                  <legend style={{ ...labelStyle, marginBottom: '0.5rem', padding: 0 }}>
                     Are you a student? <span style={{ color: '#cc0000' }}>*</span>
-                  </label>
+                  </legend>
                   <div className="mem-form-choice-grid">
                     {(['yes', 'no'] as const).map((v) => (
                       <label key={v} className="mem-form-choice">
@@ -862,10 +873,10 @@ export function MembershipForm() {
                     ))}
                   </div>
                   <FieldError message={errors.isStudent?.message} />
-                </div>
+                </fieldset>
 
                 <div style={{ marginBottom: '1rem' }}>
-                  <label style={labelStyle}>
+                  <label htmlFor="membership-education" style={labelStyle}>
                     Highest level of education <span style={{ color: '#cc0000' }}>*</span>
                   </label>
                   <FormDropdownField
@@ -876,14 +887,17 @@ export function MembershipForm() {
                     options={EDUCATION_OPTIONS}
                     hasError={!!errors.education}
                     testId="education-select"
+                    inputId="membership-education"
                   />
                   <FieldError message={errors.education?.message} />
                 </div>
 
-                <div style={{ marginBottom: '1rem' }}>
-                  <label style={{ ...labelStyle, marginBottom: '0.5rem' }}>
+                <fieldset
+                  style={{ marginBottom: '1rem', border: 'none', padding: 0, margin: '0 0 1rem' }}
+                >
+                  <legend style={{ ...labelStyle, marginBottom: '0.5rem', padding: 0 }}>
                     Nurse license(s) held <span style={{ color: '#cc0000' }}>*</span>
-                  </label>
+                  </legend>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                     {[
                       'Not Applicable',
@@ -932,10 +946,10 @@ export function MembershipForm() {
                       <FieldError message={errors.licenceSpeciality?.message} />
                     </>
                   )}
-                </div>
+                </fieldset>
 
                 <div style={{ marginBottom: '1rem' }}>
-                  <label style={labelStyle}>
+                  <label htmlFor="membership-country-practice" style={labelStyle}>
                     Country of practice <span style={{ color: '#cc0000' }}>*</span>
                   </label>
                   <Controller
@@ -943,6 +957,7 @@ export function MembershipForm() {
                     control={control}
                     render={({ field }) => (
                       <SearchableSelect
+                        id="membership-country-practice"
                         name={field.name}
                         value={field.value ?? ''}
                         onBlur={field.onBlur}
@@ -985,7 +1000,7 @@ export function MembershipForm() {
                 </div>
 
                 <div style={{ marginBottom: '1.5rem' }}>
-                  <label style={labelStyle}>
+                  <label htmlFor="membership-licence-status" style={labelStyle}>
                     License status <span style={{ color: '#cc0000' }}>*</span>
                   </label>
                   <FormDropdownField
@@ -996,6 +1011,7 @@ export function MembershipForm() {
                     options={LICENCE_STATUS_OPTIONS}
                     hasError={!!errors.licenceStatus}
                     testId="licence-status-select"
+                    inputId="membership-licence-status"
                   />
                   <FieldError message={errors.licenceStatus?.message} />
                 </div>
@@ -1048,7 +1064,7 @@ export function MembershipForm() {
                 </h3>
 
                 <div style={{ marginBottom: '1rem' }}>
-                  <label style={labelStyle}>
+                  <label htmlFor="membership-nursing-education" style={labelStyle}>
                     Where did you receive your entry-level nursing education?{' '}
                     <span style={{ color: '#cc0000' }}>*</span>
                   </label>
@@ -1057,6 +1073,7 @@ export function MembershipForm() {
                     control={control}
                     render={({ field }) => (
                       <SearchableSelect
+                        id="membership-nursing-education"
                         name={field.name}
                         value={field.value ?? ''}
                         onBlur={field.onBlur}
@@ -1075,10 +1092,12 @@ export function MembershipForm() {
                   <FieldError message={errors.nursingEducation?.message} />
                 </div>
 
-                <div style={{ marginBottom: '1rem' }}>
-                  <label style={{ ...labelStyle, marginBottom: '0.5rem' }}>
+                <fieldset
+                  style={{ marginBottom: '1rem', border: 'none', padding: 0, margin: '0 0 1rem' }}
+                >
+                  <legend style={{ ...labelStyle, marginBottom: '0.5rem', padding: 0 }}>
                     Employment status <span style={{ color: '#cc0000' }}>*</span>
-                  </label>
+                  </legend>
                   <div className="mem-form-choice-grid">
                     {['Full-time', 'Part-time', 'Per-diem', 'Retired', 'Unemployed'].map((e) => (
                       <label key={e} className="mem-form-choice">
@@ -1088,12 +1107,14 @@ export function MembershipForm() {
                     ))}
                   </div>
                   <FieldError message={errors.employmentStatus?.message} />
-                </div>
+                </fieldset>
 
-                <div style={{ marginBottom: '1rem' }}>
-                  <label style={{ ...labelStyle, marginBottom: '0.5rem' }}>
+                <fieldset
+                  style={{ marginBottom: '1rem', border: 'none', padding: 0, margin: '0 0 1rem' }}
+                >
+                  <legend style={{ ...labelStyle, marginBottom: '0.5rem', padding: 0 }}>
                     Specialty (select all that apply) <span style={{ color: '#cc0000' }}>*</span>
-                  </label>
+                  </legend>
                   <div
                     style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.4rem 1rem' }}
                   >
@@ -1135,10 +1156,10 @@ export function MembershipForm() {
                     ))}
                   </div>
                   <FieldError message={errors.specialties?.message} />
-                </div>
+                </fieldset>
 
                 <div style={{ marginBottom: '1rem' }}>
-                  <label style={labelStyle}>
+                  <label htmlFor="membership-position-title" style={labelStyle}>
                     Position title <span style={{ color: '#cc0000' }}>*</span>
                   </label>
                   <FormDropdownField
@@ -1149,12 +1170,13 @@ export function MembershipForm() {
                     options={POSITION_TITLE_OPTIONS}
                     hasError={!!errors.positionTitle}
                     testId="position-title-select"
+                    inputId="membership-position-title"
                   />
                   <FieldError message={errors.positionTitle?.message} />
                 </div>
 
                 <div style={{ marginBottom: '1.5rem' }}>
-                  <label style={labelStyle}>
+                  <label htmlFor="membership-practice-setting" style={labelStyle}>
                     Practice setting <span style={{ color: '#cc0000' }}>*</span>
                   </label>
                   <FormDropdownField
@@ -1165,6 +1187,7 @@ export function MembershipForm() {
                     options={PRACTICE_SETTING_OPTIONS}
                     hasError={!!errors.practiceSetting}
                     testId="practice-setting-select"
+                    inputId="membership-practice-setting"
                   />
                   <FieldError message={errors.practiceSetting?.message} />
                 </div>
@@ -1220,7 +1243,7 @@ export function MembershipForm() {
                 </p>
 
                 <div style={{ marginBottom: '1.5rem' }}>
-                  <label style={labelStyle}>
+                  <label htmlFor="membership-type" style={labelStyle}>
                     Membership <span style={{ color: '#cc0000' }}>*</span>
                   </label>
                   <FormDropdownField
@@ -1231,6 +1254,7 @@ export function MembershipForm() {
                     options={MEMBERSHIP_TYPE_OPTIONS}
                     hasError={!!errors.membershipType}
                     testId="membership-type-select"
+                    inputId="membership-type"
                   />
                   <FieldError message={errors.membershipType?.message} />
                   <p style={{ fontSize: '0.8rem', color: '#6b7280', marginTop: '0.5rem' }}>

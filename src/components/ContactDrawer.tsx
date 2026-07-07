@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
 import { SocialLinks } from './SocialLinks'
 
 const ContactDrawerContext = createContext<{ open: () => void }>({ open: () => {} })
@@ -10,23 +10,35 @@ export function ContactDrawerProvider({ children }: { children: ReactNode }) {
   // Keeps the overlay mounted during the slide-down animation
   const [overlayVisible, setOverlayVisible] = useState(false)
 
-  const open = () => {
+  const open = useCallback(() => {
     setOverlayVisible(true)
     requestAnimationFrame(() => setIsOpen(true))
-  }
+  }, [])
   const close = () => {
     setIsOpen(false)
     setTimeout(() => setOverlayVisible(false), 400)
   }
 
+  const contextValue = useMemo(() => ({ open }), [open])
+
   return (
-    <ContactDrawerContext.Provider value={{ open }}>
+    <ContactDrawerContext.Provider value={contextValue}>
       {children}
 
       {overlayVisible && (
-        <div
+        <button
+          type="button"
+          aria-label="Close contact drawer"
           onClick={close}
-          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.45)', zIndex: 199 }}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.45)',
+            zIndex: 199,
+            border: 'none',
+            padding: 0,
+            cursor: 'pointer',
+          }}
         />
       )}
 
@@ -68,6 +80,7 @@ export function ContactDrawerProvider({ children }: { children: ReactNode }) {
               Contact Us
             </h3>
             <button
+              type="button"
               onClick={close}
               aria-label="Close"
               style={{

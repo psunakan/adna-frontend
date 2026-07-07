@@ -108,12 +108,12 @@ export function PortalLoginPage() {
                 Email <span style={{ color: '#cc0000' }}>*</span>
               </label>
               <input
-                id="email"
                 type="email"
                 autoComplete="email"
                 placeholder="your@email.com"
                 style={fieldStyle(!!errors.email)}
                 {...register('email')}
+                id="email"
               />
               {errors.email?.message && <p style={errorTextStyle}>{errors.email.message}</p>}
             </div>
@@ -123,12 +123,12 @@ export function PortalLoginPage() {
                 Password <span style={{ color: '#cc0000' }}>*</span>
               </label>
               <PasswordField
-                id="password"
                 autoComplete="current-password"
                 placeholder="Enter your password"
                 hasError={!!errors.password}
                 testId="portal-login-password"
                 {...register('password')}
+                id="password"
               />
               {errors.password?.message && <p style={errorTextStyle}>{errors.password.message}</p>}
               <p style={{ marginTop: '0.5rem', textAlign: 'right' }}>

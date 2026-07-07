@@ -2,7 +2,7 @@ import {
   buildVerificationUrl,
   formatVerificationDate,
   type MembershipVerification,
-} from '../lib/membershipVerification'
+} from './membershipVerification'
 
 function escapeHtml(value: string): string {
   return value

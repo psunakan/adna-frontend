@@ -60,7 +60,7 @@ export function loadMembershipFormDraft(): MembershipFormDraft | null {
       return null
     }
 
-    const values = parsed.values
+    const { values } = parsed
     if (!isRecord(values)) {
       clearMembershipFormDraft()
       return null
