@@ -178,7 +178,15 @@ test.describe('Membership form', () => {
   })
 })
 
-test.describe('Membership confirmation', () => {
+test.describe('Membership thank-you (Zeffy redirect)', () => {
+  test('shows generic thank-you without registration checkout', async ({ page }) => {
+    await page.goto('/thank-you')
+
+    await expect(page.getByTestId('zeffy-thank-you')).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Thank you for your payment' })).toBeVisible()
+    await expect(page.getByText(/Refresh status/i)).toBeVisible()
+  })
+
   test('shows success after payment is confirmed', async ({ page }) => {
     await page.addInitScript(() => {
       sessionStorage.setItem(
@@ -193,7 +201,7 @@ test.describe('Membership confirmation', () => {
     })
 
     await mockCheckoutStatus(page, 'confirmed')
-    await page.goto('/membership/confirmation')
+    await page.goto('/thank-you')
 
     await expect(page.getByTestId('membership-confirmation-success')).toBeVisible()
     await expect(page.getByText('Welcome to A-DNA!')).toBeVisible()
@@ -214,7 +222,7 @@ test.describe('Membership confirmation', () => {
     })
 
     await mockCheckoutStatus(page, 'pending')
-    await page.goto('/membership/confirmation')
+    await page.goto('/thank-you')
 
     await expect(page.getByTestId('membership-confirmation-pending')).toBeVisible()
     await expect(page.getByText(/waiting for Zeffy/i)).toBeVisible()

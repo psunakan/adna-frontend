@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ThankYouRouteImport } from './routes/thank-you'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as DonateRouteImport } from './routes/donate'
 import { Route as AboutRouteImport } from './routes/about'
@@ -20,8 +21,14 @@ import { Route as PortalResetPasswordRouteImport } from './routes/portal/reset-p
 import { Route as PortalLoginRouteImport } from './routes/portal/login'
 import { Route as PortalForgotPasswordRouteImport } from './routes/portal/forgot-password'
 import { Route as MembershipVerifyRouteImport } from './routes/membership/verify'
+import { Route as MembershipThankYouRouteImport } from './routes/membership/thank-you'
 import { Route as MembershipConfirmationRouteImport } from './routes/membership/confirmation'
 
+const ThankYouRoute = ThankYouRouteImport.update({
+  id: '/thank-you',
+  path: '/thank-you',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EventsRoute = EventsRouteImport.update({
   id: '/events',
   path: '/events',
@@ -77,6 +84,11 @@ const MembershipVerifyRoute = MembershipVerifyRouteImport.update({
   path: '/verify',
   getParentRoute: () => MembershipRouteRoute,
 } as any)
+const MembershipThankYouRoute = MembershipThankYouRouteImport.update({
+  id: '/thank-you',
+  path: '/thank-you',
+  getParentRoute: () => MembershipRouteRoute,
+} as any)
 const MembershipConfirmationRoute = MembershipConfirmationRouteImport.update({
   id: '/confirmation',
   path: '/confirmation',
@@ -89,7 +101,9 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/donate': typeof DonateRoute
   '/events': typeof EventsRoute
+  '/thank-you': typeof ThankYouRoute
   '/membership/confirmation': typeof MembershipConfirmationRoute
+  '/membership/thank-you': typeof MembershipThankYouRoute
   '/membership/verify': typeof MembershipVerifyRoute
   '/portal/forgot-password': typeof PortalForgotPasswordRoute
   '/portal/login': typeof PortalLoginRoute
@@ -102,7 +116,9 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/donate': typeof DonateRoute
   '/events': typeof EventsRoute
+  '/thank-you': typeof ThankYouRoute
   '/membership/confirmation': typeof MembershipConfirmationRoute
+  '/membership/thank-you': typeof MembershipThankYouRoute
   '/membership/verify': typeof MembershipVerifyRoute
   '/portal/forgot-password': typeof PortalForgotPasswordRoute
   '/portal/login': typeof PortalLoginRoute
@@ -117,7 +133,9 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/donate': typeof DonateRoute
   '/events': typeof EventsRoute
+  '/thank-you': typeof ThankYouRoute
   '/membership/confirmation': typeof MembershipConfirmationRoute
+  '/membership/thank-you': typeof MembershipThankYouRoute
   '/membership/verify': typeof MembershipVerifyRoute
   '/portal/forgot-password': typeof PortalForgotPasswordRoute
   '/portal/login': typeof PortalLoginRoute
@@ -133,7 +151,9 @@ export interface FileRouteTypes {
     | '/about'
     | '/donate'
     | '/events'
+    | '/thank-you'
     | '/membership/confirmation'
+    | '/membership/thank-you'
     | '/membership/verify'
     | '/portal/forgot-password'
     | '/portal/login'
@@ -146,7 +166,9 @@ export interface FileRouteTypes {
     | '/about'
     | '/donate'
     | '/events'
+    | '/thank-you'
     | '/membership/confirmation'
+    | '/membership/thank-you'
     | '/membership/verify'
     | '/portal/forgot-password'
     | '/portal/login'
@@ -160,7 +182,9 @@ export interface FileRouteTypes {
     | '/about'
     | '/donate'
     | '/events'
+    | '/thank-you'
     | '/membership/confirmation'
+    | '/membership/thank-you'
     | '/membership/verify'
     | '/portal/forgot-password'
     | '/portal/login'
@@ -175,6 +199,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   DonateRoute: typeof DonateRoute
   EventsRoute: typeof EventsRoute
+  ThankYouRoute: typeof ThankYouRoute
   PortalForgotPasswordRoute: typeof PortalForgotPasswordRoute
   PortalLoginRoute: typeof PortalLoginRoute
   PortalResetPasswordRoute: typeof PortalResetPasswordRoute
@@ -183,6 +208,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/thank-you': {
+      id: '/thank-you'
+      path: '/thank-you'
+      fullPath: '/thank-you'
+      preLoaderRoute: typeof ThankYouRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/events': {
       id: '/events'
       path: '/events'
@@ -260,6 +292,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MembershipVerifyRouteImport
       parentRoute: typeof MembershipRouteRoute
     }
+    '/membership/thank-you': {
+      id: '/membership/thank-you'
+      path: '/thank-you'
+      fullPath: '/membership/thank-you'
+      preLoaderRoute: typeof MembershipThankYouRouteImport
+      parentRoute: typeof MembershipRouteRoute
+    }
     '/membership/confirmation': {
       id: '/membership/confirmation'
       path: '/confirmation'
@@ -272,12 +311,14 @@ declare module '@tanstack/react-router' {
 
 interface MembershipRouteRouteChildren {
   MembershipConfirmationRoute: typeof MembershipConfirmationRoute
+  MembershipThankYouRoute: typeof MembershipThankYouRoute
   MembershipVerifyRoute: typeof MembershipVerifyRoute
   MembershipIndexRoute: typeof MembershipIndexRoute
 }
 
 const MembershipRouteRouteChildren: MembershipRouteRouteChildren = {
   MembershipConfirmationRoute: MembershipConfirmationRoute,
+  MembershipThankYouRoute: MembershipThankYouRoute,
   MembershipVerifyRoute: MembershipVerifyRoute,
   MembershipIndexRoute: MembershipIndexRoute,
 }
@@ -292,6 +333,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   DonateRoute: DonateRoute,
   EventsRoute: EventsRoute,
+  ThankYouRoute: ThankYouRoute,
   PortalForgotPasswordRoute: PortalForgotPasswordRoute,
   PortalLoginRoute: PortalLoginRoute,
   PortalResetPasswordRoute: PortalResetPasswordRoute,
