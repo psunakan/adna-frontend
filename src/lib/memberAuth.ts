@@ -46,6 +46,22 @@ function isRpcFailure(value: unknown): value is RpcFailure {
   )
 }
 
+/** Older production RPCs omitted has_paid_current_year_dues while still returning payment_status. */
+export function enrichMemberProfile(
+  member: MemberProfile,
+  paymentStatus?: 'paid' | 'pending',
+): MemberProfile {
+  if (member.has_paid_current_year_dues === true) {
+    return member
+  }
+
+  if (paymentStatus === 'paid') {
+    return { ...member, has_paid_current_year_dues: true }
+  }
+
+  return member
+}
+
 export function getStoredSession(): MemberSession | null {
   try {
     const raw = localStorage.getItem(SESSION_STORAGE_KEY)
@@ -104,7 +120,7 @@ export async function fetchMemberProfile(token: string): Promise<MemberProfile> 
   }
 
   const result = data as RpcSuccess<{ member: MemberProfile }>
-  return result.member
+  return enrichMemberProfile(result.member)
 }
 
 async function refreshMemberMembershipStatusRpc(token: string): Promise<MembershipRefreshResult> {
@@ -129,7 +145,7 @@ async function refreshMemberMembershipStatusRpc(token: string): Promise<Membersh
   return {
     paymentStatus: result.payment_status,
     paymentMessage: result.payment_message,
-    member: result.member,
+    member: enrichMemberProfile(result.member, result.payment_status),
   }
 }
 
@@ -165,7 +181,7 @@ export async function refreshMemberMembershipStatus(
   return {
     paymentStatus: result.payment_status,
     paymentMessage: result.payment_message,
-    member: result.member,
+    member: enrichMemberProfile(result.member, result.payment_status),
   }
 }
 
