@@ -18,22 +18,26 @@ function formatDate(value: string | null) {
 }
 
 function membershipStatus(profile: {
-  is_active: boolean
   membership_tier: string | null
+  has_paid_current_year_dues?: boolean
 }) {
   const tier = normalizeMembershipTier(profile.membership_tier)
-  if (profile.is_active && tier !== 'regular') {
-    return {
-      label: 'Active — paid member',
-      className: 'portal-status portal-status--active',
-    }
-  }
-  if (profile.is_active) {
+  const hasPaid = profile.has_paid_current_year_dues === true
+
+  if (tier === 'regular') {
     return {
       label: 'Active — free member',
       className: 'portal-status portal-status--free',
     }
   }
+
+  if (hasPaid) {
+    return {
+      label: 'Active — paid member',
+      className: 'portal-status portal-status--active',
+    }
+  }
+
   return {
     label: 'Payment pending',
     className: 'portal-status portal-status--pending',
@@ -180,7 +184,8 @@ export function PortalDashboardPage() {
           </div>
         )}
 
-        {profile.is_active === false && (
+        {profile.has_paid_current_year_dues !== true &&
+          normalizeMembershipTier(profile.membership_tier) !== 'regular' && (
           <div className="portal-alert portal-alert--warning" role="alert">
             Your membership payment is still pending. Complete payment on Zeffy using{' '}
             <strong>{profile.email}</strong>, then click <strong>Refresh status</strong> in your
