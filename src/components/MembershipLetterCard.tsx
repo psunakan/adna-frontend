@@ -17,7 +17,9 @@ type Props = {
 export function MembershipLetterCard({ profile }: Props) {
   const [isIssuing, setIsIssuing] = useState(false)
   const tier = normalizeMembershipTier(profile.membership_tier)
-  const eligible = profile.is_active && (tier === 'diaspora' || tier === 'premium')
+  const eligible =
+    profile.has_paid_current_year_dues === true &&
+    (tier === 'diaspora' || tier === 'premium')
 
   const handleDownloadLetter = async () => {
     const session = getStoredSession()
