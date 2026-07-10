@@ -19,6 +19,7 @@ import {
   type MembershipRefreshResult,
   type MemberSession,
 } from './memberAuth'
+import { normalizeMembershipTier } from './membershipTier'
 
 type MemberAuthContextValue = {
   session: MemberSession | null
@@ -75,6 +76,21 @@ async function fetchProfileWithTimeout(token: string) {
   }
 }
 
+async function loadMemberProfile(token: string): Promise<MemberProfile> {
+  const nextProfile = await fetchProfileWithTimeout(token)
+  const tier = normalizeMembershipTier(nextProfile.membership_tier)
+
+  if (
+    nextProfile.has_paid_current_year_dues !== true &&
+    (tier === 'diaspora' || tier === 'premium')
+  ) {
+    const refreshed = await refreshMemberMembershipStatus(token)
+    return refreshed.member
+  }
+
+  return nextProfile
+}
+
 export function MemberAuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<MemberSession | null>(() => getStoredSession())
   const [profile, setProfile] = useState<MemberProfile | null>(null)
@@ -89,7 +105,7 @@ export function MemberAuthProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      const nextProfile = await fetchProfileWithTimeout(current.token)
+      const nextProfile = await loadMemberProfile(current.token)
       const nextSession = applyProfileToSession(current, nextProfile)
       storeSession(nextSession)
       setSession(nextSession)
@@ -145,7 +161,7 @@ export function MemberAuthProvider({ children }: { children: ReactNode }) {
       }
 
       try {
-        const nextProfile = await fetchProfileWithTimeout(current.token)
+        const nextProfile = await loadMemberProfile(current.token)
         if (!cancelled) {
           setSession(current)
           setProfile(nextProfile)
