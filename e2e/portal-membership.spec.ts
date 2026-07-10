@@ -82,10 +82,7 @@ test.describe('Member portal membership upgrades', () => {
 
   test('refresh status upgrades free member to Professional', async ({ page }) => {
     await mockMemberPortalApi(page, {
-      profileSequence: [
-        buildMockMember('regular'),
-        buildMockMember('diaspora', true, true),
-      ],
+      profileSequence: [buildMockMember('regular'), buildMockMember('diaspora', true, true)],
     })
     await seedPortalSession(page, 'regular')
     await page.goto('/portal')
