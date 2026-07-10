@@ -173,7 +173,7 @@ cp env.example .env
 | `RESEND_API_KEY`                | Edge functions         | `secrets:set`        | Resend API key for welcome and password-reset emails (Supabase secret, not browser)                                                   |
 | `RESEND_FROM_EMAIL`             | Edge functions         | `secrets:set`        | From address for transactional email, e.g. `A-DNA <noreply@yourdomain.com>`                                                           |
 | `SITE_URL`                      | Edge functions         | `secrets:set`        | Public site URL used in email links and branding (e.g. `https://a-dna.org`)                                                           |
-| `ZEFFY_WEBHOOK_SECRET`          | Optional               | Edge function        | Shared secret for Zeffy webhook auth (set via `npm run secrets:set`)                                                                  |
+| `ZEFFY_WEBHOOK_SECRET`          | Optional               | Edge function        | Shared secret for manual webhook tests (`x-zeffy-webhook-secret`); live Zeffy webhooks use `ZEFFY_API_KEY` or unsigned POST |
 | `ZEFFY_API_KEY`                 | Optional               | Edge function        | Zeffy API key for portal **Refresh status** backfill when webhook missed a payment (Supabase secret only)                             |
 | `ZEFFY_RATE_PROFESSIONAL`       | Optional               | Edge function        | Zeffy `rate_id` for Professional tier — may be the same UUID as Premium (see [Zeffy](#zeffy-membership-payments))                     |
 | `ZEFFY_RATE_PREMIUM`            | Optional               | Edge function        | Zeffy `rate_id` for Premium tier — tier is resolved from payment amount when both rates share the same ID                             |
@@ -362,7 +362,7 @@ Configure Zeffy to redirect buyers after payment to:
 
 All Zeffy-related Supabase secrets are listed in `env.example`. At minimum for production payments:
 
-- `ZEFFY_WEBHOOK_SECRET` — verify webhook authenticity
+- `ZEFFY_WEBHOOK_SECRET` — optional; for manual webhook tests. Live Zeffy deliveries are accepted via `ZEFFY_API_KEY` (Bearer) or unsigned POST when the API key is configured.
 - `ZEFFY_RATE_PROFESSIONAL` / `ZEFFY_RATE_PREMIUM` — same shared rate ID (see [Tier resolution](#tier-resolution))
 - `ZEFFY_API_KEY` — enables portal Refresh backfill when webhook is missed
 
