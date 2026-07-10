@@ -33,7 +33,10 @@ const CHECKOUT_OPTIONS = [
   },
 ]
 
-export function resolveMembershipCheckoutOptions(tier: MembershipTierAlias, hasPaid: boolean) {
+export function resolveMembershipCheckoutOptions(
+  tier: MembershipTierAlias,
+  hasPaid: boolean,
+) {
   if (!hasPaid) {
     if (tier === 'regular') {
       return CHECKOUT_OPTIONS
@@ -76,8 +79,8 @@ function membershipLeadCopy(tier: MembershipTierAlias, hasPaid: boolean, email: 
 
   return (
     <>
-      Upgrade to Premium anytime through our secure Zeffy checkout. Use <strong>{email}</strong>{' '}
-      when you pay so we can match your payment to your account.
+      Upgrade to Premium anytime through our secure Zeffy checkout. Use <strong>{email}</strong> when
+      you pay so we can match your payment to your account.
     </>
   )
 }
