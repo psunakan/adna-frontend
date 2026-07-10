@@ -358,7 +358,7 @@ npm run functions:deploy     # deploy webhook, sync, and email edge functions
 
 Configure Zeffy to redirect buyers after payment to:
 
-`https://your-site.com/membership/confirmation`
+`https://your-site.com/thank-you`
 
 All Zeffy-related Supabase secrets are listed in `env.example`. At minimum for production payments:
 
@@ -542,7 +542,9 @@ No `.env` is required in CI — current tests cover UI/navigation only.
 | `/about`                   | Mission, vision, team                             |
 | `/events`                  | Events and registration modal                     |
 | `/membership`              | Membership tiers and multi-step registration form |
-| `/membership/confirmation` | Post-checkout confirmation page                   |
+| `/thank-you`               | Zeffy post-payment thank-you page (all checkout flows) |
+| `/membership/confirmation` | Redirects to `/thank-you`                              |
+| `/membership/thank-you`    | Redirects to `/thank-you`                                |
 | `/membership/verify`       | Public membership letter verification             |
 | `/donate`                  | Donation page                                     |
 | `/portal/login`            | Member portal sign-in                             |
