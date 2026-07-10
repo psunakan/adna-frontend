@@ -197,6 +197,7 @@ export function PortalDashboardPage() {
           <div className="portal-main">
             <MembershipUpgradeSection
               tier={membershipTier}
+              hasPaidCurrentYearDues={profile.has_paid_current_year_dues}
               email={profile.email}
               first_name={profile.first_name}
               last_name={profile.last_name}
