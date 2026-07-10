@@ -161,8 +161,7 @@ export async function mockMemberPortalApi(page: Page, options: MockPortalOptions
     const profile = sequence[Math.min(index, sequence.length - 1)] ?? buildMockMember(initialTier)
     const tier = profile.membership_tier
     const eligible =
-      profile.has_paid_current_year_dues === true &&
-      (tier === 'diaspora' || tier === 'premium')
+      profile.has_paid_current_year_dues === true && (tier === 'diaspora' || tier === 'premium')
 
     if (!eligible) {
       await route.fulfill({

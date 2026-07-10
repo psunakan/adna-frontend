@@ -78,7 +78,9 @@ export function PortalLoginPage() {
           </div>
 
           <h1 className="portal-auth-title font-heading">Member Portal</h1>
-          <p className="portal-auth-lead">Sign in to manage your membership, payments, and verification letter.</p>
+          <p className="portal-auth-lead">
+            Sign in to manage your membership, payments, and verification letter.
+          </p>
 
           <form onSubmit={onSubmit} noValidate>
             <div className="portal-field">

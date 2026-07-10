@@ -186,12 +186,12 @@ export function PortalDashboardPage() {
 
         {profile.has_paid_current_year_dues !== true &&
           normalizeMembershipTier(profile.membership_tier) !== 'regular' && (
-          <div className="portal-alert portal-alert--warning" role="alert">
-            Your membership payment is still pending. Complete payment on Zeffy using{' '}
-            <strong>{profile.email}</strong>, then click <strong>Refresh status</strong> in your
-            membership card.
-          </div>
-        )}
+            <div className="portal-alert portal-alert--warning" role="alert">
+              Your membership payment is still pending. Complete payment on Zeffy using{' '}
+              <strong>{profile.email}</strong>, then click <strong>Refresh status</strong> in your
+              membership card.
+            </div>
+          )}
 
         <div className="portal-grid">
           <div className="portal-main">

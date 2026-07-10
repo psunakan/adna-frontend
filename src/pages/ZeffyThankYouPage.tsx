@@ -158,7 +158,9 @@ export function ZeffyThankYouPage() {
           <p className="zeffy-thank-you__icon" aria-hidden="true">
             ⏳
           </p>
-          <h1 className="zeffy-thank-you__title font-heading">Thank you — confirming your payment</h1>
+          <h1 className="zeffy-thank-you__title font-heading">
+            Thank you — confirming your payment
+          </h1>
           <p className="zeffy-thank-you__lead">
             We&apos;re waiting for Zeffy to confirm your payment
             {checkoutStatus.membershipLabel ? ` for ${checkoutStatus.membershipLabel}` : ''}.
@@ -171,8 +173,7 @@ export function ZeffyThankYouPage() {
           {timedOut && (
             <p className="zeffy-thank-you__note">
               Still waiting? Refresh this page in a moment. If payment was completed more than a few
-              minutes ago, contact{' '}
-              <a href="mailto:info@a-dna.org">info@a-dna.org</a>.
+              minutes ago, contact <a href="mailto:info@a-dna.org">info@a-dna.org</a>.
             </p>
           )}
         </div>
@@ -200,8 +201,7 @@ export function ZeffyThankYouPage() {
           secondary={{ to: '/', label: 'Back to home' }}
         />
         <p className="zeffy-thank-you__footer">
-          Questions?{' '}
-          <a href="mailto:info@a-dna.org">info@a-dna.org</a>
+          Questions? <a href="mailto:info@a-dna.org">info@a-dna.org</a>
         </p>
       </div>
     </ThankYouShell>
