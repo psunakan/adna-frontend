@@ -989,7 +989,9 @@ b {
   font-weight: 700;
   font-family: inherit;
   cursor: pointer;
-  transition: opacity 0.15s ease, background 0.15s ease;
+  transition:
+    opacity 0.15s ease,
+    background 0.15s ease;
   white-space: nowrap;
 }
 

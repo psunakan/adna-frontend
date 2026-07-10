@@ -536,21 +536,21 @@ No `.env` is required in CI — current tests cover UI/navigation only.
 
 ## Routes
 
-| Path                       | Description                                       |
-| -------------------------- | ------------------------------------------------- |
-| `/`                        | Home                                              |
-| `/about`                   | Mission, vision, team                             |
-| `/events`                  | Events and registration modal                     |
-| `/membership`              | Membership tiers and multi-step registration form |
+| Path                       | Description                                            |
+| -------------------------- | ------------------------------------------------------ |
+| `/`                        | Home                                                   |
+| `/about`                   | Mission, vision, team                                  |
+| `/events`                  | Events and registration modal                          |
+| `/membership`              | Membership tiers and multi-step registration form      |
 | `/thank-you`               | Zeffy post-payment thank-you page (all checkout flows) |
 | `/membership/confirmation` | Redirects to `/thank-you`                              |
-| `/membership/thank-you`    | Redirects to `/thank-you`                                |
-| `/membership/verify`       | Public membership letter verification             |
-| `/donate`                  | Donation page                                     |
-| `/portal/login`            | Member portal sign-in                             |
-| `/portal/forgot-password`  | Request password reset email                      |
-| `/portal/reset-password`   | Set new password from email link                  |
-| `/portal`                  | Member dashboard (requires login)                 |
+| `/membership/thank-you`    | Redirects to `/thank-you`                              |
+| `/membership/verify`       | Public membership letter verification                  |
+| `/donate`                  | Donation page                                          |
+| `/portal/login`            | Member portal sign-in                                  |
+| `/portal/forgot-password`  | Request password reset email                           |
+| `/portal/reset-password`   | Set new password from email link                       |
+| `/portal`                  | Member dashboard (requires login)                      |
 
 ---
 

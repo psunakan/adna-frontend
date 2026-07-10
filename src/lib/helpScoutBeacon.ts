@@ -7,8 +7,7 @@ declare global {
 }
 
 const WEBSITE_BEACON_ID =
-  import.meta.env.VITE_HELPSCOUT_WEBSITE_BEACON_ID?.trim() ||
-  'a322d75f-9379-40ba-b9b2-f57dd44de2c8'
+  import.meta.env.VITE_HELPSCOUT_WEBSITE_BEACON_ID?.trim() || 'a322d75f-9379-40ba-b9b2-f57dd44de2c8'
 
 const MEMBERSHIP_BEACON_ID =
   import.meta.env.VITE_HELPSCOUT_MEMBERSHIP_BEACON_ID?.trim() ||
