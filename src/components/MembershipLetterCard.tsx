@@ -17,7 +17,8 @@ type Props = {
 export function MembershipLetterCard({ profile }: Props) {
   const [isIssuing, setIsIssuing] = useState(false)
   const tier = normalizeMembershipTier(profile.membership_tier)
-  const eligible = profile.is_active && (tier === 'diaspora' || tier === 'premium')
+  const eligible =
+    profile.has_paid_current_year_dues === true && (tier === 'diaspora' || tier === 'premium')
 
   const handleDownloadLetter = async () => {
     const session = getStoredSession()
@@ -52,9 +53,7 @@ export function MembershipLetterCard({ profile }: Props) {
       <div className="portal-membership-card__header">
         <div>
           <p className="portal-membership-card__eyebrow">Verification</p>
-          <h2 style={{ margin: 0, fontSize: '1.35rem', fontWeight: 800, color: '#0D3D2B' }}>
-            Membership letter
-          </h2>
+          <h2 className="portal-membership-card__title font-heading">Membership letter</h2>
         </div>
       </div>
 

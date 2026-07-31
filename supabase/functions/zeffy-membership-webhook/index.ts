@@ -20,17 +20,38 @@ function unauthorized() {
 }
 
 function verifyWebhookAuth(req: Request): boolean {
-  const secret = Deno.env.get('ZEFFY_WEBHOOK_SECRET')?.trim()
-  if (!secret) {
-    console.error('ZEFFY_WEBHOOK_SECRET is not configured — rejecting webhook.')
+  const webhookSecret = Deno.env.get('ZEFFY_WEBHOOK_SECRET')?.trim()
+  const apiKey = Deno.env.get('ZEFFY_API_KEY')?.trim()
+
+  const auth = req.headers.get('authorization') ?? ''
+  const bearer = auth.startsWith('Bearer ') ? auth.slice(7).trim() : ''
+  const headerSecret = (req.headers.get('x-zeffy-webhook-secret') ?? '').trim()
+
+  if (
+    webhookSecret &&
+    (verifySharedSecret(bearer, webhookSecret) || verifySharedSecret(headerSecret, webhookSecret))
+  ) {
+    return true
+  }
+
+  if (apiKey && bearer && verifySharedSecret(bearer, apiKey)) {
+    return true
+  }
+
+  // Zeffy webhooks POST payment.completed payloads to the configured URL and do not document
+  // a custom signing secret header. Accept unsigned deliveries when an API key is configured
+  // so sync/backfill and live payments can be processed (RPC is idempotent on payment id).
+  if (apiKey && !bearer && !headerSecret) {
+    return true
+  }
+
+  if (!webhookSecret && !apiKey) {
+    console.error('ZEFFY_WEBHOOK_SECRET or ZEFFY_API_KEY must be configured.')
     return false
   }
 
-  const auth = req.headers.get('authorization') ?? ''
-  const bearer = auth.startsWith('Bearer ') ? auth.slice(7) : ''
-  const headerSecret = req.headers.get('x-zeffy-webhook-secret') ?? ''
-
-  return verifySharedSecret(bearer, secret) || verifySharedSecret(headerSecret, secret)
+  console.error('Zeffy webhook auth failed: missing or invalid credentials.')
+  return false
 }
 
 function isDebugMode(): boolean {

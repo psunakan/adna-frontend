@@ -4,6 +4,7 @@ import { ContactDrawerProvider } from '../components/ContactDrawer'
 import { TopBar, MainNav } from '../components/Header'
 import { Footer } from '../components/Footer'
 import { MemberAuthProvider } from '../lib/MemberAuthProvider'
+import { HelpScoutBeacon } from '../components/HelpScoutBeacon'
 
 export const Route = createRootRoute({
   component: RootLayout,
@@ -12,6 +13,7 @@ export const Route = createRootRoute({
 function RootLayout() {
   return (
     <MemberAuthProvider>
+      <HelpScoutBeacon />
       <ContactDrawerProvider>
         <Toaster
           position="top-center"
