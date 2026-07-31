@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { RegistrationModal } from '../components/RegistrationModal'
+import { ProgramModal } from '../components/ProgramModal'
 
 export function EventsPage() {
   const [regOpen, setRegOpen] = useState(false)
+  const [programOpen, setProgramOpen] = useState(false)
 
   const promptNotifyMe = () => {
     const email = prompt(
@@ -60,13 +62,22 @@ export function EventsPage() {
                     Join a prestigious gathering of nursing leaders and innovators to explore new
                     frontiers in global healthcare delivery.
                   </p>
-                  <button
-                    type="button"
-                    onClick={() => setRegOpen(true)}
-                    className="inline-block px-8 py-3 bg-pcna-green text-white font-bold rounded-md hover:bg-green-800 transition-all text-sm uppercase tracking-wider shadow-md hover:shadow-lg cursor-pointer"
-                  >
-                    Register
-                  </button>
+                  <div className="flex flex-wrap gap-4">
+                    <button
+                      type="button"
+                      onClick={() => setRegOpen(true)}
+                      className="inline-block px-8 py-3 bg-pcna-green text-white font-bold rounded-md hover:bg-green-800 transition-all text-sm uppercase tracking-wider shadow-md hover:shadow-lg cursor-pointer"
+                    >
+                      Register
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setProgramOpen(true)}
+                      className="inline-block px-8 py-3 border-2 border-pcna-green text-pcna-green font-bold rounded-md hover:bg-pcna-green hover:text-white transition-all text-sm uppercase tracking-wider shadow-sm hover:shadow-md cursor-pointer"
+                    >
+                      Program
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -197,6 +208,7 @@ export function EventsPage() {
       </div>
 
       <RegistrationModal open={regOpen} onClose={() => setRegOpen(false)} />
+      <ProgramModal open={programOpen} onClose={() => setProgramOpen(false)} />
     </section>
   )
 }
