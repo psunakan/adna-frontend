@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { adnaLogoUrl } from '../lib/branding'
 import {
   PROGRAM_DAYS,
   PROGRAM_EYEBROW,
@@ -110,6 +111,7 @@ export function ProgramModal({ open, onClose }: Props) {
   if (!open) return null
 
   const activeDay = PROGRAM_DAYS.find((day) => day.id === activeDayId) ?? PROGRAM_DAYS[0]
+  const logoUrl = adnaLogoUrl(window.location.origin)
 
   return (
     <div
@@ -173,7 +175,7 @@ export function ProgramModal({ open, onClose }: Props) {
           <header className="program-modal__hero">
             <div className="portal-hero__brand">
               <img
-                src="/Pictures/New adna logo.png"
+                src={logoUrl}
                 alt="African-Diaspora Nursing Alliance"
                 className="portal-hero__logo"
               />
