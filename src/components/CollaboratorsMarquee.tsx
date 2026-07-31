@@ -1,10 +1,10 @@
 import { COLLABORATOR_LOGOS } from '../data/collaborators'
 
 export function CollaboratorsMarquee() {
-  const logos = COLLABORATOR_LOGOS.flatMap((logo) => [
-    { ...logo, pass: 'a' as const },
-    { ...logo, pass: 'b' as const },
-  ])
+  const logos = [
+    ...COLLABORATOR_LOGOS.map((logo) => ({ ...logo, pass: 'a' as const })),
+    ...COLLABORATOR_LOGOS.map((logo) => ({ ...logo, pass: 'b' as const })),
+  ]
 
   return (
     <div className="overflow-hidden">
