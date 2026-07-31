@@ -20,6 +20,13 @@ export const CONTACT_EMAIL = 'info@a-dna.org'
 export const ORG_NAME = 'African-Diaspora Nursing Alliance'
 export const ORG_SHORT = 'A-DNA'
 
+/** Public asset for white-background email headers. */
+export const ADNA_LOGO_FILENAME = 'New adna logo.jpeg'
+
+export function adnaLogoUrl(siteUrl: string): string {
+  return `${siteUrl.replace(/\/$/, '')}/${encodeURIComponent(ADNA_LOGO_FILENAME)}`
+}
+
 export function escapeHtml(value: string) {
   return value
     .replaceAll('&', '&amp;')

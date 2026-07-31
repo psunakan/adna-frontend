@@ -3,6 +3,7 @@ import {
   formatVerificationDate,
   type MembershipVerification,
 } from './membershipVerification'
+import { adnaLogoUrl } from './branding'
 
 function escapeHtml(value: string): string {
   return value
@@ -36,6 +37,7 @@ function buildLetterHtml(
       line-height: 1.65;
       margin: 0;
       padding: 0;
+      background: #ffffff;
     }
     .page {
       max-width: 720px;
@@ -51,8 +53,10 @@ function buildLetterHtml(
       margin-bottom: 28px;
     }
     .header img {
-      width: 72px;
-      height: 72px;
+      width: auto;
+      max-width: 168px;
+      height: auto;
+      max-height: 80px;
       object-fit: contain;
     }
     .org-name {
@@ -115,7 +119,7 @@ function buildLetterHtml(
 <body>
   <div class="page">
     <div class="header">
-      <img src="${escapeHtml(new URL('/logo.png', origin).href)}" alt="A-DNA logo" />
+      <img src="${escapeHtml(adnaLogoUrl(origin))}" alt="A-DNA logo" />
       <div>
         <p class="org-name">African-Diaspora Nursing Alliance</p>
         <p class="org-sub">Membership Verification Letter</p>
