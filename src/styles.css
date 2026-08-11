@@ -495,7 +495,8 @@ b {
 }
 
 .searchable-select__panel--floating {
-  z-index: 100;
+  /* Keep above sticky nav (z-9999); inline style also sets this for the portal. */
+  z-index: 10050;
 }
 
 .searchable-select__search {

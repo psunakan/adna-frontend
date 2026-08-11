@@ -32,23 +32,48 @@ type Props = {
 const PANEL_GAP = 6
 const VIEWPORT_PADDING = 12
 const MIN_PANEL_HEIGHT = 160
+/** Above sticky main nav (z-9999); below mobile menu / contact overlays. */
+const PANEL_Z_INDEX = 10050
+
+function shouldAutofocusSearch() {
+  if (typeof navigator === 'undefined') return false
+  // Touch phones (and Playwright mobile emulation) report maxTouchPoints > 0.
+  return navigator.maxTouchPoints === 0
+}
+
+function getViewportHeight() {
+  return window.visualViewport?.height ?? window.innerHeight
+}
+
+function getHeaderInset() {
+  const stickyNav = document.querySelector('nav.sticky, header .sticky, .shadow-md.sticky')
+  if (!stickyNav) return VIEWPORT_PADDING
+
+  const rect = stickyNav.getBoundingClientRect()
+  if (rect.bottom <= 0) return VIEWPORT_PADDING
+
+  return Math.max(VIEWPORT_PADDING, rect.bottom + 8)
+}
 
 function getFooterInset() {
   const footer = document.querySelector('footer')
   if (!footer) return VIEWPORT_PADDING
 
+  const viewportHeight = getViewportHeight()
   const rect = footer.getBoundingClientRect()
-  if (rect.top >= window.innerHeight) return VIEWPORT_PADDING
+  if (rect.top >= viewportHeight) return VIEWPORT_PADDING
 
-  return Math.max(VIEWPORT_PADDING, window.innerHeight - rect.top + 8)
+  return Math.max(VIEWPORT_PADDING, viewportHeight - rect.top + 8)
 }
 
 function measurePanelLayout(trigger: HTMLElement, searchable: boolean): PanelLayout {
   const rect = trigger.getBoundingClientRect()
+  const viewportHeight = getViewportHeight()
+  const headerInset = getHeaderInset()
   const footerInset = getFooterInset()
   const searchHeight = searchable ? 49 : 0
-  const spaceBelow = window.innerHeight - rect.bottom - footerInset - PANEL_GAP
-  const spaceAbove = rect.top - VIEWPORT_PADDING - PANEL_GAP
+  const spaceBelow = viewportHeight - rect.bottom - footerInset - PANEL_GAP
+  const spaceAbove = rect.top - headerInset - PANEL_GAP
   const placement = spaceBelow < MIN_PANEL_HEIGHT && spaceAbove > spaceBelow ? 'above' : 'below'
   const availableSpace = placement === 'below' ? spaceBelow : spaceAbove
   const listMaxHeight = Math.max(120, availableSpace - searchHeight - 12)
@@ -57,13 +82,13 @@ function measurePanelLayout(trigger: HTMLElement, searchable: boolean): PanelLay
     position: 'fixed',
     left: rect.left,
     width: rect.width,
-    zIndex: 100,
+    zIndex: PANEL_Z_INDEX,
   }
 
   if (placement === 'below') {
     style.top = rect.bottom + PANEL_GAP
   } else {
-    style.bottom = window.innerHeight - rect.top + PANEL_GAP
+    style.bottom = viewportHeight - rect.top + PANEL_GAP
   }
 
   return { style, listMaxHeight, placement }
@@ -124,6 +149,7 @@ export function SearchableSelect({
 
   const selectOption = (nextValue: string) => {
     onChange(nextValue)
+    // Mark touched after value is set so validation sees the selection.
     close()
   }
 
@@ -132,13 +158,7 @@ export function SearchableSelect({
 
     updatePanelLayout()
 
-    const frame = window.requestAnimationFrame(() => {
-      if (searchable) {
-        searchRef.current?.focus()
-      }
-    })
-
-    const onPointerDown = (event: MouseEvent) => {
+    const onPointerDownOutside = (event: PointerEvent) => {
       const target = event.target as Node
       if (!rootRef.current?.contains(target) && !panelRef.current?.contains(target)) {
         close()
@@ -151,19 +171,32 @@ export function SearchableSelect({
 
     const onLayoutChange = () => updatePanelLayout()
 
-    document.addEventListener('mousedown', onPointerDown)
+    document.addEventListener('pointerdown', onPointerDownOutside)
     document.addEventListener('keydown', onKeyDown)
     window.addEventListener('resize', onLayoutChange)
     window.addEventListener('scroll', onLayoutChange, true)
+    window.visualViewport?.addEventListener('resize', onLayoutChange)
+    window.visualViewport?.addEventListener('scroll', onLayoutChange)
 
     return () => {
-      window.cancelAnimationFrame(frame)
-      document.removeEventListener('mousedown', onPointerDown)
+      document.removeEventListener('pointerdown', onPointerDownOutside)
       document.removeEventListener('keydown', onKeyDown)
       window.removeEventListener('resize', onLayoutChange)
       window.removeEventListener('scroll', onLayoutChange, true)
+      window.visualViewport?.removeEventListener('resize', onLayoutChange)
+      window.visualViewport?.removeEventListener('scroll', onLayoutChange)
     }
-  }, [open, close, searchable, updatePanelLayout])
+  }, [open, close, updatePanelLayout])
+
+  useEffect(() => {
+    if (!open || !panelLayout || !searchable || !shouldAutofocusSearch()) return undefined
+
+    const frame = window.requestAnimationFrame(() => {
+      searchRef.current?.focus()
+    })
+
+    return () => window.cancelAnimationFrame(frame)
+  }, [open, panelLayout, searchable])
 
   const panel =
     open && panelLayout ? (
@@ -220,6 +253,15 @@ export function SearchableSelect({
                   ]
                     .filter(Boolean)
                     .join(' ')}
+                  onPointerDown={(event) => {
+                    // Touch/pen: select immediately so the tap isn't lost when the
+                    // panel closes or the keyboard/focus changes. Mouse keeps click.
+                    if (event.pointerType !== 'touch' && event.pointerType !== 'pen') return
+                    if (event.button !== 0) return
+                    event.preventDefault()
+                    event.stopPropagation()
+                    selectOption(option.value)
+                  }}
                   onClick={() => selectOption(option.value)}
                 >
                   {option.label}
