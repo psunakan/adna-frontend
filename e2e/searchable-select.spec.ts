@@ -6,7 +6,13 @@ import {
   pickSearchableOption,
 } from './helpers/membershipForm'
 
-const { defaultBrowserType: _ignored, ...iPhoneChrome } = devices['iPhone 13']
+const iPhoneChrome = {
+  viewport: devices['iPhone 13'].viewport,
+  userAgent: devices['iPhone 13'].userAgent,
+  deviceScaleFactor: devices['iPhone 13'].deviceScaleFactor,
+  isMobile: devices['iPhone 13'].isMobile,
+  hasTouch: devices['iPhone 13'].hasTouch,
+}
 
 test.describe('SearchableSelect — desktop', () => {
   test.beforeEach(async ({ page }) => {
