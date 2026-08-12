@@ -19,12 +19,7 @@ type Props = {
   steps?: MembershipStepperStep[]
 }
 
-export function MembershipFormStepper({
-  step,
-  completed,
-  onGoToStep,
-  steps = [...STEPS],
-}: Props) {
+export function MembershipFormStepper({ step, completed, onGoToStep, steps = [...STEPS] }: Props) {
   const current = steps.find((item) => item.id === step) ?? steps[steps.length - 1]
   const progress = (step / steps.length) * 100
 

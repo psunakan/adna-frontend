@@ -391,7 +391,11 @@ export function SchemaMembershipForm({ schema }: Props) {
                         {nameFields.length > 0 ? (
                           <div className="mem-form-name-grid" style={{ marginBottom: '1rem' }}>
                             {nameFields.map((field) => (
-                              <DynamicMembershipField key={field.key} field={field} {...fieldProps} />
+                              <DynamicMembershipField
+                                key={field.key}
+                                field={field}
+                                {...fieldProps}
+                              />
                             ))}
                           </div>
                         ) : null}

@@ -11,7 +11,11 @@ import {
 export type DynamicFormValues = Record<string, unknown>
 
 export function defaultValueForField(field: MembershipFormField): unknown {
-  if (field.defaultValue !== undefined && field.defaultValue !== null && field.defaultValue !== '') {
+  if (
+    field.defaultValue !== undefined &&
+    field.defaultValue !== null &&
+    field.defaultValue !== ''
+  ) {
     return field.defaultValue
   }
   switch (field.type) {
@@ -48,9 +52,7 @@ export function reviewStepNumber(schema: MembershipFormSchema): number {
 
 export function inputSteps(schema: MembershipFormSchema): MembershipFormStep[] {
   const review = reviewStepNumber(schema)
-  return schema.steps
-    .filter((step) => step.number !== review)
-    .sort((a, b) => a.number - b.number)
+  return schema.steps.filter((step) => step.number !== review).sort((a, b) => a.number - b.number)
 }
 
 function isEmpty(value: unknown, type: MembershipFormField['type']): boolean {
@@ -188,8 +190,7 @@ export function buildZodSchema(schema: MembershipFormSchema) {
 
     const phone = typeof data.phone === 'string' ? data.phone : ''
     const phoneCode = typeof data.phoneCode === 'string' ? data.phoneCode : ''
-    const countryResidence =
-      typeof data.countryResidence === 'string' ? data.countryResidence : ''
+    const countryResidence = typeof data.countryResidence === 'string' ? data.countryResidence : ''
     if (
       phone &&
       phoneCode &&
@@ -224,7 +225,11 @@ export function getLocalMembershipFormSchema(): MembershipFormSchema {
     version: 'local',
     steps: [
       { number: 1, title: 'Personal Information', description: 'Account and contact details' },
-      { number: 2, title: 'Professional Information', description: 'Licenses and practice location' },
+      {
+        number: 2,
+        title: 'Professional Information',
+        description: 'Licenses and practice location',
+      },
       {
         number: 3,
         title: 'Professional Information Cont.',
@@ -373,12 +378,7 @@ export function getLocalMembershipFormSchema(): MembershipFormSchema {
         step: 2,
         sortOrder: 30,
         required: true,
-        options: opt([
-          'Not Applicable',
-          'Registered Nurse',
-          'Registered Midwife',
-          'Diploma Nurse',
-        ]),
+        options: opt(['Not Applicable', 'Registered Nurse', 'Registered Midwife', 'Diploma Nurse']),
         validation: { minSelections: 1 },
       },
       {

@@ -15,6 +15,7 @@ import type { DynamicFormValues } from '../../lib/membershipFormDynamic'
 import { isFieldVisible } from '../../lib/membershipFormDynamic'
 import { PasswordField } from '../form/PasswordField'
 import { SearchableSelect } from '../form/SearchableSelect'
+import { fieldInputId, fieldTestId } from './fieldIds'
 
 const COUNTRY_OPTIONS = COUNTRIES.map((country) => ({ value: country, label: country }))
 
@@ -57,43 +58,6 @@ function fieldStyle(hasError: boolean): CSSProperties {
   return hasError ? { ...inputStyle, borderColor: '#cc0000' } : inputStyle
 }
 
-export function fieldTestId(field: MembershipFormField): string {
-  const known: Record<string, string> = {
-    countryResidence: 'country-residence-select',
-    stateResidence: 'state-residence-select',
-    phoneCode: 'phone-code-select',
-    education: 'education-select',
-    countryPractice: 'country-practice-select',
-    statePractice: 'state-practice-select',
-    licenceStatus: 'licence-status-select',
-    nursingEducation: 'nursing-education-select',
-    positionTitle: 'position-title-select',
-    practiceSetting: 'practice-setting-select',
-    membershipType: 'membership-type-select',
-  }
-  return known[field.key] ?? `${kebab(field.key)}-field`
-}
-
-export function fieldInputId(field: MembershipFormField): string {
-  const known: Record<string, string> = {
-    email: 'membership-email',
-    password: 'membership-password',
-    confirmPassword: 'membership-confirm-password',
-    phone: 'membership-phone',
-    firstName: 'membership-firstName',
-    lastName: 'membership-lastName',
-    middleName: 'membership-middleName',
-  }
-  return known[field.key] ?? `membership-${kebab(field.key)}`
-}
-
-function kebab(value: string): string {
-  return value
-    .replace(/([a-z])([A-Z])/g, '$1-$2')
-    .replace(/[_\s]+/g, '-')
-    .toLowerCase()
-}
-
 type Props = {
   field: MembershipFormField
   control: Control<DynamicFormValues>
@@ -119,9 +83,7 @@ export function DynamicMembershipField({
 }: Props) {
   if (!isFieldVisible(field, values)) return null
 
-  const errorMessage = errors[field.key]?.message
-    ? String(errors[field.key]?.message)
-    : undefined
+  const errorMessage = errors[field.key]?.message ? String(errors[field.key]?.message) : undefined
   const hasError = !!errorMessage
   const testId = fieldTestId(field)
   const inputId = fieldInputId(field)
@@ -133,11 +95,7 @@ export function DynamicMembershipField({
   const label = (
     <label htmlFor={inputId} style={labelStyle}>
       {field.label}
-      {field.required ? (
-        <RequiredMark />
-      ) : (
-        <span className="mem-form-optional"> (Optional)</span>
-      )}
+      {field.required ? <RequiredMark /> : <span className="mem-form-optional"> (Optional)</span>}
     </label>
   )
 
@@ -418,9 +376,7 @@ export function DynamicMembershipField({
         type={field.type === 'email' ? 'email' : field.type === 'tel' ? 'tel' : 'text'}
         style={fieldStyle(hasError)}
         placeholder={field.placeholder || undefined}
-        autoComplete={
-          field.key === 'email' ? 'email' : field.key === 'phone' ? 'tel' : undefined
-        }
+        autoComplete={field.key === 'email' ? 'email' : field.key === 'phone' ? 'tel' : undefined}
         {...register(field.key, {
           onChange: () => {
             void trigger(field.key)

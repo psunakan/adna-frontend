@@ -1,5 +1,10 @@
 import type { MembershipFormSchema } from '../../lib/adnaMembershipApi'
-import { fieldsForStep, inputSteps, isFieldVisible, type DynamicFormValues } from '../../lib/membershipFormDynamic'
+import {
+  fieldsForStep,
+  inputSteps,
+  isFieldVisible,
+  type DynamicFormValues,
+} from '../../lib/membershipFormDynamic'
 import { phoneCodeLabelForIso } from '../../data/phoneCodeOptions'
 
 type Props = {
@@ -12,7 +17,8 @@ type Props = {
 
 function formatValue(fieldKey: string, value: unknown, values: DynamicFormValues): string {
   if (fieldKey === 'password' || fieldKey === 'confirmPassword') return '••••••••'
-  if (fieldKey === 'isStudent') return value === 'yes' ? 'Yes' : value === 'no' ? 'No' : String(value ?? '')
+  if (fieldKey === 'isStudent')
+    return value === 'yes' ? 'Yes' : value === 'no' ? 'No' : String(value ?? '')
   if (fieldKey === 'phone') {
     return [phoneCodeLabelForIso(String(values.phoneCode ?? '')), String(value ?? '')]
       .filter(Boolean)
@@ -21,7 +27,11 @@ function formatValue(fieldKey: string, value: unknown, values: DynamicFormValues
   if (fieldKey === 'showSpeciality') return ''
   if (Array.isArray(value)) {
     const items = [...value]
-    if (fieldKey === 'licences' && values.showSpeciality && String(values.licenceSpeciality ?? '').trim()) {
+    if (
+      fieldKey === 'licences' &&
+      values.showSpeciality &&
+      String(values.licenceSpeciality ?? '').trim()
+    ) {
       items.push(`Speciality: ${String(values.licenceSpeciality).trim()}`)
     }
     return items.join(', ')
@@ -93,7 +103,10 @@ export function SchemaMembershipFormReview({
         </p>
       ) : null}
 
-      <div className="mem-form-step-actions mem-form-step-actions--end" style={{ marginTop: '1.5rem' }}>
+      <div
+        className="mem-form-step-actions mem-form-step-actions--end"
+        style={{ marginTop: '1.5rem' }}
+      >
         <button
           type="submit"
           className="mem-form-btn mem-form-btn--primary"
