@@ -4,7 +4,7 @@ const STORAGE_KEY = 'adna_membership_form_draft'
 const DRAFT_VERSION = 1
 const MAX_AGE_MS = 14 * 24 * 60 * 60 * 1000
 
-export type SavedMembershipFormValues = Omit<MembershipFormValues, 'password' | 'confirmPassword'>
+export type SavedMembershipFormValues = Record<string, unknown>
 
 export type MembershipFormDraft = {
   version: number
@@ -18,26 +18,36 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
 }
 
-export function stripSensitiveFormValues(values: MembershipFormValues): SavedMembershipFormValues {
+export function stripSensitiveFormValues(
+  values: MembershipFormValues | Record<string, unknown>,
+): SavedMembershipFormValues {
   const rest = { ...values }
   delete rest.password
   delete rest.confirmPassword
   return rest
 }
 
+function asString(value: unknown): string {
+  return typeof value === 'string' ? value : ''
+}
+
+function asStringArray(value: unknown): string[] {
+  return Array.isArray(value) ? value.map(String) : []
+}
+
 export function hasResumeableDraft(draft: MembershipFormDraft): boolean {
   const { values } = draft
   return (
-    values.title !== '' ||
-    values.firstName.trim() !== '' ||
-    values.lastName.trim() !== '' ||
-    values.email.trim() !== '' ||
-    values.countryResidence !== '' ||
-    values.phone.trim() !== '' ||
-    values.isStudent !== '' ||
-    values.education !== '' ||
-    values.licences.length > 0 ||
-    values.membershipType !== '' ||
+    asString(values.title) !== '' ||
+    asString(values.firstName).trim() !== '' ||
+    asString(values.lastName).trim() !== '' ||
+    asString(values.email).trim() !== '' ||
+    asString(values.countryResidence) !== '' ||
+    asString(values.phone).trim() !== '' ||
+    asString(values.isStudent) !== '' ||
+    asString(values.education) !== '' ||
+    asStringArray(values.licences).length > 0 ||
+    asString(values.membershipType) !== '' ||
     draft.step > 1 ||
     draft.completed.length > 0
   )

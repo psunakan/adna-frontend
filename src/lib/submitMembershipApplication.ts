@@ -4,6 +4,8 @@ import { isSupabaseConfigured, supabase } from './supabase'
 import { createMembershipCheckout } from './membershipCheckout'
 import { buildZeffyCheckoutUrl } from './zeffyCheckout'
 import { MEMBERSHIP_TYPE_IDS, type MemberInsert, type MembershipType } from '../types/database'
+import { isAdnaApiConfigured, registerMemberViaAdnaApi } from './adnaMembershipApi'
+import type { DynamicFormValues } from './membershipFormDynamic'
 
 export class DuplicateMemberEmailError extends Error {
   constructor() {
@@ -82,6 +84,79 @@ function toMemberInsert(data: MembershipFormData): MemberInsert {
 export type MembershipCheckoutResult = {
   checkoutToken: string
   zeffyUrl: string
+}
+
+function asString(value: unknown): string {
+  return typeof value === 'string' ? value : ''
+}
+
+function asStringArray(value: unknown): string[] {
+  return Array.isArray(value) ? value.map(String) : []
+}
+
+/** Submit from dynamic form values (WordPress API when configured, else Supabase). */
+export async function submitMembershipApplicationFromValues(
+  values: DynamicFormValues,
+): Promise<MembershipCheckoutResult> {
+  const membershipType = asString(values.membershipType)
+  if (membershipType !== 'diaspora' && membershipType !== 'premium') {
+    throw new Error('Please select a paid membership type.')
+  }
+
+  if (isAdnaApiConfigured) {
+    try {
+      const result = await registerMemberViaAdnaApi(values)
+      const checkoutUrl =
+        result.checkout_url ||
+        buildZeffyCheckoutUrl({
+          tier: membershipType,
+          email: result.member.email,
+          first_name: result.member.first_name,
+          last_name: result.member.last_name,
+        })
+
+      return {
+        checkoutToken: result.checkout_token,
+        zeffyUrl: checkoutUrl,
+      }
+    } catch (error) {
+      const err = error as Error & { code?: string; status?: number }
+      if (
+        err.status === 409 ||
+        err.code === 'email_exists' ||
+        /already exists/i.test(err.message)
+      ) {
+        throw new DuplicateMemberEmailError()
+      }
+      throw error
+    }
+  }
+
+  return submitMembershipApplication({
+    title: asString(values.title),
+    first_name: asString(values.firstName),
+    middle_name: asString(values.middleName) || null,
+    last_name: asString(values.lastName),
+    country_residence: asString(values.countryResidence),
+    state_residence: asString(values.stateResidence),
+    phone_code: asString(values.phoneCode),
+    phone: asString(values.phone),
+    email: asString(values.email),
+    password: asString(values.password),
+    is_student: asString(values.isStudent) === 'yes',
+    education: asString(values.education),
+    licences: asStringArray(values.licences),
+    licence_speciality: asString(values.licenceSpeciality) || null,
+    country_practice: asString(values.countryPractice),
+    state_practice: asString(values.statePractice),
+    licence_status: asString(values.licenceStatus),
+    nursing_education: asString(values.nursingEducation),
+    employment_status: asString(values.employmentStatus),
+    specialties: asStringArray(values.specialties),
+    position_title: asString(values.positionTitle),
+    practice_setting: asString(values.practiceSetting),
+    membership_type: membershipType,
+  })
 }
 
 export async function submitMembershipApplication(
