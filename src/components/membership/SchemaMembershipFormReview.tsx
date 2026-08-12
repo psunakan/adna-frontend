@@ -1,4 +1,4 @@
-import type { MembershipFormSchema } from '../../lib/adnaMembershipApi'
+import type { MembershipFormField, MembershipFormSchema } from '../../lib/adnaMembershipApi'
 import {
   fieldsForStep,
   inputSteps,
@@ -15,20 +15,58 @@ type Props = {
   submitting: boolean
 }
 
-function formatValue(fieldKey: string, value: unknown, values: DynamicFormValues): string {
-  if (fieldKey === 'password' || fieldKey === 'confirmPassword') return '••••••••'
-  if (fieldKey === 'isStudent')
+type ReviewRow = { label: string; value: string }
+
+const NAME_KEYS = new Set(['title', 'firstName', 'middleName', 'lastName'])
+const SKIP_KEYS = new Set(['confirmPassword', 'showSpeciality', 'phoneCode', 'licenceSpeciality'])
+
+function optionLabel(field: MembershipFormField, value: unknown): string {
+  if (value == null || value === '') return ''
+  const match = field.options?.find((option) => option.value === String(value))
+  return match?.label ?? String(value)
+}
+
+function formatName(values: DynamicFormValues): string {
+  const title = String(values.title ?? '')
+  return [
+    title === 'Dr' ? 'Dr.' : title,
+    String(values.firstName ?? '').trim(),
+    String(values.middleName ?? '').trim(),
+    String(values.lastName ?? '').trim(),
+  ]
+    .filter(Boolean)
+    .join(' ')
+}
+
+function formatValue(
+  field: MembershipFormField,
+  value: unknown,
+  values: DynamicFormValues,
+): string {
+  if (field.key === 'password' || field.key === 'confirmPassword') return '••••••••'
+  if (field.key === 'isStudent')
     return value === 'yes' ? 'Yes' : value === 'no' ? 'No' : String(value ?? '')
-  if (fieldKey === 'phone') {
+  if (field.key === 'phone') {
     return [phoneCodeLabelForIso(String(values.phoneCode ?? '')), String(value ?? '')]
       .filter(Boolean)
       .join(' · ')
   }
-  if (fieldKey === 'showSpeciality') return ''
+  if (
+    field.type === 'membership_type' ||
+    field.type === 'select' ||
+    field.type === 'searchable_select' ||
+    field.type === 'radio' ||
+    field.type === 'yes_no'
+  ) {
+    return optionLabel(field, value)
+  }
   if (Array.isArray(value)) {
-    const items = [...value]
+    const items = value.map((item) => {
+      const match = field.options?.find((option) => option.value === String(item))
+      return match?.label ?? String(item)
+    })
     if (
-      fieldKey === 'licences' &&
+      field.key === 'licences' &&
       values.showSpeciality &&
       String(values.licenceSpeciality ?? '').trim()
     ) {
@@ -38,6 +76,56 @@ function formatValue(fieldKey: string, value: unknown, values: DynamicFormValues
   }
   if (typeof value === 'boolean') return value ? 'Yes' : 'No'
   return String(value ?? '')
+}
+
+function buildRows(fields: MembershipFormField[], values: DynamicFormValues): ReviewRow[] {
+  const visible = fields
+    .filter((field) => isFieldVisible(field, values))
+    .filter((field) => !SKIP_KEYS.has(field.key))
+
+  const used = new Set<string>()
+  const rows: ReviewRow[] = []
+
+  const nameFields = visible.filter((field) => NAME_KEYS.has(field.key))
+  if (nameFields.length > 0) {
+    const name = formatName(values)
+    if (name) rows.push({ label: 'Name', value: name })
+    nameFields.forEach((field) => used.add(field.key))
+  }
+
+  for (const field of visible) {
+    if (used.has(field.key)) continue
+
+    if (field.type === 'country') {
+      const stateField = visible.find(
+        (candidate) =>
+          candidate.type === 'state' &&
+          (candidate.config?.countryField ?? 'countryResidence') === field.key,
+      )
+      const country = String(values[field.key] ?? '').trim()
+      const state = stateField ? String(values[stateField.key] ?? '').trim() : ''
+      const combined = [country, state].filter(Boolean).join(', ')
+      if (combined) {
+        rows.push({ label: field.label, value: combined })
+      }
+      used.add(field.key)
+      if (stateField) used.add(stateField.key)
+      continue
+    }
+
+    if (field.type === 'state') {
+      // Paired with its country field above when present.
+      const countryKey = field.config?.countryField ?? 'countryResidence'
+      if (visible.some((candidate) => candidate.key === countryKey)) continue
+    }
+
+    const value = formatValue(field, values[field.key], values)
+    if (value === '') continue
+    rows.push({ label: field.label, value })
+    used.add(field.key)
+  }
+
+  return rows
 }
 
 export function SchemaMembershipFormReview({
@@ -60,16 +148,7 @@ export function SchemaMembershipFormReview({
 
       <div className="mem-form-review__sections">
         {steps.map((step) => {
-          const rows = fieldsForStep(schema, step.number)
-            .filter((field) => isFieldVisible(field, values))
-            .filter((field) => field.key !== 'confirmPassword' && field.key !== 'showSpeciality')
-            .filter((field) => field.key !== 'phoneCode')
-            .filter((field) => field.key !== 'licenceSpeciality')
-            .map((field) => ({
-              label: field.label,
-              value: formatValue(field.key, values[field.key], values),
-            }))
-            .filter((row) => row.value !== '')
+          const rows = buildRows(fieldsForStep(schema, step.number), values)
 
           return (
             <section key={step.number} className="mem-form-review__section">

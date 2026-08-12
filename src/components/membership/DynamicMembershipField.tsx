@@ -68,6 +68,9 @@ type Props = {
   errors: FieldErrors<DynamicFormValues>
   values: DynamicFormValues
   onCountryChange?: (fieldKey: string, country: string) => void
+  /** When true, treat the email field as having a duplicate-email error state. */
+  emailHasDuplicateError?: boolean
+  onEmailChange?: () => void
 }
 
 export function DynamicMembershipField({
@@ -80,11 +83,13 @@ export function DynamicMembershipField({
   errors,
   values,
   onCountryChange,
+  emailHasDuplicateError = false,
+  onEmailChange,
 }: Props) {
   if (!isFieldVisible(field, values)) return null
 
   const errorMessage = errors[field.key]?.message ? String(errors[field.key]?.message) : undefined
-  const hasError = !!errorMessage
+  const hasError = !!errorMessage || (field.key === 'email' && emailHasDuplicateError)
   const testId = fieldTestId(field)
   const inputId = fieldInputId(field)
   const options = (field.options ?? []).map((option) => ({
@@ -379,6 +384,7 @@ export function DynamicMembershipField({
         autoComplete={field.key === 'email' ? 'email' : field.key === 'phone' ? 'tel' : undefined}
         {...register(field.key, {
           onChange: () => {
+            if (field.key === 'email') onEmailChange?.()
             void trigger(field.key)
           },
         })}

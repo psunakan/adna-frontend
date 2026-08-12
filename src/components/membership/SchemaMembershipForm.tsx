@@ -50,19 +50,29 @@ function DuplicateEmailAlert({ email }: { email: string }) {
         lineHeight: 1.6,
       }}
     >
-      An account with this email already exists.{' '}
-      <Link to={PORTAL_LOGIN_PATH} style={{ color: '#991b1b', fontWeight: 600 }}>
-        Sign in
-      </Link>{' '}
-      or{' '}
-      <Link
-        to={PORTAL_FORGOT_PASSWORD_PATH}
-        search={forgotPasswordSearch}
-        style={{ color: '#991b1b', fontWeight: 600 }}
-      >
-        reset your password
-      </Link>
-      .
+      <p style={{ margin: 0 }}>
+        An account with this email already exists. Please{' '}
+        <Link
+          to={PORTAL_LOGIN_PATH}
+          style={{ color: '#0D3D2B', fontWeight: 700, textDecoration: 'underline' }}
+        >
+          sign in to the Member Portal
+        </Link>
+        {forgotPasswordSearch ? (
+          <>
+            {' '}
+            or{' '}
+            <Link
+              to={PORTAL_FORGOT_PASSWORD_PATH}
+              search={forgotPasswordSearch}
+              style={{ color: '#0D3D2B', fontWeight: 700, textDecoration: 'underline' }}
+            >
+              reset your password
+            </Link>
+          </>
+        ) : null}{' '}
+        if you forgot it, or use a different email address to register.
+      </p>
     </div>
   )
 }
@@ -391,6 +401,8 @@ export function SchemaMembershipForm({ schema }: Props) {
                     errors,
                     values: formValues,
                     onCountryChange,
+                    emailHasDuplicateError: duplicateEmail,
+                    onEmailChange: () => setDuplicateEmail(false),
                   }
 
                   return (
