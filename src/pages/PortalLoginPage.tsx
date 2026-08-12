@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import toast from 'react-hot-toast'
 import { loginSchema, type LoginFormValues } from '../lib/loginSchema'
-import { useMemberAuth } from '../lib/MemberAuthProvider'
+import { useMemberAuth } from '../lib/memberAuthContext'
 import { PORTAL_FORGOT_PASSWORD_PATH, PORTAL_PATH } from '../lib/memberAuth'
 import { PasswordField } from '../components/form/PasswordField'
 

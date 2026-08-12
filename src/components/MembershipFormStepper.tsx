@@ -6,26 +6,29 @@ const STEPS = [
   { id: 5, label: 'Review & Submit', short: 'Review' },
 ] as const
 
+export type MembershipStepperStep = {
+  id: number
+  label: string
+  short: string
+}
+
 type Props = {
   step: number
   completed: number[]
   onGoToStep: (step: number) => void
+  steps?: MembershipStepperStep[]
 }
 
-export function MembershipFormStepper({ step, completed, onGoToStep }: Props) {
-  const current = STEPS[step - 1] ?? STEPS[STEPS.length - 1]
-  const progress = (step / STEPS.length) * 100
+export function MembershipFormStepper({ step, completed, onGoToStep, steps = [...STEPS] }: Props) {
+  const current = steps.find((item) => item.id === step) ?? steps[steps.length - 1]
+  const progress = (step / steps.length) * 100
 
   return (
     <div className="mem-form-stepper" aria-label="Registration progress">
       <div className="mem-form-stepper__head">
         <div className="mem-form-stepper__intro">
           <p className="mem-form-stepper__kicker">Membership application</p>
-          <h3 className="mem-form-stepper__title">{current.label}</h3>
-        </div>
-        <div className="mem-form-stepper__status" aria-hidden="true">
-          <span className="mem-form-stepper__status-value">{Math.round(progress)}%</span>
-          <span className="mem-form-stepper__status-label">complete</span>
+          <h3 className="mem-form-stepper__title">{current?.label}</h3>
         </div>
       </div>
 
@@ -34,15 +37,15 @@ export function MembershipFormStepper({ step, completed, onGoToStep }: Props) {
         role="progressbar"
         aria-valuenow={step}
         aria-valuemin={1}
-        aria-valuemax={STEPS.length}
-        aria-label={`${current.label}, ${Math.round(progress)}% complete`}
+        aria-valuemax={steps.length}
+        aria-label={current?.label}
       >
         <div className="mem-form-stepper__bar-fill" style={{ width: `${progress}%` }} />
       </div>
 
       <nav className="mem-form-stepper__nav" aria-label="Form sections">
         <ol className="mem-form-stepper__segments">
-          {STEPS.map(({ id, label, short }) => {
+          {steps.map(({ id, label, short }) => {
             const isActive = step === id
             const isDone = id < step || completed.includes(id)
             const isClickable = isActive || id < step

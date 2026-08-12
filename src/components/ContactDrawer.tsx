@@ -1,9 +1,6 @@
-import { createContext, useContext, useState, type ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import { SocialLinks } from './SocialLinks'
-
-const ContactDrawerContext = createContext<{ open: () => void }>({ open: () => {} })
-
-export const useContactDrawer = () => useContext(ContactDrawerContext)
+import { ContactDrawerContext } from './contactDrawerContext'
 
 export function ContactDrawerProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false)

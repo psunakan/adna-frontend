@@ -1,12 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from 'react'
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 import {
   clearStoredSession,
   fetchMemberProfile,
@@ -19,19 +11,7 @@ import {
   type MembershipRefreshResult,
   type MemberSession,
 } from './memberAuth'
-
-type MemberAuthContextValue = {
-  session: MemberSession | null
-  profile: MemberProfile | null
-  isAuthenticated: boolean
-  isLoading: boolean
-  login: (email: string, password: string) => Promise<void>
-  logout: () => Promise<void>
-  refreshProfile: () => Promise<MemberProfile | null>
-  refreshMembershipStatus: () => Promise<MembershipRefreshResult | null>
-}
-
-const MemberAuthContext = createContext<MemberAuthContextValue | null>(null)
+import { MemberAuthContext } from './memberAuthContext'
 
 const PROFILE_FETCH_TIMEOUT_MS = 10_000
 
@@ -203,12 +183,4 @@ export function MemberAuthProvider({ children }: { children: ReactNode }) {
   )
 
   return <MemberAuthContext.Provider value={value}>{children}</MemberAuthContext.Provider>
-}
-
-export function useMemberAuth() {
-  const context = useContext(MemberAuthContext)
-  if (!context) {
-    throw new Error('useMemberAuth must be used within MemberAuthProvider')
-  }
-  return context
 }
