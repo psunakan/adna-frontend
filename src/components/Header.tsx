@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from '@tanstack/react-router'
-import { MailIcon, PhoneIcon, useContactDrawer } from './ContactDrawer'
+import { MailIcon, PhoneIcon } from './ContactDrawer'
+import { useContactDrawer } from './contactDrawerContext'
 import { MemberProfileButton } from './MemberProfileButton'
-import { useMemberAuth } from '../lib/MemberAuthProvider'
+import { useMemberAuth } from '../lib/memberAuthContext'
 
 const NAV_LINKS = [
   { to: '/', label: 'Home' },

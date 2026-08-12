@@ -25,7 +25,17 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+      // React Hook Form's `watch()` is incompatible with React Compiler memoization; expected.
+      'react-hooks/incompatible-library': 'off',
+      // Fail CI when component files also export hooks/helpers (breaks Fast Refresh).
+      'react-refresh/only-export-components': [
+        'error',
+        {
+          allowConstantExport: true,
+          // TanStack Router file routes export `Route` alongside page components.
+          allowExportNames: ['Route'],
+        },
+      ],
     },
   },
   {

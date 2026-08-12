@@ -4,7 +4,7 @@ import toast from 'react-hot-toast'
 import { MembershipUpgradeSection } from '../components/MembershipUpgradeSection'
 import { MembershipLetterCard } from '../components/MembershipLetterCard'
 import { MemberNameWithBadge } from '../components/MembershipBadge'
-import { useMemberAuth } from '../lib/MemberAuthProvider'
+import { useMemberAuth } from '../lib/memberAuthContext'
 import { PORTAL_LOGIN_PATH } from '../lib/memberAuth'
 import { normalizeMembershipTier } from '../lib/membershipTier'
 

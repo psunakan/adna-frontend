@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { MembershipBadge } from './MembershipBadge'
-import { useMemberAuth } from '../lib/MemberAuthProvider'
+import { useMemberAuth } from '../lib/memberAuthContext'
 import { getMemberInitials } from '../lib/memberInitials'
 import { PORTAL_LOGIN_PATH, PORTAL_PATH } from '../lib/memberAuth'
 import { normalizeMembershipTier } from '../lib/membershipTier'
