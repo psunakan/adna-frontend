@@ -1,7 +1,19 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import type { MembershipFormSchema } from '../lib/adnaMembershipApi'
 import { loadMembershipFormSchema } from '../lib/membershipFormDynamic'
 import { SchemaMembershipForm } from './membership/SchemaMembershipForm'
+
+function MembershipFormShell({ children }: { children: ReactNode }) {
+  return (
+    <div
+      id="membership-form"
+      className="mem-pad mem-form-section"
+      style={{ background: '#f9fafb', paddingTop: '2rem' }}
+    >
+      <div className="mem-inner">{children}</div>
+    </div>
+  )
+}
 
 /**
  * Membership registration form.
@@ -30,25 +42,25 @@ export function MembershipForm() {
 
   if (error) {
     return (
-      <div id="membership-form" className="mem-pad mem-form-section" style={{ paddingTop: '2rem' }}>
-        <div className="mem-inner">
-          <p role="alert" style={{ color: '#cc0000' }}>
-            {error}
-          </p>
-        </div>
-      </div>
+      <MembershipFormShell>
+        <p role="alert" style={{ color: '#cc0000' }}>
+          {error}
+        </p>
+      </MembershipFormShell>
     )
   }
 
   if (!schema) {
     return (
-      <div id="membership-form" className="mem-pad mem-form-section" style={{ paddingTop: '2rem' }}>
-        <div className="mem-inner">
-          <p style={{ color: '#6b7280' }}>Loading membership form…</p>
-        </div>
-      </div>
+      <MembershipFormShell>
+        <p style={{ color: '#6b7280' }}>Loading membership form…</p>
+      </MembershipFormShell>
     )
   }
 
-  return <SchemaMembershipForm schema={schema} />
+  return (
+    <MembershipFormShell>
+      <SchemaMembershipForm schema={schema} />
+    </MembershipFormShell>
+  )
 }

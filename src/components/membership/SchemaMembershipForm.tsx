@@ -300,178 +300,180 @@ export function SchemaMembershipForm({ schema }: Props) {
   const currentStepMeta = schema.steps.find((item) => item.number === step)
   const visibleFields = fieldsForStep(schema, step)
 
+  const stepperSteps = schema.steps.map((item) => {
+    const defaults: Record<number, { label: string; short: string }> = {
+      1: { label: 'Personal Info', short: 'Personal' },
+      2: { label: 'Professional', short: 'Professional' },
+      3: { label: 'Experience', short: 'Experience' },
+      4: { label: 'Membership', short: 'Membership' },
+      5: { label: 'Review & Submit', short: 'Review' },
+    }
+    const fallback = defaults[item.number]
+    return {
+      id: item.number,
+      label: fallback?.label ?? item.title,
+      short: fallback?.short ?? item.title.split(' ')[0] ?? item.title,
+    }
+  })
+
   return (
-    <div
-      id="membership-form"
-      className="mem-pad mem-form-section"
-      style={{ background: '#f9fafb', paddingTop: '2rem' }}
-    >
-      <div className="mem-inner">
-        <div className="mem-form-intro">
-          <h2 className="font-heading mem-form-intro__title">Register</h2>
-          <p className="mem-form-intro__subtitle">
-            Fill in your membership application below. Your progress is saved automatically on this
-            device so you can resume later.
-          </p>
-        </div>
-
-        <div className="mem-form-card">
-          {resumedAt ? (
-            <div className="mem-form-progress-banner" data-testid="membership-form-resume-banner">
-              <div>
-                <p className="mem-form-progress-banner__title">Application restored</p>
-                <p className="mem-form-progress-banner__copy">
-                  We picked up where you left off from {formatDraftSavedAt(resumedAt)}. Passwords
-                  are not stored. Re-enter them on step 1 before submitting.
-                </p>
-              </div>
-              <button
-                type="button"
-                className="mem-form-progress-banner__reset"
-                data-testid="membership-form-start-over"
-                onClick={startOver}
-              >
-                Start over
-              </button>
-            </div>
-          ) : null}
-
-          <MembershipFormStepper
-            step={step}
-            completed={completed}
-            onGoToStep={goToStep}
-            steps={schema.steps.map((item) => ({
-              id: item.number,
-              label: item.title.replace(/\s+Cont\.$/, ''),
-              short: item.title.split(' ')[0] ?? item.title,
-            }))}
-          />
-
-          <form onSubmit={handleSubmit(onSubmit, onInvalid)} noValidate className="mem-form-body">
-            {step !== reviewStep && (
-              <div className="form-step">
-                <h3
-                  style={{
-                    fontSize: '1.2rem',
-                    fontWeight: 700,
-                    color: '#0D3D2B',
-                    marginBottom: '0.25rem',
-                  }}
-                >
-                  {currentStepMeta?.title ?? `Step ${step}`}
-                </h3>
-                {currentStepMeta?.description ? (
-                  <p style={{ fontSize: '0.85rem', color: '#6b7280', marginBottom: '1.5rem' }}>
-                    {currentStepMeta.description}
-                  </p>
-                ) : (
-                  <p style={{ fontSize: '0.85rem', color: '#6b7280', marginBottom: '1.5rem' }}>
-                    Fields marked <span style={{ color: '#cc0000' }}>*</span> are required.
-                  </p>
-                )}
-
-                <div className="mem-form-fields">
-                  {(() => {
-                    const nameKeys = new Set(['firstName', 'middleName', 'lastName'])
-                    const nameFields = visibleFields.filter((field) => nameKeys.has(field.key))
-                    const otherFields = visibleFields.filter((field) => !nameKeys.has(field.key))
-                    const fieldProps = {
-                      control,
-                      register,
-                      trigger,
-                      setValue,
-                      watch,
-                      errors,
-                      values: formValues,
-                      onCountryChange,
-                    }
-
-                    return (
-                      <>
-                        {nameFields.length > 0 ? (
-                          <div className="mem-form-name-grid" style={{ marginBottom: '1rem' }}>
-                            {nameFields.map((field) => (
-                              <DynamicMembershipField
-                                key={field.key}
-                                field={field}
-                                {...fieldProps}
-                              />
-                            ))}
-                          </div>
-                        ) : null}
-                        {otherFields.map((field) => (
-                          <DynamicMembershipField key={field.key} field={field} {...fieldProps} />
-                        ))}
-                      </>
-                    )
-                  })()}
-                </div>
-
-                {step === 1 && duplicateEmail ? (
-                  <DuplicateEmailAlert email={duplicateEmailValue} />
-                ) : null}
-
-                {step === 4 ? (
-                  <p style={{ fontSize: '0.8rem', color: '#6b7280', marginTop: '0.5rem' }}>
-                    Ghana/Africa members may qualify for local pricing (300 GHS / 600 GHS).
-                  </p>
-                ) : null}
-
-                <div
-                  className={`mem-form-step-actions${editingFromReview ? ' mem-form-step-actions--end' : ''}`}
-                >
-                  {!editingFromReview && step > 1 && (
-                    <button
-                      type="button"
-                      className="mem-form-btn mem-form-btn--secondary"
-                      onClick={() => prev(step)}
-                    >
-                      &larr; Previous
-                    </button>
-                  )}
-                  {editingFromReview ? (
-                    <button
-                      type="button"
-                      className="mem-form-btn mem-form-btn--primary"
-                      data-testid="edit-section-done"
-                      onClick={() => finishEditing(step)}
-                    >
-                      Done
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      className="mem-form-btn mem-form-btn--primary"
-                      data-testid={
-                        step === steps[steps.length - 1]?.number
-                          ? 'membership-form-go-review'
-                          : undefined
-                      }
-                      onClick={() => next(step)}
-                    >
-                      {step === steps[steps.length - 1]?.number ? 'Review →' : 'Next →'}
-                    </button>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {step === reviewStep && (
-              <SchemaMembershipFormReview
-                schema={schema}
-                values={formValues}
-                onEdit={(target) => {
-                  setEditingFromReview(true)
-                  setStep(target)
-                  scrollToForm()
-                }}
-                submitError={submitError}
-                submitting={submitting}
-              />
-            )}
-          </form>
-        </div>
+    <>
+      <div className="mem-form-intro">
+        <h2 className="font-heading mem-form-intro__title">Register</h2>
+        <p className="mem-form-intro__subtitle">
+          Fill in your membership application below. Your progress is saved automatically on this
+          device so you can resume later.
+        </p>
       </div>
-    </div>
+
+      <div className="mem-form-card">
+        {resumedAt ? (
+          <div className="mem-form-progress-banner" data-testid="membership-form-resume-banner">
+            <div>
+              <p className="mem-form-progress-banner__title">Application restored</p>
+              <p className="mem-form-progress-banner__copy">
+                We picked up where you left off from {formatDraftSavedAt(resumedAt)}. Passwords are
+                not stored. Re-enter them on step 1 before submitting.
+              </p>
+            </div>
+            <button
+              type="button"
+              className="mem-form-progress-banner__reset"
+              data-testid="membership-form-start-over"
+              onClick={startOver}
+            >
+              Start over
+            </button>
+          </div>
+        ) : null}
+
+        <MembershipFormStepper
+          step={step}
+          completed={completed}
+          onGoToStep={goToStep}
+          steps={stepperSteps}
+        />
+
+        <form onSubmit={handleSubmit(onSubmit, onInvalid)} noValidate className="mem-form-body">
+          {step !== reviewStep && (
+            <div className="form-step">
+              <h3
+                style={{
+                  fontSize: '1.2rem',
+                  fontWeight: 700,
+                  color: '#0D3D2B',
+                  marginBottom: '0.25rem',
+                }}
+              >
+                {currentStepMeta?.title ?? `Step ${step}`}
+              </h3>
+              {currentStepMeta?.description ? (
+                <p style={{ fontSize: '0.85rem', color: '#6b7280', marginBottom: '1.5rem' }}>
+                  {currentStepMeta.description}
+                </p>
+              ) : (
+                <p style={{ fontSize: '0.85rem', color: '#6b7280', marginBottom: '1.5rem' }}>
+                  Fields marked <span style={{ color: '#cc0000' }}>*</span> are required.
+                </p>
+              )}
+
+              <div className="mem-form-fields">
+                {(() => {
+                  const nameKeys = new Set(['firstName', 'middleName', 'lastName'])
+                  const nameFields = visibleFields.filter((field) => nameKeys.has(field.key))
+                  const otherFields = visibleFields.filter((field) => !nameKeys.has(field.key))
+                  const fieldProps = {
+                    control,
+                    register,
+                    trigger,
+                    setValue,
+                    watch,
+                    errors,
+                    values: formValues,
+                    onCountryChange,
+                  }
+
+                  return (
+                    <>
+                      {nameFields.length > 0 ? (
+                        <div className="mem-form-name-grid" style={{ marginBottom: '1rem' }}>
+                          {nameFields.map((field) => (
+                            <DynamicMembershipField key={field.key} field={field} {...fieldProps} />
+                          ))}
+                        </div>
+                      ) : null}
+                      {otherFields.map((field) => (
+                        <DynamicMembershipField key={field.key} field={field} {...fieldProps} />
+                      ))}
+                    </>
+                  )
+                })()}
+              </div>
+
+              {step === 1 && duplicateEmail ? (
+                <DuplicateEmailAlert email={duplicateEmailValue} />
+              ) : null}
+
+              {step === 4 ? (
+                <p style={{ fontSize: '0.8rem', color: '#6b7280', marginTop: '0.5rem' }}>
+                  Ghana/Africa members may qualify for local pricing (300 GHS / 600 GHS).
+                </p>
+              ) : null}
+
+              <div
+                className={`mem-form-step-actions${editingFromReview ? ' mem-form-step-actions--end' : ''}`}
+              >
+                {!editingFromReview && step > 1 && (
+                  <button
+                    type="button"
+                    className="mem-form-btn mem-form-btn--secondary"
+                    onClick={() => prev(step)}
+                  >
+                    &larr; Previous
+                  </button>
+                )}
+                {editingFromReview ? (
+                  <button
+                    type="button"
+                    className="mem-form-btn mem-form-btn--primary"
+                    data-testid="edit-section-done"
+                    onClick={() => finishEditing(step)}
+                  >
+                    Done
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="mem-form-btn mem-form-btn--primary"
+                    data-testid={
+                      step === steps[steps.length - 1]?.number
+                        ? 'membership-form-go-review'
+                        : undefined
+                    }
+                    onClick={() => next(step)}
+                  >
+                    {step === steps[steps.length - 1]?.number ? 'Review →' : 'Next →'}
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+
+          {step === reviewStep && (
+            <SchemaMembershipFormReview
+              schema={schema}
+              values={formValues}
+              onEdit={(target) => {
+                setEditingFromReview(true)
+                setStep(target)
+                scrollToForm()
+              }}
+              submitError={submitError}
+              submitting={submitting}
+            />
+          )}
+        </form>
+      </div>
+    </>
   )
 }

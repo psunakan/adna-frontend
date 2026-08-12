@@ -103,9 +103,19 @@ export function buildZodSchema(schema: MembershipFormSchema) {
         (field.key === 'licenceSpeciality' && conditionMet(data.showSpeciality, true))
 
       if (required && isEmpty(value, field.type)) {
+        const selectionTypes = new Set([
+          'select',
+          'searchable_select',
+          'radio',
+          'yes_no',
+          'membership_type',
+        ])
+        const message = selectionTypes.has(field.type)
+          ? `Please select a ${field.label.toLowerCase()}.`
+          : `${field.label} is required.`
         ctx.addIssue({
           code: 'custom',
-          message: `${field.label} is required.`,
+          message,
           path: [field.key],
         })
         continue

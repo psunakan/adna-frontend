@@ -13,12 +13,17 @@ import {
 test.describe('Membership form', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/membership')
+    await expect(
+      page.locator('#membership-form').getByRole('heading', { name: 'Register' }),
+    ).toBeVisible()
     await page.locator('#membership-form').scrollIntoViewIfNeeded()
   })
 
   test('shows registration form on step 1', async ({ page }) => {
     await expect(page.getByRole('heading', { name: 'Register' })).toBeVisible()
-    await expect(page.getByText('Personal Information')).toBeVisible()
+    await expect(
+      page.locator('#membership-form form').getByRole('heading', { name: 'Personal Information' }),
+    ).toBeVisible()
   })
 
   test('validates required fields on step 1', async ({ page }) => {
