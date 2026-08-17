@@ -12,7 +12,7 @@ type Props = {
   onClose: () => void
 }
 
-const AGENDA_URL = 'https://a-dna.org/events/agenda'
+const AGENDA_URL = 'https://a-dna.org/events/ADNA26Agenda'
 const AGENDA_PDF_URL = '/agenda.pdf'
 
 export function ProgramModal({ open, onClose }: Props) {
@@ -34,11 +34,9 @@ export function ProgramModal({ open, onClose }: Props) {
     return () => mql.removeEventListener('change', handleChange)
   }, [])
 
-  useEffect(() => {
-    return () => {
+  useEffect(() => () => {
       if (copyResetTimer.current) clearTimeout(copyResetTimer.current)
-    }
-  }, [])
+    }, [])
 
   if (!open) return null
 
@@ -241,16 +239,22 @@ export function ProgramModal({ open, onClose }: Props) {
           )}
 
           <div
-            className="program-modal__pdf"
+            className="program-modal__pdf w-full"
             style={{
               height: isMobile ? 'calc(90vh - 60px)' : '75vh',
               minHeight: isMobile ? 320 : 400,
+              width: '100%',
+              maxWidth: '100%',
+              boxSizing: 'border-box',
+              overflowX: 'auto',
+              WebkitOverflowScrolling: 'touch',
             }}
           >
             <iframe
               src={AGENDA_PDF_URL}
               title="ADNA26 Conference Agenda PDF"
-              style={{ width: '100%', height: '100%', border: 'none' }}
+              className="w-full"
+              style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
             />
           </div>
         </div>

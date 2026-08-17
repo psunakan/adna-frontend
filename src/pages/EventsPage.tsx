@@ -7,9 +7,9 @@ export function EventsPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const [regOpen, setRegOpen] = useState(false)
-  const programOpen = location.pathname === '/events/agenda'
+  const programOpen = location.pathname === '/events/ADNA26Agenda'
 
-  const openProgram = () => navigate({ to: '/events/agenda' })
+  const openProgram = () => navigate({ to: '/events/ADNA26Agenda' })
   const closeProgram = () => navigate({ to: '/events' })
 
   const promptNotifyMe = () => {
@@ -23,11 +23,11 @@ export function EventsPage() {
 
   return (
     <section id="events">
-      <div className="py-20 bg-pcna-light">
+      <div className="py-6 sm:py-12 lg:py-20 bg-pcna-light">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
+          <div className="text-center mb-6 sm:mb-10 lg:mb-16">
             <h2
-              className="font-heading text-4xl sm:text-5xl md:text-6xl font-black tracking-widest uppercase mb-4"
+              className="font-heading text-2xl sm:text-4xl md:text-6xl font-black tracking-widest uppercase mb-4"
               style={{ color: '#0a3d2e' }}
             >
               Upcoming Events &amp; Summits
@@ -50,9 +50,9 @@ export function EventsPage() {
                   />
                 </div>
                 <div className="p-8">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="w-16 h-16 bg-pcna-light rounded-lg flex flex-col items-center justify-center border border-pcna-green/20 shadow-sm">
-                      <span className="text-pcna-green font-bold text-xl leading-none">21-22</span>
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="flex-shrink-0 h-auto w-auto px-3.5 py-2.5 bg-pcna-light rounded-xl flex flex-col items-center justify-center border border-pcna-green/20 shadow-sm self-center">
+                      <span className="text-pcna-green font-bold text-xl leading-none whitespace-nowrap">21-22</span>
                       <span className="text-pcna-green text-xs font-bold uppercase mt-1">AUG</span>
                     </div>
                     <div>
@@ -101,8 +101,8 @@ export function EventsPage() {
                   </div>
                 </div>
                 <div className="p-8">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="w-16 h-16 bg-pcna-light rounded-lg flex flex-col items-center justify-center border border-pcna-green/20 shadow-sm">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="flex-shrink-0 h-auto w-auto px-3.5 py-2.5 bg-pcna-light rounded-xl flex flex-col items-center justify-center border border-pcna-green/20 shadow-sm self-center">
                       <span className="text-pcna-green font-bold text-xl leading-none">07-09</span>
                       <span className="text-pcna-green text-xs font-bold uppercase mt-1">JAN</span>
                     </div>

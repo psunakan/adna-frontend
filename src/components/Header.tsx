@@ -24,7 +24,7 @@ export function TopBar() {
   }
 
   return (
-    <div className="bg-pcna-green text-white text-sm py-2 block relative z-[99999]">
+    <div className="bg-pcna-green text-white text-sm py-2 hidden sm:block relative z-[99999]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-end items-center space-x-6">
         <MemberProfileButton variant="light" size="sm" />
         <div className="relative" onMouseEnter={show} onMouseLeave={scheduleHide}>
