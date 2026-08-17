@@ -1,10 +1,16 @@
 import { useState } from 'react'
+import { useLocation, useNavigate } from '@tanstack/react-router'
 import { RegistrationModal } from '../components/RegistrationModal'
 import { ProgramModal } from '../components/ProgramModal'
 
 export function EventsPage() {
+  const navigate = useNavigate()
+  const location = useLocation()
   const [regOpen, setRegOpen] = useState(false)
-  const [programOpen, setProgramOpen] = useState(false)
+  const programOpen = location.pathname === '/events/agenda'
+
+  const openProgram = () => navigate({ to: '/events/agenda' })
+  const closeProgram = () => navigate({ to: '/events' })
 
   const promptNotifyMe = () => {
     const email = prompt(
@@ -72,7 +78,7 @@ export function EventsPage() {
                     </button>
                     <button
                       type="button"
-                      onClick={() => setProgramOpen(true)}
+                      onClick={openProgram}
                       className="inline-block px-8 py-3 border-2 border-pcna-green text-pcna-green font-bold rounded-md hover:bg-pcna-green hover:text-white transition-all text-sm uppercase tracking-wider shadow-sm hover:shadow-md cursor-pointer"
                     >
                       Program
@@ -208,7 +214,7 @@ export function EventsPage() {
       </div>
 
       <RegistrationModal open={regOpen} onClose={() => setRegOpen(false)} />
-      <ProgramModal open={programOpen} onClose={() => setProgramOpen(false)} />
+      <ProgramModal open={programOpen} onClose={closeProgram} />
     </section>
   )
 }
