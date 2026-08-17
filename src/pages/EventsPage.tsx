@@ -2,11 +2,31 @@ import { useState } from 'react'
 import { useLocation, useNavigate } from '@tanstack/react-router'
 import { RegistrationModal } from '../components/RegistrationModal'
 import { ProgramModal } from '../components/ProgramModal'
+import { GalleryModal } from '../components/GalleryModal'
+
+const PANEL_IMAGES = [
+  '/Panel/Panel (1).jpeg',
+  '/Panel/Panel (2).jpeg',
+  '/Panel/Panel (3).jpeg',
+  '/Panel/Panel (4).jpeg',
+]
+
+const WORKSHOP_IMAGES = [
+  '/Workshop/1workshop.jpeg',
+  '/Workshop/2workshop.jpeg',
+  '/Workshop/3workshop.jpeg',
+  '/Workshop/4workshop.jpeg',
+  '/Workshop/5workshop.jpeg',
+  '/Workshop/6workshop.jpeg',
+  '/Workshop/7workshop.jpeg',
+]
 
 export function EventsPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const [regOpen, setRegOpen] = useState(false)
+  const [panelOpen, setPanelOpen] = useState(false)
+  const [workshopOpen, setWorkshopOpen] = useState(false)
   const programOpen = location.pathname === '/events/ADNA26Agenda'
 
   const openProgram = () => navigate({ to: '/events/ADNA26Agenda' })
@@ -68,20 +88,34 @@ export function EventsPage() {
                     Join a prestigious gathering of nursing leaders and innovators to explore new
                     frontiers in global healthcare delivery.
                   </p>
-                  <div className="flex flex-wrap gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full">
                     <button
                       type="button"
                       onClick={() => setRegOpen(true)}
-                      className="inline-block px-8 py-3 bg-pcna-green text-white font-bold rounded-md hover:bg-green-800 transition-all text-sm uppercase tracking-wider shadow-md hover:shadow-lg cursor-pointer"
+                      className="w-full text-center px-2 py-3 bg-pcna-green text-white font-bold rounded-md hover:bg-green-800 transition-all text-sm uppercase tracking-wider shadow-md hover:shadow-lg cursor-pointer"
                     >
                       Register
                     </button>
                     <button
                       type="button"
                       onClick={openProgram}
-                      className="inline-block px-8 py-3 border-2 border-pcna-green text-pcna-green font-bold rounded-md hover:bg-pcna-green hover:text-white transition-all text-sm uppercase tracking-wider shadow-sm hover:shadow-md cursor-pointer"
+                      className="w-full text-center px-2 py-3 border-2 border-pcna-green text-pcna-green font-bold rounded-md hover:bg-pcna-green hover:text-white transition-all text-sm uppercase tracking-wider shadow-sm hover:shadow-md cursor-pointer"
                     >
                       Program
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPanelOpen(true)}
+                      className="w-full text-center px-2 py-3 border-2 border-pcna-green text-pcna-green font-bold rounded-md hover:bg-pcna-green hover:text-white transition-all text-sm uppercase tracking-wider shadow-sm hover:shadow-md cursor-pointer"
+                    >
+                      Panel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setWorkshopOpen(true)}
+                      className="w-full text-center px-2 py-3 border-2 border-pcna-green text-pcna-green font-bold rounded-md hover:bg-pcna-green hover:text-white transition-all text-sm uppercase tracking-wider shadow-sm hover:shadow-md cursor-pointer"
+                    >
+                      Workshop
                     </button>
                   </div>
                 </div>
@@ -90,13 +124,13 @@ export function EventsPage() {
               <div className="bg-white rounded-2xl shadow-xl overflow-hidden group hover:shadow-2xl transition-all duration-500">
                 <div className="bg-pcna-green relative overflow-hidden">
                   <img
-                    src="/Pictures/eventupcomingjan.jpg"
+                    src="/assets/ghana-conference-2027.PNG"
                     alt="G-DNA Global Health Conference Accra"
-                    className="w-full h-auto object-contain group-hover:scale-105 transition-transform duration-700"
+                    className="w-full h-auto object-contain"
                   />
                   <div className="absolute top-6 left-6">
                     <span className="px-3 py-1 bg-pcna-red text-xs font-bold uppercase rounded-full shadow-sm">
-                      Coming Soon
+                      UPCOMING
                     </span>
                   </div>
                 </div>
@@ -215,6 +249,18 @@ export function EventsPage() {
 
       <RegistrationModal open={regOpen} onClose={() => setRegOpen(false)} />
       <ProgramModal open={programOpen} onClose={closeProgram} />
+      <GalleryModal
+        open={panelOpen}
+        onClose={() => setPanelOpen(false)}
+        title="Panel"
+        images={PANEL_IMAGES}
+      />
+      <GalleryModal
+        open={workshopOpen}
+        onClose={() => setWorkshopOpen(false)}
+        title="Workshop"
+        images={WORKSHOP_IMAGES}
+      />
     </section>
   )
 }
