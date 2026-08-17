@@ -8,7 +8,6 @@ type Props = {
 }
 
 export function GalleryModal({ open, onClose, title, images }: Props) {
-  const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 767.98px)').matches)
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null)
 
   useEffect(() => {
@@ -19,20 +18,13 @@ export function GalleryModal({ open, onClose, title, images }: Props) {
   }, [open])
 
   useEffect(() => {
-    const mql = window.matchMedia('(max-width: 767.98px)')
-    const handleChange = () => setIsMobile(mql.matches)
-    mql.addEventListener('change', handleChange)
-    return () => mql.removeEventListener('change', handleChange)
-  }, [])
-
-  useEffect(() => {
     if (!open) setLightboxSrc(null)
   }, [open])
 
   if (!open) return null
 
   const handleImageClick = (src: string) => {
-    if (isMobile) setLightboxSrc(src)
+    setLightboxSrc(src)
   }
 
   return (
@@ -40,34 +32,10 @@ export function GalleryModal({ open, onClose, title, images }: Props) {
       role="presentation"
       onClick={(e) => e.target === e.currentTarget && onClose()}
       onKeyDown={(e) => e.key === 'Escape' && onClose()}
-      style={{
-        display: 'flex',
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        background: 'rgba(0,0,0,0.85)',
-        zIndex: 9999,
-        justifyContent: 'center',
-        alignItems: 'flex-start',
-        padding: '1rem',
-        boxSizing: 'border-box',
-        overflowY: 'auto',
-      }}
+      className="flex fixed inset-0 z-[9999] justify-center items-start px-1 py-2 sm:p-4 box-border overflow-y-auto bg-black/85"
     >
       <div
-        style={{
-          position: 'relative',
-          width: '100%',
-          maxWidth: 900,
-          background: '#fff',
-          borderRadius: 12,
-          overflow: 'hidden',
-          margin: 'auto',
-          padding: '2rem 1.5rem 1.5rem',
-          boxSizing: 'border-box',
-        }}
+        className="relative w-full max-w-[900px] bg-white rounded-xl overflow-hidden mx-auto my-auto px-2 pt-6 pb-3 sm:p-6 sm:pt-8 box-border"
       >
         <button
           type="button"
@@ -97,17 +65,17 @@ export function GalleryModal({ open, onClose, title, images }: Props) {
         <h3 className="font-heading text-xl sm:text-2xl font-black uppercase tracking-wider text-pcna-green mb-6">
           {title}
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {images.map((src) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+          {images.map((src, index) => (
             <button
               key={src}
               type="button"
               onClick={() => handleImageClick(src)}
-              className="block w-full p-0 border-0 bg-transparent overflow-hidden aspect-[3/4] rounded-lg shadow-md cursor-pointer md:aspect-auto md:cursor-default"
+              className="block w-full p-0 border-0 bg-transparent overflow-hidden aspect-[3/4] rounded-lg shadow-md cursor-pointer md:aspect-auto"
             >
               <img
                 src={src}
-                alt={title}
+                alt={`${title} flyer ${index + 1}`}
                 className="w-full h-full object-contain md:h-auto md:object-cover"
               />
             </button>
@@ -118,24 +86,11 @@ export function GalleryModal({ open, onClose, title, images }: Props) {
         <div
           role="presentation"
           onClick={() => setLightboxSrc(null)}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            background: 'rgba(0,0,0,0.95)',
-            zIndex: 10001,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '1rem',
-            boxSizing: 'border-box',
-          }}
+          className="flex fixed inset-0 z-[10001] items-center justify-center p-1 sm:p-4 box-border bg-black/95"
         >
           <img
             src={lightboxSrc}
-            alt={title}
+            alt={`${title} flyer ${images.indexOf(lightboxSrc) + 1}`}
             className="w-full h-auto object-contain"
             style={{ maxHeight: '90vh' }}
           />

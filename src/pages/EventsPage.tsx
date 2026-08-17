@@ -4,21 +4,40 @@ import { RegistrationModal } from '../components/RegistrationModal'
 import { ProgramModal } from '../components/ProgramModal'
 import { GalleryModal } from '../components/GalleryModal'
 
+// Ordered chronologically by time of day printed on each flyer (9AM, then 10AM, then
+// 2PM). "-v2" flyers are updated/redesigned versions of the same session that were
+// added later and are kept alongside the originals.
 const PANEL_IMAGES = [
-  '/Panel/Panel (1).jpeg',
-  '/Panel/Panel (2).jpeg',
-  '/Panel/Panel (3).jpeg',
-  '/Panel/Panel (4).jpeg',
+  '/Panel/panel-hypertension-diaspora-9am.jpeg',
+  '/Panel/panel-no-bed-no-excuse-9am.jpeg',
+  '/Panel/panel-hypertension-diaspora-9am-v2.jpeg',
+  '/Panel/panel-no-bed-no-excuse-9am-v2.jpeg',
+  '/Panel/panel-transitional-care-10am.jpeg',
+  '/Panel/panel-transitional-care-10am-v2.jpeg',
+  '/Panel/panel-ethical-recruitment-2pm.jpeg',
+  '/Panel/panel-ethical-recruitment-2pm-v2.jpeg',
 ]
 
+// Ordered chronologically by time of day on Aug 21, 2026 (11:15 AM breakouts, then
+// 3:30 PM breakouts). "-v2"/"-v3" flyers are updated/redesigned versions of the same
+// session that were added later and are kept alongside the originals.
 const WORKSHOP_IMAGES = [
-  '/Workshop/1workshop.jpeg',
-  '/Workshop/2workshop.jpeg',
-  '/Workshop/3workshop.jpeg',
-  '/Workshop/4workshop.jpeg',
-  '/Workshop/5workshop.jpeg',
-  '/Workshop/6workshop.jpeg',
-  '/Workshop/7workshop.jpeg',
+  '/Workshop/workshop-maternal-health-1115am.jpeg',
+  '/Workshop/workshop-advanced-practice-1115am.jpeg',
+  '/Workshop/workshop-hiv-care-1115am.jpeg',
+  '/Workshop/workshop-blood-pressure-1115am.jpeg',
+  '/Workshop/workshop-advanced-practice-1115am-v2.jpeg',
+  '/Workshop/workshop-postpartum-care-1115am.jpeg',
+  '/Workshop/workshop-hiv-care-1115am-v2.jpeg',
+  '/Workshop/workshop-advocacy-in-action-330pm.jpeg',
+  '/Workshop/workshop-ai-machine-learning-330pm.jpeg',
+  '/Workshop/workshop-financial-literacy-330pm.jpeg',
+  '/Workshop/workshop-health-equity-leadership-330pm.jpeg',
+  '/Workshop/workshop-financial-literacy-330pm-v2.jpeg',
+  '/Workshop/workshop-advocacy-in-action-330pm-v2.jpeg',
+  '/Workshop/workshop-health-equity-leadership-330pm-v2.jpeg',
+  '/Workshop/workshop-ai-machine-learning-330pm-v2.jpeg',
+  '/Workshop/workshop-financial-literacy-330pm-v3.jpeg',
 ]
 
 export function EventsPage() {
