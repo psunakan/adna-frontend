@@ -129,7 +129,7 @@ export function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-gray-100">
             <Reveal className="py-10 px-6 text-center">
               <StatCounter
-                target={4500}
+                target={6500}
                 suffix="+"
                 className="text-5xl md:text-6xl font-extrabold font-heading text-pcna-green"
               />
