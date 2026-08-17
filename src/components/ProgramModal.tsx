@@ -238,25 +238,40 @@ export function ProgramModal({ open, onClose }: Props) {
             </header>
           )}
 
-          <div
-            className="program-modal__pdf w-full"
-            style={{
-              height: isMobile ? 'calc(90vh - 60px)' : '75vh',
-              minHeight: isMobile ? 320 : 400,
-              width: '100%',
-              maxWidth: '100%',
-              boxSizing: 'border-box',
-              overflowX: 'auto',
-              WebkitOverflowScrolling: 'touch',
-            }}
-          >
-            <iframe
-              src={AGENDA_PDF_URL}
-              title="ADNA26 Conference Agenda PDF"
-              className="w-full"
-              style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
-            />
-          </div>
+          {isMobile && (
+            <div
+              className="block sm:hidden w-full h-[65vh] overflow-y-auto overflow-x-hidden p-2 space-y-4"
+              style={{ WebkitOverflowScrolling: 'touch' }}
+            >
+              <img
+                src="/assets/ADNA26_Agenda_Full.webp"
+                alt="ADNA 2026 Conference Agenda"
+                className="w-full h-auto block object-contain rounded-md"
+              />
+            </div>
+          )}
+
+          {!isMobile && (
+            <div
+              className="program-modal__pdf w-full hidden sm:block"
+              style={{
+                height: isMobile ? 'calc(90vh - 60px)' : '75vh',
+                minHeight: isMobile ? 320 : 400,
+                width: '100%',
+                maxWidth: '100%',
+                boxSizing: 'border-box',
+                overflowX: 'auto',
+                WebkitOverflowScrolling: 'touch',
+              }}
+            >
+              <iframe
+                src={AGENDA_PDF_URL}
+                title="ADNA26 Conference Agenda PDF"
+                className="w-full"
+                style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>
