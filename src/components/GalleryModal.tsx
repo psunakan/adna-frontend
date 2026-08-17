@@ -99,13 +99,18 @@ export function GalleryModal({ open, onClose, title, images }: Props) {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {images.map((src) => (
-            <img
+            <button
               key={src}
-              src={src}
-              alt={title}
+              type="button"
               onClick={() => handleImageClick(src)}
-              className="w-full h-auto aspect-[3/4] object-contain rounded-lg shadow-md cursor-pointer md:aspect-auto md:object-cover md:cursor-default"
-            />
+              className="block w-full p-0 border-0 bg-transparent overflow-hidden aspect-[3/4] rounded-lg shadow-md cursor-pointer md:aspect-auto md:cursor-default"
+            >
+              <img
+                src={src}
+                alt={title}
+                className="w-full h-full object-contain md:h-auto md:object-cover"
+              />
+            </button>
           ))}
         </div>
       </div>
