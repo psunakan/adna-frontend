@@ -143,7 +143,7 @@ export function EventsPage() {
               <div className="bg-white rounded-2xl shadow-xl overflow-hidden group hover:shadow-2xl transition-all duration-500">
                 <div className="bg-pcna-green relative overflow-hidden">
                   <img
-                    src="/assets/ghana-conference-2027.PNG"
+                    src="/assets/ghana-conference-2027v2.jpeg"
                     alt="G-DNA Global Health Conference Accra"
                     className="w-full h-auto object-contain"
                   />
@@ -164,7 +164,7 @@ export function EventsPage() {
                         Accra, Ghana
                       </p>
                       <p className="text-base sm:text-lg md:text-xl text-gray-500 font-bold">
-                        Flagstaff House Area
+                        Kofi Ohene-Konadu Auditorium (UPSA) Accra, Ghana
                       </p>
                     </div>
                   </div>
