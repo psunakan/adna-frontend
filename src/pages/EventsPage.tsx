@@ -112,13 +112,23 @@ export function EventsPage() {
                     A transformative summit connecting African nurses across the diaspora and the
                     continent for a healthier future.
                   </p>
-                  <button
-                    type="button"
-                    onClick={promptNotifyMe}
-                    className="inline-block px-8 py-3 border-2 border-pcna-green text-pcna-green font-bold rounded-md hover:bg-pcna-green hover:text-white transition-all text-sm uppercase tracking-wider shadow-sm hover:shadow-md cursor-pointer"
-                  >
-                    NOTIFY ME
-                  </button>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+                    <a
+                      href="https://campaign.g-dna.org/register"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full text-center px-2 py-3 bg-pcna-green text-white font-bold rounded-md hover:bg-green-800 transition-all text-sm uppercase tracking-wider shadow-md hover:shadow-lg cursor-pointer"
+                    >
+                      Register Now
+                    </a>
+                    <button
+                      type="button"
+                      onClick={promptNotifyMe}
+                      className="w-full text-center px-2 py-3 border-2 border-pcna-green text-pcna-green font-bold rounded-md hover:bg-pcna-green hover:text-white transition-all text-sm uppercase tracking-wider shadow-sm hover:shadow-md cursor-pointer"
+                    >
+                      NOTIFY ME
+                    </button>
+                  </div>
                 </div>
               </div>
 
