@@ -51,15 +51,6 @@ export function EventsPage() {
   const openProgram = () => navigate({ to: '/events/ADNA26Agenda' })
   const closeProgram = () => navigate({ to: '/events' })
 
-  const promptNotifyMe = () => {
-    const email = prompt(
-      "Enter your email address to receive a calendar invite (.ics) or 'Add to Calendar' link:",
-    )
-    if (email?.trim()) {
-      alert(`Thank you! A calendar invite for Accra 2027 has been sent to ${email}`)
-    }
-  }
-
   return (
     <section id="events">
       <div className="py-6 sm:py-12 lg:py-20 bg-pcna-light">
@@ -112,23 +103,14 @@ export function EventsPage() {
                     A transformative summit connecting African nurses across the diaspora and the
                     continent for a healthier future.
                   </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
-                    <a
-                      href="https://campaign.g-dna.org/register"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full text-center px-2 py-3 bg-pcna-green text-white font-bold rounded-md hover:bg-green-800 transition-all text-sm uppercase tracking-wider shadow-md hover:shadow-lg cursor-pointer"
-                    >
-                      Register Now
-                    </a>
-                    <button
-                      type="button"
-                      onClick={promptNotifyMe}
-                      className="w-full text-center px-2 py-3 border-2 border-pcna-green text-pcna-green font-bold rounded-md hover:bg-pcna-green hover:text-white transition-all text-sm uppercase tracking-wider shadow-sm hover:shadow-md cursor-pointer"
-                    >
-                      NOTIFY ME
-                    </button>
-                  </div>
+                  <a
+                    href="https://campaign.g-dna.org/register"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full text-center px-8 py-3 bg-pcna-green text-white font-bold rounded-md hover:bg-green-800 transition-all text-sm uppercase tracking-wider shadow-md hover:shadow-lg cursor-pointer"
+                  >
+                    Register Now
+                  </a>
                 </div>
               </div>
 
