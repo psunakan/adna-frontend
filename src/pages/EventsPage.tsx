@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from '@tanstack/react-router'
 import { RegistrationModal } from '../components/RegistrationModal'
 import { ProgramModal } from '../components/ProgramModal'
@@ -48,6 +48,21 @@ export function EventsPage() {
   const [workshopOpen, setWorkshopOpen] = useState(false)
   const programOpen = location.pathname === '/events/ADNA26Agenda'
 
+  // Deep link from the homepage / nav ("/events#ghana-2027"): scroll to the Accra
+  // January 2027 card and briefly highlight it.
+  useEffect(() => {
+    if (location.hash !== 'ghana-2027') return undefined
+    const el = document.getElementById('ghana-2027')
+    if (!el) return undefined
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    el.classList.add('event-highlight')
+    const t = setTimeout(() => el.classList.remove('event-highlight'), 2600)
+    return () => {
+      clearTimeout(t)
+      el.classList.remove('event-highlight')
+    }
+  }, [location.hash])
+
   const openProgram = () => navigate({ to: '/events/ADNA26Agenda' })
   const closeProgram = () => navigate({ to: '/events' })
 
@@ -71,7 +86,10 @@ export function EventsPage() {
 
           <div className="grid lg:grid-cols-3 gap-12">
             <div className="lg:col-span-2 space-y-12">
-              <div className="bg-white rounded-2xl shadow-xl overflow-hidden group hover:shadow-2xl transition-all duration-500">
+              <div
+                id="ghana-2027"
+                className="scroll-mt-6 bg-white rounded-2xl shadow-xl overflow-hidden group hover:shadow-2xl transition-all duration-500"
+              >
                 <div className="bg-pcna-green relative overflow-hidden">
                   <img
                     src="/assets/ghana-conference-2027v2.jpeg"

@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { MailIcon, PhoneIcon, useContactDrawer } from './ContactDrawer'
 import { MemberProfileButton } from './MemberProfileButton'
 import { useMemberAuth } from '../lib/MemberAuthProvider'
+import { CONFERENCE_2027_LINK } from '../lib/navLinks'
 
 const NAV_LINKS = [
   { to: '/', label: 'Home' },
@@ -143,22 +144,32 @@ export function MainNav() {
             </Link>
 
             {/* Desktop Menu */}
-            <div className="hidden lg:flex space-x-8 items-center">
+            <div className="hidden lg:flex space-x-4 xl:space-x-8 items-center">
               {NAV_LINKS.map((link) => (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  activeOptions={{ exact: link.to === '/' }}
-                  activeProps={{ className: 'nav-link-active' }}
-                  className="text-pcna-green hover:text-pcna-red transition-colors font-extrabold text-xl uppercase tracking-wide py-4 border-b-4 border-transparent"
-                >
-                  {link.label}
-                </Link>
+                <Fragment key={link.to}>
+                  <Link
+                    to={link.to}
+                    activeOptions={{ exact: link.to === '/' }}
+                    activeProps={{ className: 'nav-link-active' }}
+                    className="text-pcna-green hover:text-pcna-red transition-colors font-extrabold text-base xl:text-xl uppercase tracking-wide whitespace-nowrap py-4 border-b-4 border-transparent"
+                  >
+                    {link.label}
+                  </Link>
+                  {link.to === '/' && (
+                    <Link
+                      to={CONFERENCE_2027_LINK.to}
+                      hash={CONFERENCE_2027_LINK.hash}
+                      className="px-4 xl:px-5 py-2 bg-[#006837] text-white font-extrabold rounded-full hover:bg-[#00522b] transition-colors uppercase tracking-wide text-base xl:text-xl whitespace-nowrap shadow-md"
+                    >
+                      {CONFERENCE_2027_LINK.label}
+                    </Link>
+                  )}
+                </Fragment>
               ))}
               <Link
                 to="/donate"
                 aria-label="Donate to A-DNA"
-                className="ml-4 px-8 py-3 bg-pcna-red text-white font-extrabold rounded-md hover:bg-red-800 transition-all duration-300 hover:scale-105 shadow-lg uppercase tracking-widest text-xl"
+                className="ml-2 xl:ml-4 px-5 xl:px-8 py-3 bg-pcna-red text-white font-extrabold rounded-md hover:bg-red-800 transition-all duration-300 hover:scale-105 shadow-lg uppercase tracking-widest text-base xl:text-xl"
               >
                 Donate
               </Link>
@@ -245,27 +256,53 @@ export function MainNav() {
           </div>
 
           {NAV_LINKS.map((link) => (
-            <Link
-              key={link.to}
-              to={link.to}
-              onClick={closeAnd()}
-              className="mobile-nav-link hover:bg-[#f0faf6] hover:border-l-pcna-green"
-              style={{
-                display: 'block',
-                padding: '11px 16px',
-                fontSize: '0.75rem',
-                fontWeight: 800,
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-                color: '#116b53',
-                textDecoration: 'none',
-                borderLeft: '3px solid transparent',
-                transition: 'background 0.15s, border-color 0.15s',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {link.label}
-            </Link>
+            <Fragment key={link.to}>
+              <Link
+                to={link.to}
+                onClick={closeAnd()}
+                className="mobile-nav-link hover:bg-[#f0faf6] hover:border-l-pcna-green"
+                style={{
+                  display: 'block',
+                  padding: '11px 16px',
+                  fontSize: '0.75rem',
+                  fontWeight: 800,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                  color: '#116b53',
+                  textDecoration: 'none',
+                  borderLeft: '3px solid transparent',
+                  transition: 'background 0.15s, border-color 0.15s',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {link.label}
+              </Link>
+              {link.to === '/' && (
+                <div style={{ padding: '6px 16px' }}>
+                  <Link
+                    to={CONFERENCE_2027_LINK.to}
+                    hash={CONFERENCE_2027_LINK.hash}
+                    onClick={closeAnd()}
+                    style={{
+                      display: 'block',
+                      padding: '9px 12px',
+                      background: '#006837',
+                      color: '#fff',
+                      fontSize: '0.75rem',
+                      fontWeight: 800,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.08em',
+                      textAlign: 'center',
+                      borderRadius: 9999,
+                      textDecoration: 'none',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {CONFERENCE_2027_LINK.label}
+                  </Link>
+                </div>
+              )}
+            </Fragment>
           ))}
 
           <div style={{ padding: '10px 16px' }}>
