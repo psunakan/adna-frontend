@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { CollaboratorsMarquee } from '../components/CollaboratorsMarquee'
+import { CONFERENCE_2027_LINK } from '../lib/navLinks'
 import { Reveal, StatCounter } from '../components/Reveal'
 
 export function HomePage() {
@@ -35,10 +36,24 @@ export function HomePage() {
                 Join A-DNA Today
               </Link>
               <Link
-                to="/events"
-                className="w-full sm:w-auto px-8 py-3 bg-white text-pcna-green font-bold rounded-md hover:bg-gray-100 transition-all duration-300 hover:scale-105 shadow-md uppercase tracking-wider text-sm text-center"
+                to={CONFERENCE_2027_LINK.to}
+                hash={CONFERENCE_2027_LINK.hash}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3 bg-gradient-to-r from-[#00522b] to-[#008744] text-white font-extrabold rounded-md shadow-[0_0_25px_rgba(0,168,89,0.4)] transition-all duration-300 hover:scale-[1.04] hover:-translate-y-0.5 uppercase tracking-wider text-sm text-center"
               >
-                View Upcoming Events
+                <svg
+                  aria-hidden="true"
+                  className="w-4 h-4 flex-shrink-0"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  viewBox="0 0 24 24"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <path d="M16 2v4M8 2v4M3 10h18" />
+                </svg>
+                Ghana 2027 Conference
               </Link>
             </div>
           </div>

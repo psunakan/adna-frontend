@@ -14,6 +14,10 @@ test.describe('Site navigation', () => {
     await page.goto('/')
 
     const mainNav = page.locator('nav.bg-white')
+    await mainNav.getByRole('link', { name: '2027 Conference', exact: true }).click()
+    await expect(page).toHaveURL(/\/events#ghana-2027/)
+    await expect(page.locator('#ghana-2027')).toBeInViewport()
+
     await mainNav.getByRole('link', { name: 'About Us', exact: true }).click()
     await expect(page).toHaveURL(/\/about/)
 
@@ -25,6 +29,13 @@ test.describe('Site navigation', () => {
 
     await mainNav.getByRole('link', { name: 'Donate to A-DNA' }).click()
     await expect(page).toHaveURL(/\/donate/)
+  })
+
+  test('hero Ghana 2027 button deep-links to the Accra conference', async ({ page }) => {
+    await page.goto('/')
+    await page.getByRole('link', { name: 'Ghana 2027 Conference', exact: true }).click()
+    await expect(page).toHaveURL(/\/events#ghana-2027/)
+    await expect(page.locator('#ghana-2027')).toBeInViewport()
   })
 
   test('member portal link opens login page', async ({ page }) => {
