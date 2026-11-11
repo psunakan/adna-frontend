@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from '@tanstack/react-router'
+import { Link, useLocation, useNavigate } from '@tanstack/react-router'
+import { CONFERENCE_HUB_LINK } from '../lib/navLinks'
 import { RegistrationModal } from '../components/RegistrationModal'
 import { ProgramModal } from '../components/ProgramModal'
 import { GalleryModal } from '../components/GalleryModal'
@@ -121,14 +122,23 @@ export function EventsPage() {
                     A transformative summit connecting African nurses across the diaspora and the
                     continent for a healthier future.
                   </p>
-                  <a
-                    href="https://campaign.g-dna.org/register"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block w-full text-center px-8 py-3 bg-pcna-green text-white font-bold rounded-md hover:bg-green-800 transition-all text-sm uppercase tracking-wider shadow-md hover:shadow-lg cursor-pointer"
-                  >
-                    Register Now
-                  </a>
+                  <div className="flex flex-col sm:flex-row gap-3 w-full">
+                    <a
+                      href="https://campaign.g-dna.org/register"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block w-full sm:flex-1 text-center px-8 py-3 bg-pcna-green text-white font-bold rounded-md hover:bg-green-800 transition-all text-sm uppercase tracking-wider shadow-md hover:shadow-lg cursor-pointer"
+                    >
+                      Register Now
+                    </a>
+                    <Link
+                      to={CONFERENCE_HUB_LINK.to}
+                      aria-label="Open the Ghana 2027 Conference Hub"
+                      className="block w-full sm:flex-1 text-center px-8 py-3 border-2 border-pcna-green text-pcna-green font-bold rounded-md hover:bg-pcna-green hover:text-white transition-all text-sm uppercase tracking-wider shadow-sm hover:shadow-md cursor-pointer whitespace-nowrap"
+                    >
+                      Conference Hub
+                    </Link>
+                  </div>
                 </div>
               </div>
 
