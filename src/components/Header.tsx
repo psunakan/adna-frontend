@@ -3,7 +3,7 @@ import { Link } from '@tanstack/react-router'
 import { MailIcon, PhoneIcon, useContactDrawer } from './ContactDrawer'
 import { MemberProfileButton } from './MemberProfileButton'
 import { useMemberAuth } from '../lib/MemberAuthProvider'
-import { CONFERENCE_2027_LINK } from '../lib/navLinks'
+import { CONFERENCE_HUB_LINK } from '../lib/navLinks'
 
 const NAV_LINKS = [
   { to: '/', label: 'Home' },
@@ -157,11 +157,10 @@ export function MainNav() {
                   </Link>
                   {link.to === '/' && (
                     <Link
-                      to={CONFERENCE_2027_LINK.to}
-                      hash={CONFERENCE_2027_LINK.hash}
+                      to={CONFERENCE_HUB_LINK.to}
                       className="px-4 xl:px-5 py-2 bg-[#006837] text-white font-extrabold rounded-full hover:bg-[#00522b] transition-colors uppercase tracking-wide text-base xl:text-xl whitespace-nowrap shadow-md"
                     >
-                      {CONFERENCE_2027_LINK.label}
+                      {CONFERENCE_HUB_LINK.label}
                     </Link>
                   )}
                 </Fragment>
@@ -280,8 +279,7 @@ export function MainNav() {
               {link.to === '/' && (
                 <div style={{ padding: '6px 16px' }}>
                   <Link
-                    to={CONFERENCE_2027_LINK.to}
-                    hash={CONFERENCE_2027_LINK.hash}
+                    to={CONFERENCE_HUB_LINK.to}
                     onClick={closeAnd()}
                     style={{
                       display: 'block',
@@ -298,7 +296,7 @@ export function MainNav() {
                       whiteSpace: 'nowrap',
                     }}
                   >
-                    {CONFERENCE_2027_LINK.label}
+                    {CONFERENCE_HUB_LINK.label}
                   </Link>
                 </div>
               )}
