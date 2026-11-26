@@ -170,11 +170,18 @@ const REGISTRATION_TIERS = [
   { name: 'Gala', price: 150, note: '9 January 2027 · Gala ticket', popular: false },
 ]
 
-const SPONSORS = [
-  { name: 'Gilead', logo: 'sponsor-gilead.svg', size: 'h-20 sm:h-24' },
-  { name: 'AMN Healthcare', logo: 'sponsor-amn.png', size: 'h-14 sm:h-16' },
-  { name: 'Trumerit', logo: 'sponsor-trumerit.png', size: 'h-20 sm:h-24' },
-  { name: 'Health Carousel Foundation', logo: 'sponsor-health-carousel.png', size: 'h-20 sm:h-24' },
+// `tint` recolors an all-white logo (used as a CSS mask) so it reads on the white section.
+// `ratio` is the logo file's width/height, needed to size the masked element.
+const SPONSORS: { name: string; logo: string; tint?: string; ratio?: string }[] = [
+  { name: 'Gilead', logo: 'sponsor-gilead.svg' },
+  { name: 'AMN Healthcare', logo: 'sponsor-amn.png' },
+  { name: 'Trumerit', logo: 'sponsor-trumerit.png' },
+  {
+    name: 'Health Carousel Foundation',
+    logo: 'sponsor-health-carousel.png',
+    tint: '#1f2b5b',
+    ratio: '600 / 130',
+  },
 ]
 
 const FAQS = [
@@ -304,7 +311,7 @@ export function ConferenceHubPage() {
             background: `linear-gradient(to top, ${INK} 0%, ${INK}b3 45%, ${INK}4d 100%)`,
           }}
         />
-        <div className="relative w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12 sm:pb-16 lg:pb-20">
+        <div className="relative w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-8 sm:pb-12 lg:pb-14">
           <span className="inline-block px-3 py-1 bg-pcna-red text-xs font-bold uppercase rounded-full shadow-sm mb-5">
             Registration open
           </span>
@@ -340,7 +347,7 @@ export function ConferenceHubPage() {
             </div>
           </div>
 
-          <div className="mt-8 flex flex-col sm:flex-row gap-3">
+          <div className="mt-6 flex flex-col sm:flex-row gap-3">
             <a href="#register" className={LIGHT_BTN}>
               Secure your seat
             </a>
@@ -349,7 +356,7 @@ export function ConferenceHubPage() {
             </a>
           </div>
 
-          <div className="mt-9">
+          <div className="mt-6">
             <p className="text-xs font-bold uppercase tracking-widest text-white/60 mb-2">
               Conference opens in
             </p>
@@ -361,7 +368,7 @@ export function ConferenceHubPage() {
       {/* Conference film */}
       <section
         id="conference-film"
-        className="scroll-mt-6 py-12 md:py-16"
+        className="scroll-mt-6 py-8 md:py-12"
         style={{ background: INK }}
       >
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -391,9 +398,9 @@ export function ConferenceHubPage() {
       {/* Why we gather */}
       <section
         id="about"
-        className="scroll-mt-6 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 md:py-32"
+        className="scroll-mt-6 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20"
       >
-        <div className="grid items-center gap-10 md:gap-14 md:grid-cols-2">
+        <div className="grid items-center gap-7 md:gap-10 md:grid-cols-2">
           <Reveal>
             <Eyebrow>Why we gather</Eyebrow>
             <SectionTitle>Diaspora expertise, delivered home.</SectionTitle>
@@ -420,7 +427,7 @@ export function ConferenceHubPage() {
           </Reveal>
         </div>
 
-        <div className="mt-16 sm:mt-24 grid grid-cols-2 md:grid-cols-4 gap-px overflow-hidden rounded-3xl bg-gray-200">
+        <div className="mt-10 sm:mt-16 grid grid-cols-2 md:grid-cols-4 gap-px overflow-hidden rounded-3xl bg-gray-200">
           {STATS.map((s) => (
             <div key={s.label} className="bg-white p-6 sm:p-8 text-center">
               <div className="font-heading text-3xl sm:text-5xl font-black text-pcna-green">
@@ -433,11 +440,11 @@ export function ConferenceHubPage() {
       </section>
 
       {/* Summit week */}
-      <section id="week" className="scroll-mt-6 bg-pcna-light py-16 sm:py-24 md:py-32">
+      <section id="week" className="scroll-mt-6 bg-pcna-light py-12 sm:py-16 md:py-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <Eyebrow>Summit week · January 2027</Eyebrow>
           <SectionTitle>One week. Three ways to show up.</SectionTitle>
-          <div className="mt-10 sm:mt-14 grid gap-6 md:grid-cols-3">
+          <div className="mt-7 sm:mt-10 grid gap-6 md:grid-cols-3">
             {SUMMIT_WEEK.map((e, i) => (
               <Reveal
                 key={e.tag}
@@ -464,7 +471,7 @@ export function ConferenceHubPage() {
       {/* Last year in pictures */}
       <section
         id="highlights"
-        className="scroll-mt-6 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 md:py-32"
+        className="scroll-mt-6 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20"
       >
         <Eyebrow>Highlights · A-DNA 2026</Eyebrow>
         <SectionTitle>Last year in pictures.</SectionTitle>
@@ -472,7 +479,7 @@ export function ConferenceHubPage() {
           Shared ideas, new friendships, and Ghanaian rhythms. Our 2026 gathering brought
           professions and continents together. Be part of the next chapter in Accra.
         </p>
-        <div className="mt-10 sm:mt-14 grid grid-flow-dense grid-cols-2 auto-rows-[160px] sm:auto-rows-[200px] md:grid-cols-4 md:auto-rows-[230px] gap-3">
+        <div className="mt-7 sm:mt-10 grid grid-flow-dense grid-cols-2 auto-rows-[160px] sm:auto-rows-[200px] md:grid-cols-4 md:auto-rows-[230px] gap-3">
           {GALLERY.map((g) => {
             let spanClass = ''
             if (g.span === 'col') spanClass = 'col-span-2'
@@ -493,13 +500,13 @@ export function ConferenceHubPage() {
       {/* Programme / tracks */}
       <section
         id="tracks"
-        className="scroll-mt-6 py-16 sm:py-24 md:py-32 text-white"
+        className="scroll-mt-6 py-12 sm:py-16 md:py-20 text-white"
         style={{ background: INK }}
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <Eyebrow light>Programme</Eyebrow>
           <SectionTitle light>Eight tracks. One shared future.</SectionTitle>
-          <ol className="mt-10 sm:mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <ol className="mt-7 sm:mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {TRACKS.map((t, i) => (
               <li
                 key={t}
@@ -513,7 +520,7 @@ export function ConferenceHubPage() {
             ))}
           </ol>
 
-          <div className="mt-12 sm:mt-16 grid gap-6 md:grid-cols-2">
+          <div className="mt-8 sm:mt-11 grid gap-6 md:grid-cols-2">
             {FEATURED_PANELS.map((p) => (
               <div key={p.title} className="rounded-3xl bg-pcna-green p-6 sm:p-10 shadow-xl">
                 <p className="text-xs font-bold uppercase tracking-widest text-white/70">
@@ -530,7 +537,7 @@ export function ConferenceHubPage() {
       {/* Registration */}
       <section
         id="register"
-        className="scroll-mt-6 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 md:py-32"
+        className="scroll-mt-6 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20"
       >
         <Eyebrow>Registration</Eyebrow>
         <SectionTitle>Choose your registration</SectionTitle>
@@ -539,7 +546,7 @@ export function ConferenceHubPage() {
           and across Africa, or Zeffy everywhere else.
         </p>
 
-        <div className="mt-10 sm:mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-7 sm:mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {REGISTRATION_TIERS.map((t) => {
             const isGala = t.name === 'Gala'
             let cardClass = 'bg-pcna-light border-transparent'
@@ -590,7 +597,7 @@ export function ConferenceHubPage() {
           })}
         </div>
 
-        <p className="text-gray-500 font-bold mt-8 text-sm">
+        <p className="text-gray-500 font-bold mt-6 text-sm">
           Payment or accessibility questions?{' '}
           <button
             type="button"
@@ -603,7 +610,7 @@ export function ConferenceHubPage() {
       </section>
 
       {/* Housing */}
-      <section id="housing" className="scroll-mt-6 bg-pcna-light py-16 sm:py-24">
+      <section id="housing" className="scroll-mt-6 bg-pcna-light py-12 sm:py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <Eyebrow>Stay</Eyebrow>
           <SectionTitle>Housing</SectionTitle>
@@ -614,9 +621,9 @@ export function ConferenceHubPage() {
       </section>
 
       {/* Partner */}
-      <section id="partner" className="scroll-mt-6 px-4 sm:px-6 lg:px-8 py-16 sm:py-24 md:py-32">
+      <section id="partner" className="scroll-mt-6 px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
         <div
-          className="max-w-6xl mx-auto rounded-3xl text-white grid gap-10 p-6 sm:p-10 md:grid-cols-[1.4fr_1fr] md:p-16 overflow-hidden"
+          className="max-w-6xl mx-auto rounded-3xl text-white grid gap-7 p-6 sm:p-10 md:grid-cols-[1.4fr_1fr] md:p-12 overflow-hidden"
           style={{ background: INK }}
         >
           <div>
@@ -649,11 +656,11 @@ export function ConferenceHubPage() {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="scroll-mt-6 bg-pcna-light py-16 sm:py-24 md:py-32">
+      <section id="faq" className="scroll-mt-6 bg-pcna-light py-12 sm:py-16 md:py-20">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <Eyebrow>FAQ</Eyebrow>
           <SectionTitle>Good to know</SectionTitle>
-          <div className="mt-10 space-y-3">
+          <div className="mt-7 space-y-3">
             {FAQS.map((f) => (
               <details key={f.q} className="group bg-white rounded-xl shadow-sm p-5">
                 <summary
@@ -673,7 +680,7 @@ export function ConferenceHubPage() {
       </section>
 
       {/* Closing CTA */}
-      <section className="bg-pcna-green py-16 sm:py-20 text-center text-white">
+      <section className="bg-pcna-green py-12 sm:py-14 text-center text-white">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="font-bold uppercase tracking-widest text-sm text-white/80">
             Africa is in our DNA
@@ -691,11 +698,13 @@ export function ConferenceHubPage() {
       {/* Sponsors */}
       <section
         id="sponsors"
-        className="scroll-mt-6 bg-white py-14 sm:py-20"
+        className="scroll-mt-6 bg-white py-10 sm:py-12"
         aria-labelledby="sponsors-title"
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Eyebrow>Our sponsors</Eyebrow>
+          <p className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-pcna-green">
+            Our sponsors
+          </p>
           <h2
             id="sponsors-title"
             className="font-heading text-2xl sm:text-4xl font-black"
@@ -703,23 +712,61 @@ export function ConferenceHubPage() {
           >
             Partners in lasting impact.
           </h2>
-          <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 items-center justify-items-center">
+          <div className="mx-auto mt-8 sm:mt-10 max-w-6xl grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8 sm:gap-x-8 items-center justify-items-center">
             {SPONSORS.map((s) => (
-              <img
+              <div
                 key={s.name}
-                src={`${IMG}/${s.logo}`}
-                alt={s.name}
-                loading="lazy"
-                className={`${s.size} w-full max-w-64 object-contain`}
-              />
+                className="flex h-14 sm:h-16 w-full max-w-[240px] items-center justify-center"
+              >
+                {s.tint ? (
+                  <div
+                    role="img"
+                    aria-label={s.name}
+                    className="h-10 sm:h-12 lg:h-14 max-w-full"
+                    style={{
+                      aspectRatio: s.ratio,
+                      backgroundColor: s.tint,
+                      WebkitMask: `url(${IMG}/${s.logo}) center / contain no-repeat`,
+                      mask: `url(${IMG}/${s.logo}) center / contain no-repeat`,
+                    }}
+                  />
+                ) : (
+                  <img
+                    src={`${IMG}/${s.logo}`}
+                    alt={s.name}
+                    loading="lazy"
+                    className="block max-h-10 sm:max-h-12 lg:max-h-14 w-auto max-w-full object-contain"
+                  />
+                )}
+              </div>
             ))}
           </div>
-          <img
-            src={`${IMG}/adna-gdna-logo.png`}
-            alt="African-Diaspora Nursing Alliance and Ghanaian-Diaspora Nursing Alliance"
-            loading="lazy"
-            className="mx-auto mt-12 h-auto w-44 sm:w-56"
+          <div
+            aria-hidden="true"
+            className="mt-8 sm:mt-10 mb-5 sm:mb-6 h-[3px] w-full rounded-full"
+            style={{ background: 'linear-gradient(90deg, #c8102e, #fcd116, #0f6b4a)' }}
           />
+          <div className="flex flex-col items-center">
+            <div
+              className="relative max-w-full rounded-2xl px-6 py-4 sm:px-9 sm:py-6 shadow-[0_18px_40px_-12px_rgba(11,46,31,0.55)]"
+              style={{ background: 'linear-gradient(135deg, #0b2e1f, #0a2419)' }}
+            >
+              <span
+                aria-hidden="true"
+                className="absolute top-0 left-[14px] right-[14px] h-[3px] rounded-full"
+                style={{ background: 'linear-gradient(90deg, #c8102e, #fcd116, #0f6b4a)' }}
+              />
+              <img
+                src={`${IMG}/adna-gdna-logo.png`}
+                alt="African-Diaspora Nursing Alliance and Ghanaian-Diaspora Nursing Alliance"
+                loading="lazy"
+                className="block h-14 sm:h-20 w-auto max-w-full object-contain"
+              />
+            </div>
+            <p className="mt-3 text-[10px] sm:text-xs uppercase tracking-[0.18em] text-[#8a8a8a]">
+              A joint initiative of A-DNA &amp; G-DNA
+            </p>
+          </div>
         </div>
       </section>
     </div>
