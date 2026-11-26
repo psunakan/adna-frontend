@@ -1221,7 +1221,19 @@ export function ConferenceHubPage() {
       </section>
 
       {/* Housing */}
+<<<<<<< HEAD
       <HousingSection />
+=======
+      <section id="housing" className="scroll-mt-6 bg-pcna-light py-12 sm:py-16">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Eyebrow>Stay</Eyebrow>
+          <SectionTitle>Housing</SectionTitle>
+          <p className="mt-5 text-gray-600 text-base sm:text-lg">
+            Housing options for A-DNA Ghana Conference 2027 will be announced soon.
+          </p>
+        </div>
+      </section>
+>>>>>>> origin/main
 
       {/* Partner */}
       <section id="partner" className="scroll-mt-6 px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
