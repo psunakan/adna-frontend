@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { Reveal } from '../components/Reveal'
 import { useContactDrawer } from '../components/ContactDrawer'
@@ -289,6 +289,617 @@ function SectionTitle({ children, light = false }: { children: string; light?: b
     >
       {children}
     </h2>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Housing (STAY): partner-rate directory. Email addresses and URLs live only in
+// the data/hrefs below and are never printed in the UI; visitors use buttons.
+// ---------------------------------------------------------------------------
+const EMAIL_RATE_CODE = 'G-DNA2027'
+const MJ_PROMO_CODE = 'GDNA27'
+
+type HousingCategory = 'partner' | 'standard' | 'all'
+
+type Hotel = {
+  id: string
+  name: string
+  category: 'partner' | 'standard'
+  badge: string
+  summary: string
+  location: string
+  rates: { label: string; price: string; unit: string }[]
+  booking: 'email' | 'promo' | 'website'
+  email?: string
+  code?: string
+  url: string
+  steps: string[]
+}
+
+const HOTELS: Hotel[] = [
+  {
+    id: 'mensvic',
+    name: 'Mensvic Grand Hotel',
+    category: 'partner',
+    badge: 'Partner Rate · Email Booking',
+    summary: 'Single $100 · Double $150',
+    location: 'Accra, Ghana',
+    rates: [
+      { label: 'Single', price: '$100', unit: '/ night' },
+      { label: 'Double', price: '$150', unit: '/ night' },
+    ],
+    booking: 'email',
+    email: 'info@mensvichotels.com',
+    code: EMAIL_RATE_CODE,
+    url: 'https://mensvichotels.com',
+    steps: [
+      `Select Request via Email to send a reservation request referencing code ${EMAIL_RATE_CODE}.`,
+      'Confirm your check-in/check-out dates and room preference (Single or Double).',
+    ],
+  },
+  {
+    id: 'tomreik',
+    name: 'Tomreik Hotel',
+    category: 'partner',
+    badge: 'Partner Rate · Email Booking',
+    summary: 'Standard $100 · Deluxe $130',
+    location: 'Accra, Ghana',
+    rates: [
+      { label: 'Standard', price: '$100', unit: '/ night' },
+      { label: 'Deluxe', price: '$130', unit: '/ night' },
+    ],
+    booking: 'email',
+    email: 'reservation@tomreikhotel.com',
+    code: EMAIL_RATE_CODE,
+    url: 'https://tomreikhotel.com',
+    steps: [
+      `Select Request via Email to request your room referencing code ${EMAIL_RATE_CODE}.`,
+      'Specify whether you prefer a Standard ($100) or Deluxe ($130) room.',
+    ],
+  },
+  {
+    id: 'erata',
+    name: 'Erata Hotel',
+    category: 'partner',
+    badge: 'Partner Rate · Email Booking',
+    summary: 'Single GHS 1,000 · Double GHS 1,300',
+    location: 'Accra, Ghana',
+    rates: [
+      { label: 'Single', price: 'GHS 1,000', unit: '/ night' },
+      { label: 'Double', price: 'GHS 1,300', unit: '/ night' },
+    ],
+    booking: 'email',
+    email: 'info@eratahotel.com',
+    code: EMAIL_RATE_CODE,
+    url: 'https://eratahotel.com',
+    steps: [
+      `Select Request via Email to request the partner rate referencing code ${EMAIL_RATE_CODE}.`,
+      'Share your travel dates and Single or Double room selection.',
+    ],
+  },
+  {
+    id: 'mj-grand',
+    name: 'MJ Grand Hotel',
+    category: 'partner',
+    badge: '20% Off Advertised Rates',
+    summary: `From $80 · Code ${MJ_PROMO_CODE}`,
+    location: 'Accra, Ghana',
+    rates: [
+      { label: 'Single / Standard / Deluxe', price: '$80', unit: '/ night' },
+      { label: 'Twin Bed', price: '$120', unit: '/ night' },
+      { label: 'Junior Suite', price: '$150', unit: '/ night' },
+      { label: 'Executive', price: '$160', unit: '/ night' },
+    ],
+    booking: 'promo',
+    code: MJ_PROMO_CODE,
+    url: 'https://mjgrandhotelghana.com/booking',
+    steps: [
+      `Copy promo code ${MJ_PROMO_CODE} and open the booking portal with Book Online.`,
+      `Enter ${MJ_PROMO_CODE} during the normal guest booking flow to apply the 20% discount.`,
+    ],
+  },
+  {
+    id: 'bonsukoda',
+    name: 'Bonsukoda Lodge and Studios',
+    category: 'partner',
+    badge: 'Partner Offer · GHS 100 Off Studios',
+    summary: 'GHS 100 off studios',
+    location: 'Accra, Ghana',
+    rates: [{ label: 'Studios', price: 'GHS 100 off', unit: 'partner discount' }],
+    booking: 'website',
+    url: 'https://bonsukodalodge.com',
+    steps: [
+      'Browse studio availability directly on the lodge website.',
+      'Mention A-DNA / G-DNA 2027 to receive GHS 100 off studios.',
+    ],
+  },
+  {
+    id: 'marriott',
+    name: 'Accra Marriott Hotel',
+    category: 'standard',
+    badge: 'Standard Rates',
+    summary: 'Standard rates',
+    location: 'Accra, Ghana',
+    rates: [{ label: 'Published availability', price: 'Standard Rates', unit: 'direct booking' }],
+    booking: 'website',
+    url: 'https://www.marriott.com',
+    steps: [
+      'Recommended Accra hotel available at standard published rates.',
+      'Select Visit Website to check room dates and book directly.',
+    ],
+  },
+  {
+    id: 'movenpick',
+    name: 'Mövenpick Ambassador Hotel Accra',
+    category: 'standard',
+    badge: 'Standard Rates',
+    summary: 'Standard rates',
+    location: 'Accra, Ghana',
+    rates: [{ label: 'Published availability', price: 'Standard Rates', unit: 'direct booking' }],
+    booking: 'website',
+    url: 'https://movenpick.accor.com',
+    steps: [
+      'Recommended Accra hotel available at standard published rates.',
+      'Select Visit Website to check room availability and reserve.',
+    ],
+  },
+  {
+    id: 'kempinski',
+    name: 'Kempinski Hotel Gold Coast City',
+    category: 'standard',
+    badge: 'Standard Rates',
+    summary: 'Standard rates',
+    location: 'Accra, Ghana',
+    rates: [{ label: 'Rooms & suites', price: 'Standard Rates', unit: 'direct booking' }],
+    booking: 'website',
+    url: 'https://www.kempinski.com/en/hotel-gold-coast-city/rooms-suites#rooms',
+    steps: [
+      'Recommended Accra hotel available at standard published rates.',
+      'Select Visit Website to view rooms and suites directly.',
+    ],
+  },
+  {
+    id: 'palms',
+    name: 'The Palms by Eagles (Airport City)',
+    category: 'standard',
+    badge: 'Standard Rates',
+    summary: 'Standard rates',
+    location: 'Airport City, Accra',
+    rates: [{ label: 'Published availability', price: 'Standard Rates', unit: 'direct booking' }],
+    booking: 'website',
+    url: 'https://palmsbyeagles.com',
+    steps: [
+      'Recommended Airport City hotel available at standard published rates.',
+      'Select Visit Website to check availability and book.',
+    ],
+  },
+]
+
+const HOUSING_TABS: { key: HousingCategory; label: string }[] = [
+  { key: 'partner', label: 'Partner Rates' },
+  { key: 'standard', label: 'Standard Rates' },
+  { key: 'all', label: 'All Stays' },
+]
+
+const BRAND_GRADIENT = 'linear-gradient(90deg, #c8102e 0%, #fcd116 50%, #0f6b4a 100%)'
+
+const H_BTN = 'inline-flex items-center justify-center rounded-xl px-4 py-2.5 text-xs sm:text-sm font-semibold transition cursor-pointer'
+const H_BTN_PRIMARY = `${H_BTN} bg-[#0E4A30] text-white hover:bg-[#0B2E1F]`
+const H_BTN_SOFT = `${H_BTN} border border-[#0E4A30]/25 bg-[#F4F6F5] text-[#0B2E1F] hover:bg-[#0E4A30]/10`
+const H_BTN_GOLD = `${H_BTN} border border-[#C89B2B]/45 bg-[#C89B2B]/15 text-[#0B2E1F] hover:bg-[#C89B2B]/25`
+const H_BTN_GHOST = `${H_BTN} border border-[#E2E8F0] bg-white text-[#475569] hover:bg-[#F4F6F5] hover:text-[#0B2E1F]`
+
+function buildMailto(hotel: Hotel) {
+  const code = hotel.code ?? EMAIL_RATE_CODE
+  const subject = `A-DNA 2027 Room Reservation (${code})`
+  const body =
+    `Hello ${hotel.name} Reservations Team,\n\n` +
+    `I am attending the A-DNA / G-DNA Ghana Conference 2027 and would like to request the partner rate using code ${code}.\n\n` +
+    'Check-in date:\nCheck-out date:\nRoom type:\nGuest name:\n\nThank you.'
+  return `mailto:${hotel.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+}
+
+async function copyToClipboard(text: string) {
+  try {
+    await navigator.clipboard.writeText(text)
+  } catch {
+    const ta = document.createElement('textarea')
+    ta.value = text
+    ta.setAttribute('readonly', '')
+    ta.style.position = 'fixed'
+    ta.style.left = '-9999px'
+    document.body.appendChild(ta)
+    ta.select()
+    try {
+      document.execCommand('copy')
+    } finally {
+      document.body.removeChild(ta)
+    }
+  }
+}
+
+function HousingSection() {
+  const [category, setCategory] = useState<HousingCategory>('partner')
+  const [selectedId, setSelectedId] = useState(HOTELS[0].id)
+  const [emailHotel, setEmailHotel] = useState<Hotel | null>(null)
+  const [copied, setCopied] = useState<string | null>(null)
+  const dialogRef = useRef<HTMLDialogElement>(null)
+  const spotlightRef = useRef<HTMLDivElement>(null)
+  const copyTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+
+  useEffect(() => () => clearTimeout(copyTimer.current), [])
+
+  const filtered = category === 'all' ? HOTELS : HOTELS.filter((h) => h.category === category)
+  const selected = filtered.find((h) => h.id === selectedId) ?? filtered[0]
+  const countFor = (key: HousingCategory) =>
+    key === 'all' ? HOTELS.length : HOTELS.filter((h) => h.category === key).length
+
+  const copy = async (code: string) => {
+    await copyToClipboard(code)
+    setCopied(code)
+    clearTimeout(copyTimer.current)
+    copyTimer.current = setTimeout(() => setCopied(null), 2000)
+  }
+
+  const selectHotel = (id: string) => {
+    setSelectedId(id)
+    // On stacked (mobile/tablet) layouts the details card sits below the list.
+    if (!window.matchMedia('(min-width: 1024px)').matches) {
+      spotlightRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
+  const openEmail = (hotel: Hotel) => {
+    setEmailHotel(hotel)
+    dialogRef.current?.showModal()
+  }
+  const closeEmail = () => dialogRef.current?.close()
+
+  const copyLabel = (code: string, prefix = 'Code') =>
+    copied === code ? (
+      <>✓ Copied</>
+    ) : (
+      <>
+        {prefix}: <span className="ml-1 font-mono">{code}</span>
+      </>
+    )
+
+  const renderActions = (hotel: Hotel) => {
+    const site = (
+      <a
+        href={hotel.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={hotel.booking === 'website' ? H_BTN_PRIMARY : H_BTN_GHOST}
+      >
+        Visit Website
+      </a>
+    )
+    if (hotel.booking === 'email' && hotel.code) {
+      return (
+        <>
+          <button type="button" onClick={() => openEmail(hotel)} className={H_BTN_PRIMARY}>
+            Request via Email
+          </button>
+          <button type="button" onClick={() => copy(hotel.code!)} className={H_BTN_SOFT}>
+            {copyLabel(hotel.code)}
+          </button>
+          {site}
+        </>
+      )
+    }
+    if (hotel.booking === 'promo' && hotel.code) {
+      return (
+        <>
+          <a href={hotel.url} target="_blank" rel="noopener noreferrer" className={H_BTN_PRIMARY}>
+            Book Online
+          </a>
+          <button type="button" onClick={() => copy(hotel.code!)} className={H_BTN_GOLD}>
+            {copyLabel(hotel.code, 'Promo code')}
+          </button>
+        </>
+      )
+    }
+    return (
+      <>
+        {site}
+        {hotel.id === 'bonsukoda' && (
+          <span className="inline-flex items-center rounded-xl border border-[#C89B2B]/35 bg-[#C89B2B]/12 px-3.5 py-2 text-xs font-semibold text-[#0B2E1F]">
+            GHS 100 off studios
+          </span>
+        )}
+      </>
+    )
+  }
+
+  const badgeTone = (hotel: Hotel) => {
+    if (hotel.booking === 'promo') return 'bg-[#C89B2B]/15 text-[#0B2E1F] border-[#C89B2B]/40'
+    if (hotel.category === 'partner') return 'bg-[#0E4A30]/10 text-[#0E4A30] border-[#0E4A30]/20'
+    return 'bg-slate-100 text-slate-700 border-slate-200'
+  }
+  const pillTone = (hotel: Hotel) => {
+    if (hotel.booking === 'promo') return 'bg-[#C89B2B]/15 text-[#0B2E1F]'
+    if (hotel.category === 'partner') return 'bg-[#0E4A30]/10 text-[#0B2E1F]'
+    return 'bg-slate-100 text-slate-600'
+  }
+
+  return (
+    <section
+      id="housing"
+      aria-labelledby="housing-title"
+      className="scroll-mt-6 bg-[#0b2e1f] px-3 py-8 sm:px-6 sm:py-12 lg:px-8"
+    >
+      <div className="mx-auto max-w-6xl overflow-hidden rounded-3xl border-2 border-[#1f6b48] bg-[#F4F6F5] shadow-[0_18px_45px_rgba(0,0,0,0.28)]">
+        <div aria-hidden="true" className="h-1 w-full" style={{ background: BRAND_GRADIENT }} />
+
+        <div className="px-4 py-7 sm:px-6 sm:py-9 lg:px-8">
+          {/* Header + category filter */}
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-2xl">
+              <Eyebrow>Stay</Eyebrow>
+              <h2
+                id="housing-title"
+                className="font-heading text-3xl sm:text-4xl font-black leading-tight"
+                style={{ color: INK }}
+              >
+                Housing &amp; Partner Rates
+              </h2>
+              <p className="mt-2 text-sm sm:text-base leading-relaxed text-[#475569]">
+                Negotiated conference rates in Accra for A-DNA / G-DNA 2027 attendees. Reference your
+                code when booking partner properties.
+              </p>
+            </div>
+            <div
+              role="group"
+              aria-label="Filter housing by rate type"
+              className="inline-flex flex-wrap gap-1 self-start rounded-xl border border-[#E2E8F0] bg-white p-1 shadow-2xs lg:self-end"
+            >
+              {HOUSING_TABS.map((t) => {
+                const active = category === t.key
+                return (
+                  <button
+                    key={t.key}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => setCategory(t.key)}
+                    className={`rounded-lg px-3.5 py-2 text-xs font-semibold transition cursor-pointer ${
+                      active
+                        ? 'bg-[#0E4A30] text-white shadow-2xs'
+                        : 'text-[#475569] hover:bg-[#F4F6F5] hover:text-[#0F172A]'
+                    }`}
+                  >
+                    {t.label} ({countFor(t.key)})
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Promo code quick-copy bar */}
+          <div className="mt-5 rounded-2xl border border-[#E2E8F0] bg-white px-4 py-3 shadow-2xs sm:px-5">
+            <div className="flex flex-col gap-2.5 md:flex-row md:items-center md:justify-between">
+              <p className="text-xs leading-snug text-[#475569] sm:text-sm">
+                <strong className="font-semibold text-[#0B2E1F]">Email-rate hotels:</strong> request
+                Mensvic, Tomreik &amp; Erata by email using{' '}
+                <span className="font-semibold text-[#0E4A30]">{EMAIL_RATE_CODE}</span>.{' '}
+                <strong className="font-semibold text-[#0B2E1F]">MJ Grand:</strong> apply{' '}
+                <span className="font-semibold text-[#9a7414]">{MJ_PROMO_CODE}</span> online.
+              </p>
+              <div className="flex shrink-0 flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => copy(EMAIL_RATE_CODE)}
+                  className="inline-flex items-center rounded-xl border border-[#0E4A30]/25 bg-[#F4F6F5] px-3 py-1.5 text-xs font-semibold text-[#0B2E1F] transition hover:bg-[#0E4A30] hover:text-white cursor-pointer"
+                >
+                  {copied === EMAIL_RATE_CODE ? '✓ Copied' : <>Copy <strong className="ml-1 font-mono">{EMAIL_RATE_CODE}</strong></>}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => copy(MJ_PROMO_CODE)}
+                  className="inline-flex items-center rounded-xl border border-[#C89B2B]/40 bg-[#C89B2B]/12 px-3 py-1.5 text-xs font-semibold text-[#0B2E1F] transition hover:bg-[#C89B2B] hover:text-white cursor-pointer"
+                >
+                  {copied === MJ_PROMO_CODE ? '✓ Copied' : <>Copy <strong className="ml-1 font-mono">{MJ_PROMO_CODE}</strong></>}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Split directory: hotel list + details card */}
+          <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-start">
+            <div className="lg:col-span-5">
+              <div className="overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white shadow-2xs">
+                <div className="flex items-center justify-between border-b border-[#E2E8F0] bg-[#F4F6F5]/70 px-4 py-2.5">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#0B2E1F]">
+                    {HOUSING_TABS.find((t) => t.key === category)?.label} ({filtered.length})
+                  </span>
+                  <span className="text-[11px] font-medium text-slate-500">Select a hotel</span>
+                </div>
+                <ul className="divide-y divide-[#E2E8F0] lg:max-h-[430px] lg:overflow-y-auto">
+                  {filtered.map((h) => {
+                    const isSel = h.id === selected?.id
+                    return (
+                      <li key={h.id}>
+                        <button
+                          type="button"
+                          aria-pressed={isSel}
+                          onClick={() => selectHotel(h.id)}
+                          className={`flex w-full items-center justify-between gap-3 border-l-4 px-4 py-3 text-left transition cursor-pointer ${
+                            isSel
+                              ? 'border-l-[#0E4A30] bg-[#0E4A30]/[0.07]'
+                              : 'border-l-transparent bg-white hover:bg-[#F4F6F5]/75'
+                          }`}
+                        >
+                          <span className="min-w-0 flex-1">
+                            <span className="block truncate text-sm font-bold text-[#0B2E1F]">{h.name}</span>
+                            <span className="mt-0.5 block truncate text-xs text-slate-500">{h.summary}</span>
+                          </span>
+                          <span
+                            className={`shrink-0 rounded-lg px-2.5 py-1 text-[11px] font-semibold ${pillTone(h)}`}
+                          >
+                            {h.category === 'partner' ? 'Partner' : 'Standard'}
+                          </span>
+                        </button>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+            </div>
+
+            {selected && (
+              <div ref={spotlightRef} className="scroll-mt-6 lg:col-span-7">
+                <article
+                  aria-live="polite"
+                  className="relative overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white shadow-2xs"
+                >
+                  <div aria-hidden="true" className="h-1.5 w-full" style={{ background: BRAND_GRADIENT }} />
+                  <div className="p-5 sm:p-6">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <span
+                        className={`inline-flex items-center rounded-full border px-3 py-0.5 text-xs font-bold ${badgeTone(selected)}`}
+                      >
+                        {selected.badge}
+                      </span>
+                      <span className="text-xs font-medium text-slate-500">{selected.location}</span>
+                    </div>
+                    <h3 className="mt-2.5 text-xl sm:text-2xl font-extrabold tracking-tight text-[#0B2E1F]">
+                      {selected.name}
+                    </h3>
+
+                    <div className="mt-4">
+                      <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Rates</p>
+                      <div
+                        className={`mt-2 grid grid-cols-1 gap-2 ${selected.rates.length > 1 ? 'sm:grid-cols-2' : ''}`}
+                      >
+                        {selected.rates.map((r) => (
+                          <div
+                            key={r.label}
+                            className="flex items-baseline justify-between gap-2 rounded-xl border border-[#E2E8F0] bg-[#F4F6F5] px-3.5 py-2.5"
+                          >
+                            <span className="text-xs font-medium text-[#475569]">{r.label}</span>
+                            <span className="text-right">
+                              <span className="text-sm sm:text-base font-extrabold text-[#0B2E1F]">{r.price}</span>
+                              <span className="ml-1 text-[11px] text-slate-500">{r.unit}</span>
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="mt-4 rounded-xl border border-[#E2E8F0] bg-[#F4F6F5]/75 p-3.5 sm:p-4">
+                      <p className="text-xs font-bold uppercase tracking-wider text-[#0B2E1F]">Booking details</p>
+                      <ol className="mt-2 space-y-1.5">
+                        {selected.steps.map((s, i) => (
+                          <li key={s} className="flex items-start gap-2.5 text-xs sm:text-sm text-[#475569]">
+                            <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#0E4A30] text-[11px] font-bold text-white">
+                              {i + 1}
+                            </span>
+                            <span>{s}</span>
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+
+                    <div className="mt-5 flex flex-wrap items-center gap-2.5 border-t border-[#E2E8F0] pt-4">
+                      {renderActions(selected)}
+                    </div>
+                  </div>
+                </article>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Email reservation helper (keeps raw addresses out of the card UI) */}
+      <dialog
+        ref={dialogRef}
+        aria-labelledby="email-modal-title"
+        onClose={() => setEmailHotel(null)}
+        className="m-auto w-[calc(100%-2rem)] max-w-md overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white p-0 shadow-xl backdrop:bg-[#0B2E1F]/55"
+      >
+        {emailHotel && (
+          <>
+            <div aria-hidden="true" className="h-1.5 w-full" style={{ background: BRAND_GRADIENT }} />
+            <div className="p-5 sm:p-6">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <span className="inline-block rounded-full bg-[#0E4A30]/10 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-[#0E4A30]">
+                    Direct email reservation
+                  </span>
+                  <h3 id="email-modal-title" className="mt-2 text-lg font-extrabold text-[#0B2E1F]">
+                    {emailHotel.name} · Email Booking
+                  </h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={closeEmail}
+                  aria-label="Close reservation helper"
+                  className="rounded-lg p-1.5 text-slate-400 transition hover:bg-[#F4F6F5] hover:text-[#0F172A] cursor-pointer"
+                >
+                  ✕
+                </button>
+              </div>
+              <p className="mt-2.5 text-xs sm:text-sm leading-relaxed text-[#475569]">
+                Your mail app will open with a pre-filled A-DNA / G-DNA 2027 reservation draft. Be sure
+                to reference your booking code when sending.
+              </p>
+              <div className="mt-4 space-y-1.5 rounded-xl border border-[#E2E8F0] bg-[#F4F6F5] p-3.5 text-xs text-[#334155]">
+                <p>
+                  <strong className="font-semibold text-[#0B2E1F]">Subject:</strong> A-DNA 2027 Room
+                  Reservation ({emailHotel.code})
+                </p>
+                <p>
+                  <strong className="font-semibold text-[#0B2E1F]">Reference code:</strong>{' '}
+                  <span className="font-mono font-bold text-[#0E4A30]">{emailHotel.code}</span>
+                </p>
+              </div>
+              <div className="mt-5 flex flex-wrap items-center justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => emailHotel.code && copy(emailHotel.code)}
+                  className="inline-flex items-center justify-center rounded-xl border border-[#E2E8F0] bg-[#F4F6F5] px-3.5 py-2 text-xs font-semibold text-[#0B2E1F] transition hover:bg-slate-200/70 cursor-pointer"
+                >
+                  {copied === emailHotel.code ? '✓ Copied' : 'Copy Code'}
+                </button>
+                <button
+                  type="button"
+                  onClick={closeEmail}
+                  className="inline-flex items-center justify-center rounded-xl border border-[#E2E8F0] bg-white px-3.5 py-2 text-xs font-semibold text-[#475569] transition hover:text-[#0F172A] cursor-pointer"
+                >
+                  Close
+                </button>
+                <a
+                  href={buildMailto(emailHotel)}
+                  onClick={closeEmail}
+                  className="inline-flex items-center justify-center rounded-xl bg-[#0E4A30] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#0B2E1F]"
+                >
+                  Open Mail App
+                </a>
+              </div>
+            </div>
+          </>
+        )}
+      </dialog>
+
+      {/* Copy confirmation */}
+      <div
+        role="status"
+        aria-live="polite"
+        className={`pointer-events-none fixed bottom-5 right-5 z-50 flex items-center gap-2 rounded-xl border border-[#C89B2B]/40 bg-[#0B2E1F] px-4 py-2.5 text-xs font-semibold text-white shadow-lg transition-all duration-200 ${
+          copied ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'
+        }`}
+      >
+        {copied && (
+          <>
+            <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-[#0E4A30] text-[#C89B2B]">
+              ✓
+            </span>
+            {copied} copied to clipboard
+          </>
+        )}
+      </div>
+    </section>
   )
 }
 
@@ -610,15 +1221,7 @@ export function ConferenceHubPage() {
       </section>
 
       {/* Housing */}
-      <section id="housing" className="scroll-mt-6 bg-pcna-light py-12 sm:py-16">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Eyebrow>Stay</Eyebrow>
-          <SectionTitle>Housing</SectionTitle>
-          <p className="mt-5 text-gray-600 text-base sm:text-lg">
-            Housing options for A-DNA Ghana Conference 2027 will be announced soon.
-          </p>
-        </div>
-      </section>
+      <HousingSection />
 
       {/* Partner */}
       <section id="partner" className="scroll-mt-6 px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
