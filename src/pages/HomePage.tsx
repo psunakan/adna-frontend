@@ -30,7 +30,7 @@ export function HomePage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center w-full sm:w-auto">
               <Link
-                to="/about"
+                to="/membership"
                 className="w-full sm:w-auto px-8 py-3 bg-pcna-red text-white font-bold rounded-md hover:bg-red-800 transition-all duration-300 hover:scale-105 shadow-md uppercase tracking-wider text-sm text-center"
               >
                 Join A-DNA Today
