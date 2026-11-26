@@ -1266,20 +1266,42 @@ export function ConferenceHubPage() {
           <SectionTitle>Good to know</SectionTitle>
           <div className="mt-7 space-y-3">
             {FAQS.map((f) => (
-              <details key={f.q} className="group bg-white rounded-xl shadow-sm p-5">
+              <details
+                key={f.q}
+                className="group relative overflow-hidden rounded-2xl border border-black/10 bg-white p-5 sm:px-6 shadow-sm transition-[box-shadow,border-color] duration-300 open:border-transparent open:shadow-lg"
+              >
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-y-0 left-0 w-1 opacity-0 transition-opacity duration-300 group-open:opacity-100"
+                  style={{ background: 'linear-gradient(180deg, #c8102e, #fcd116, #0f6b4a)' }}
+                />
                 <summary
-                  className="cursor-pointer list-none flex justify-between items-center gap-4 font-bold"
+                  className="flex cursor-pointer list-none items-center justify-between gap-4 rounded-md font-bold focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0f6b4a] [&::-webkit-details-marker]:hidden"
                   style={{ color: INK }}
                 >
-                  {f.q}
-                  <span className="text-pcna-green text-xl transition-transform group-open:rotate-45">
-                    +
+                  <span className="min-w-0 flex-1 break-words">{f.q}</span>
+                  <span
+                    aria-hidden="true"
+                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#eef6f1] text-[#0f6b4a] transition-colors duration-300 group-open:bg-[#0f6b4a] group-open:text-white"
+                  >
+                    <span className="block text-lg leading-none transition-transform duration-300 group-open:rotate-45">
+                      +
+                    </span>
                   </span>
                 </summary>
-                <p className="text-gray-600 mt-3">{f.a}</p>
+                <p className="text-gray-600 mt-3 break-words">{f.a}</p>
               </details>
             ))}
           </div>
+          <p className="mt-8 text-center">
+            <button
+              type="button"
+              onClick={openContact}
+              className="cursor-pointer font-bold text-[#0f6b4a] underline underline-offset-4 hover:text-pcna-green"
+            >
+              Still have questions? Contact us
+            </button>
+          </p>
         </div>
       </section>
 
