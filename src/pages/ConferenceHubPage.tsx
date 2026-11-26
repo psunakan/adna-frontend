@@ -172,10 +172,11 @@ const REGISTRATION_TIERS = [
 
 // `tint` recolors an all-white logo (used as a CSS mask) so it reads on the white section.
 // `ratio` is the logo file's width/height, needed to size the masked element.
-const SPONSORS: { name: string; logo: string; tint?: string; ratio?: string }[] = [
+// `size` overrides the default max-height classes so a logo matches the others' visual weight.
+const SPONSORS: { name: string; logo: string; tint?: string; ratio?: string; size?: string }[] = [
   { name: 'Gilead', logo: 'sponsor-gilead.svg' },
-  { name: 'AMN Healthcare', logo: 'sponsor-amn.png' },
-  { name: 'Trumerit', logo: 'sponsor-trumerit.png' },
+  { name: 'AMN Healthcare', logo: 'sponsor-amn.png', size: 'max-h-16 sm:max-h-20' },
+  { name: 'Trumerit', logo: 'sponsor-trumerit.png', size: 'max-h-16 sm:max-h-20' },
   {
     name: 'Health Carousel Foundation',
     logo: 'sponsor-health-carousel.png',
@@ -1319,7 +1320,7 @@ export function ConferenceHubPage() {
             {SPONSORS.map((s) => (
               <div
                 key={s.name}
-                className="flex h-14 sm:h-16 w-full max-w-[240px] items-center justify-center"
+                className="flex h-16 sm:h-20 w-full max-w-[240px] items-center justify-center"
               >
                 {s.tint ? (
                   <div
@@ -1338,7 +1339,7 @@ export function ConferenceHubPage() {
                     src={`${IMG}/${s.logo}`}
                     alt={s.name}
                     loading="lazy"
-                    className="block max-h-10 sm:max-h-12 lg:max-h-14 w-auto max-w-full object-contain"
+                    className={`block ${s.size ?? 'max-h-10 sm:max-h-12 lg:max-h-14'} w-auto max-w-full object-contain`}
                   />
                 )}
               </div>
