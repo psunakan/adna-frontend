@@ -51,4 +51,5 @@ export const COLLABORATOR_LOGOS = [
     minW: 200,
     h: 'h-20',
   },
+  { src: '/Logo/dataflow-logo-cropped.png', alt: 'Dataflow', minW: 200, h: 'h-12' },
 ] as const
